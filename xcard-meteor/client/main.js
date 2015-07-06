@@ -2,7 +2,7 @@ xCard = {
 
 	namespace: "xCard",
 
-	// Session wrapper to allow up to wrap xCard
+	// Session wrapper to allow us to wrap xCard
 	// session variables with the proper namespace
 	Session: {
 		set: function(k,v) {
