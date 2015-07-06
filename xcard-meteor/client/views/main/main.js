@@ -11,6 +11,16 @@ Template.mainPage.events({
 Template.mainPage.helpers({
 	helloCounter : function() {
 		return xCard.Session.get( "main.helloCounter" );
+	},
+	cards: function() {
+		var result = [],
+				cards = CardModel.find();
+
+		if( cards ) {
+			result = cards.fetch();
+		}
+
+		return result;
 	}
 });
 

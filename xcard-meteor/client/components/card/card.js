@@ -3,11 +3,11 @@ Template.card.events({
 
 Template.card.helpers({
 	head : function() {
-		return "<Card Name>";
+		return this.head || "no title";
 	},
 
 	body : function(){
-		return "<Card Body Text>";
+		return this.body || "no body";
 	}
 });
 
