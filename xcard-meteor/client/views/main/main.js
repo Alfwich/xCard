@@ -1,5 +1,5 @@
 (function(){
-	var formatCardData = function()
+	var formatCardData = function(){}
 	Template.mainPage.events({
 		"click button" : function(e) {
 			var val = xCard.Session.get("main.helloCounter");
