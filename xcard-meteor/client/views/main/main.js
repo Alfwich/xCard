@@ -2,7 +2,7 @@
 	var mainCounterName = "main.helloCounter";
 
 	Template.mainPage.events({
-		"click button" : function(e) {
+		"click button.hello" : function(e) {
 			var val = xCard.Session.get(mainCounterName);
 
 			if( _.isNumber(val) ) {
