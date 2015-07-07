@@ -1,6 +1,10 @@
 Template.card.events({
 	"click button.report": function() {
 		console.log( this );
+	},
+
+	"click button.delete": function() {
+		Meteor.call( "deleteCard", this._id );
 	}
 })
 
