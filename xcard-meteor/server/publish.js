@@ -4,7 +4,7 @@ Meteor.publish( "cardData" , function() {
 });
 
 Meteor.publish( "cardOwnership", function() {
-	return CardOwnershipCollection.find();
+	return CardOwnershipCollection.find( { owner: this.userId } );
 });
 
 // TODO: Create a publification that returns the current user-owned cards

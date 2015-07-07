@@ -5,10 +5,16 @@ Meteor.methods({
     }
   },
 
-  acquireCard: function(userId, cardId) {
-    if( !_.isUndefined(userId) && !_.isUndefined(cardId) ) {
+  acquireCard: function(cardId) {
+    if( !_.isUndefined(Meteor.userId()) && !_.isUndefined(cardId) ) {
       // TODO: Do validation of userId and cardId
-      CardOwnershipCollection.insert({ owner: userId, cardId: cardId });
+      CardOwnershipCollection.insert({ owner: Meteor.userId(), cardId: cardId });
+    }
+  },
+
+  removeCard: function(ownershipId) {
+    if( !_.isUndefined(ownershipId)) {
+      CardOwnershipCollection.remove( ownershipId );
     }
   }
 });

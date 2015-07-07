@@ -1,6 +1,22 @@
 (function(){
 
 	Template.mainPage.events({
+		"click button.report": function(card) {
+			console.log( this );
+		},
+
+		"click button.acquire": function() {
+			Meteor.call( "acquireCard", this._id );
+		},
+
+		"click button.delete": function() {
+			Meteor.call( "deleteCard", this._id );
+		},
+
+		"click button.remove": function() {
+			Meteor.call( "removeCard", this._id );
+		}
+
 	});
 
 	Template.mainPage.helpers({
@@ -9,10 +25,20 @@
 		},
 
 		ownedCards: function() {
-			var ownedCards = CardOwnershipCollection.find().fetch();
-			// Get all of the cards which have an id in the array of owned card ids
-			// TODO: How will we model multiple cards?
-			var result = CardsCollection.find( { _id: { $in: _.pluck(ownedCards,"cardId") } }, { sort: { title: 1 } }  ).fetch();
+			var result = CardOwnershipCollection.find().fetch();
+
+			// Populate the card for each ownership entry
+			result = _.forEach(result, function(ele) {
+				//arr[idx]["card"] = new CardModel( CardsCollection.findOne( ele["cardId"] ) );
+				ele.card = new CardModel( CardsCollection.findOne( ele["cardId"] ) );
+			});
+
+			// Remove any entries where the card could not be loaded
+			// TODO: Find a better way to do this?
+			result = _.filter( result, function(ele) {
+				return !_.isUndefined( ele["card"].title );
+			});
+
 			return result;
 		},
 

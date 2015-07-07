@@ -4,13 +4,27 @@
     <div class="col-xs-6">
       <h3> All Cards </h3>
       {{#each cards}}
-        {{> card}}
+        <div class="card-container">
+          {{> card}}
+          <div class="card-controls">
+      			<button class="report btn btn-default btn-xs">info</button>
+      			<button class="acquire btn btn-default btn-xs">acquire</button>
+      			<button class="delete btn btn-danger btn-xs">delete</button>
+          </div>
+        </div>
       {{/each}}
     </div>
     <div class="col-xs-6">
       <h3> Your Cards </h3>
       {{#each ownedCards}}
-        {{> card}}
+        <div class="card-container">
+          {{#with card}}
+            {{> card }}
+          {{/with}}
+          <div class="card-controls">
+      			<button class="remove btn btn-danger btn-xs">remove</button>
+          </div>
+        </div>
       {{/each}}
     </div>
   </div>
