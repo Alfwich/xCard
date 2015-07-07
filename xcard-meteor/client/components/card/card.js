@@ -6,11 +6,11 @@ Template.card.events({
 
 Template.card.helpers({
 	head : function() {
-		return this.title || "no title";
+		return this.title;
 	},
 
 	body : function(){
-		return this.body || "no body";
+		return this.body;
 	}
 });
 
