@@ -1,6 +1,17 @@
 <template name="mainPage">
-  <h2>Check out our {{numberOfCards}} cool cards!</h2>
-  {{#each cards}}
-    {{> card}}
-  {{/each}}
+  <h2>Check out our {{numberOfCards}} cool cards! {{> loginButtons }}</h2>
+  <div class="row">
+    <div class="col-xs-6">
+      <h3> All Cards </h3>
+      {{#each cards}}
+        {{> card}}
+      {{/each}}
+    </div>
+    <div class="col-xs-6">
+      <h3> Your Cards </h3>
+      {{#each ownedCards}}
+        {{> card}}
+      {{/each}}
+    </div>
+  </div>
 </template>

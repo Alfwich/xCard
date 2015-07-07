@@ -3,6 +3,10 @@ Template.card.events({
 		console.log( this );
 	},
 
+	"click button.acquire": function() {
+		Meteor.call( "acquireCard", Meteor.userId(), this._id );
+	},
+
 	"click button.delete": function() {
 		Meteor.call( "deleteCard", this._id );
 	}
