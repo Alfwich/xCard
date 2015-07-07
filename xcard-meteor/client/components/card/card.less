@@ -1,16 +1,35 @@
 .card {
-	width: 30%;
+	width: 200px;
   height: 300px;
-  border: 1px solid #000;
+  border: 2px solid #AAA;
   border-radius: 5px;
   display: inline-block;
-  padding: 5px;
+  padding: 2px;
+	margin: 5px;
 	white-space: nowrap;
+	overflow: hidden;
+	font-size: 15px;
+	position: relative;
+	box-shadow: -3px 5px 9px 2px;
 
 	.head {
-		font-size: 20px;
+		font-size: 110%;
+		font-weight: bold;
+	}
+
+	.picture {
+		width: 100%;
+		background-color: #E68BFF;
+		height: 150px;
+		border: 1px solid #000;
 	}
 
 	.body {
+	}
+
+	.controls {
+		position: absolute;
+		right: 2px;
+		bottom: 2px;
 	}
 }
