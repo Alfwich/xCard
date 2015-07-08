@@ -18,12 +18,21 @@ class ACTION:
         self.TARGET = incTARGET
 
 
+class SCHEDULE:
+
+    def __init__(self):
+        self.ACTIONS = []
+
+    def addAction(self, incACTION):
+        self.ACTIONS.append(incACTION)
+
+
 class Player:
 
     def __init__(self, name):
         self.name = name
         self.cards = []
-        self.schedule = []
+        self.SCHEDULE = SCHEDULE()
         self.health = 100
         self.TARGET = TARGET()
 
@@ -36,7 +45,7 @@ class Player:
             i += 1
         cardChoice = input("Enter your CARD choice: ")
         if cardChoice == "n":
-            self.schedule = []
+            self.SCHEDULE = SCHEDULE()
             return
 
         cardChoiceInt = int(cardChoice)
@@ -50,10 +59,12 @@ class Player:
             i += 1
         targetChoice = input("  Enter your TARGET choice: ")
         targetChoiceInt = int(targetChoice)
-        self.cards[cardChoiceIndex].TARGET = players[
+
+        newACTION = self.cards[cardChoiceIndex].ACTION
+        newACTION.TARGET = players[
             targetChoiceInt - 1].TARGET
 
-        self.schedule = [self.cards[cardChoiceIndex]]
+        self.SCHEDULE.addAction(self.cards[cardChoiceIndex].ACTION)
         del self.cards[cardChoiceIndex]
 
     def acquireCard(self, card):
@@ -71,6 +82,7 @@ class Game:
 
     def __init__(self, players):
         self.players = players
+        self.SCHEDULE = SCHEDULE()
 
     def isOver(self):
         actionPossible = False
@@ -108,15 +120,15 @@ class Game:
         for player in self.players:
             print("{} has {} health.".format(player.name, player.health))
 
-    def applyCardToTargetPlayer(self, card):
+    def applyACTIONToTARGET(self, incACTION):
         for player in self.players:
-            if player.TARGET == card.TARGET:
-                player.health += card.ACTION.healthDelta
+            if player.TARGET == incACTION.TARGET:
+                player.health += incACTION.healthDelta
 
-    def applySchedule(self, schedule):
-        for card in schedule:
-            assert(card.TARGET != None)
-            self.applyCardToTargetPlayer(card)
+    def applySchedule(self):
+        for incACTION in self.SCHEDULE.ACTIONS:
+            assert(incACTION.TARGET != None)
+            self.applyACTIONToTARGET(incACTION)
 
 
 def main():
@@ -144,13 +156,13 @@ def main():
             print("{} is the list of WINNERS.".format(game.winners()))
             break
 
-        gameSchedule = []
         for player in players:
             player.chooseSchedule(players)
-            print("{}.schedule = {}".format(player.name, player.schedule))
-            gameSchedule.extend(player.schedule)
+            print("{}.SCHEDULE = {}".format(player.name, player.SCHEDULE))
+            game.SCHEDULE.ACTIONS.extend(player.SCHEDULE.ACTIONS)
 
-        game.applySchedule(gameSchedule)
+        game.applySchedule()
+        game.SCHEDULE = SCHEDULE()
 
         turnNumber += 1
 
