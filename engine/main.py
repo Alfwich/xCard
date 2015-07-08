@@ -4,6 +4,7 @@ class Player:
         self.name = name
         self.cards = []
         self.schedule = []
+        self.health = 100
 
     def chooseSchedule(self):
         print("{}, please choose your schedule.".format(self.name))
@@ -37,6 +38,38 @@ class Game:
     def __init__(self, players):
         self.players = players
 
+    def isGameOver(self):
+        actionPossible = False
+
+        for player in self.players:
+            if player.cards != []:
+                actionPossible = True
+
+        if not actionPossible:
+            return True
+
+        alivePlayers = 0
+        for player in self.players:
+            if player.health > 0:
+                alivePlayers += 1
+
+        if alivePlayers <= 1:
+            return True
+
+        return False
+
+    def winner(self):
+        winners = []
+        maxHealthSeen = -1
+        for player in self.players:
+            if player.health > maxHealthSeen:
+                maxHealthSeen = player.health
+                winners = [player]
+            elif player.health == maxHealthSeen:
+                winners.append(player)
+
+        return winners
+
 
 def main():
     players = [Player("Alan"), Player("Betty")]
@@ -54,10 +87,13 @@ def main():
     game = Game(players)
 
     while True:
+        if game.isGameOver():
+            print("{} is the list of winners.".format(game.winner()))
+            break
+
         for player in players:
             player.chooseSchedule()
             print("{}.schedule = {}".format(player.name, player.schedule))
-        break
 
 if __name__ == "__main__":
     main()
