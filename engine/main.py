@@ -11,6 +11,13 @@ class TARGET:
         self.uniqueIdentifier = TARGET.newUniqueIdentifier()
 
 
+class ACTION:
+
+    def __init__(self, healthDelta, incTARGET):
+        self.healthDelta = healthDelta
+        self.TARGET = incTARGET
+
+
 class Player:
 
     def __init__(self, name):
@@ -53,12 +60,11 @@ class Player:
         self.cards.append(card)
 
 
-class Card:
+class CARD:
 
-    def __init__(self, name, healthDelta):
+    def __init__(self, name, incACTION):
         self.name = name
-        self.healthDelta = healthDelta
-        self.TARGET = None
+        self.ACTION = incACTION
 
 
 class Game:
@@ -105,7 +111,7 @@ class Game:
     def applyCardToTargetPlayer(self, card):
         for player in self.players:
             if player.TARGET == card.TARGET:
-                player.health += card.healthDelta
+                player.health += card.ACTION.healthDelta
 
     def applySchedule(self, schedule):
         for card in schedule:
@@ -115,9 +121,11 @@ class Game:
 
 def main():
     players = [Player("Alan"), Player("Betty")]
+    actions = [ACTION(-10, None), ACTION(5, None)]
+    cards = [CARD("Punch", actions[0]), CARD("Health Potition", actions[1])]
 
-    players[0].acquireCard(Card("Punch", -10))
-    players[1].acquireCard(Card("Health Potion", 5))
+    players[0].acquireCard(cards[0])
+    players[1].acquireCard(cards[1])
 
     for player in players:
         print("PLAYER: {}".format(player.name))
