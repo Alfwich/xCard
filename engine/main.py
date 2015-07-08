@@ -6,22 +6,32 @@ class Player:
         self.schedule = []
         self.health = 100
 
-    def chooseSchedule(self):
+    def chooseSchedule(self, players):
         print("{}, please choose your schedule.".format(self.name))
         print("[n] for nothing.")
         i = 1
         for card in self.cards:
             print("[{}] for Card(\"{}\")".format(i, card.name))
             i += 1
-        choice = input("Enter your choice: ")
-        if choice == "n":
+        cardChoice = input("Enter your card choice: ")
+        if cardChoice == "n":
             self.schedule = []
             return
 
-        choiceInt = int(choice)
-        choiceIndex = choiceInt - 1
-        self.schedule = [self.cards[choiceIndex]]
-        del self.cards[choiceIndex]
+        cardChoiceInt = int(cardChoice)
+        cardChoiceIndex = cardChoiceInt - 1
+
+        print("{}, please choose a target.".format(self.name))
+        i = 1
+        for player in players:
+            print("[{}] to target {}".format(i, player.name))
+            i += 1
+        targetChoice = input("Enter your target choice: ")
+        targetChoiceInt = int(targetChoice)
+        self.cards[cardChoiceIndex].target = targetChoiceInt - 1
+
+        self.schedule = [self.cards[cardChoiceIndex]]
+        del self.cards[cardChoiceIndex]
 
     def addCardToHand(self, card):
         self.cards.append(card)
@@ -32,6 +42,7 @@ class Card:
     def __init__(self, name, healthDelta):
         self.name = name
         self.healthDelta = healthDelta
+        self.target = None
 
 
 class Game:
@@ -93,7 +104,7 @@ def main():
             break
 
         for player in players:
-            player.chooseSchedule()
+            player.chooseSchedule(players)
             print("{}.schedule = {}".format(player.name, player.schedule))
 
 if __name__ == "__main__":
