@@ -38,7 +38,7 @@ class Game:
     def __init__(self, players):
         self.players = players
 
-    def isGameOver(self):
+    def isOver(self):
         actionPossible = False
 
         for player in self.players:
@@ -87,7 +87,7 @@ def main():
     game = Game(players)
 
     while True:
-        if game.isGameOver():
+        if game.isOver():
             print("{} is the list of winners.".format(game.winner()))
             break
 
