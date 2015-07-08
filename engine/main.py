@@ -34,6 +34,7 @@ class Player:
 
         cardChoiceInt = int(cardChoice)
         cardChoiceIndex = cardChoiceInt - 1
+        assert(cardChoiceIndex < len(self.cards))
 
         print("  {}, please choose a TARGET.".format(self.name))
         i = 1
