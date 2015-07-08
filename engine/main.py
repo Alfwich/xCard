@@ -82,6 +82,10 @@ class Game:
 
         return winners
 
+    def printPlayersHealths(self):
+        for player in self.players:
+            print("{} has {} health.".format(player.name, player.health))
+
 
 def main():
     players = [Player("Alan"), Player("Betty")]
@@ -98,7 +102,10 @@ def main():
 
     game = Game(players)
 
+    turnNumber = 1
     while True:
+        print("\n===Turn {} begins===".format(turnNumber))
+        game.printPlayersHealths()
         if game.isOver():
             print("{} is the list of winners.".format(game.winner()))
             break
@@ -106,6 +113,8 @@ def main():
         for player in players:
             player.chooseSchedule(players)
             print("{}.schedule = {}".format(player.name, player.schedule))
+
+        turnNumber += 1
 
 if __name__ == "__main__":
     main()
