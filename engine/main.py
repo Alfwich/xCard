@@ -70,15 +70,15 @@ class Game:
 
         return False
 
-    def winner(self):
+    def winners(self):
         winners = []
         maxHealthSeen = -1
         for player in self.players:
             if player.health > maxHealthSeen:
                 maxHealthSeen = player.health
-                winners = [player]
+                winners = [player.name]
             elif player.health == maxHealthSeen:
-                winners.append(player)
+                winners.append(player.name)
 
         return winners
 
@@ -107,7 +107,7 @@ def main():
         print("\n===Turn {} begins===".format(turnNumber))
         game.printPlayersHealths()
         if game.isOver():
-            print("{} is the list of winners.".format(game.winner()))
+            print("{} is the list of winners.".format(game.winners()))
             break
 
         for player in players:
