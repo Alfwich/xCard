@@ -29,8 +29,9 @@ class Player:
 
 class Card:
 
-    def __init__(self, name):
+    def __init__(self, name, healthDelta):
         self.name = name
+        self.healthDelta = healthDelta
 
 
 class Game:
@@ -74,8 +75,8 @@ class Game:
 def main():
     players = [Player("Alan"), Player("Betty")]
 
-    players[0].addCardToHand(Card("Punch"))
-    players[1].addCardToHand(Card("Health Potion"))
+    players[0].addCardToHand(Card("Punch", -10))
+    players[1].addCardToHand(Card("Health Potion", 5))
 
     for player in players:
         print("Player: {}".format(player.name))
