@@ -12,7 +12,7 @@ class Player:
         i = 1
         for card in self.cards:
             print("[{}] for Card(\"{}\")".format(i, card.name))
-            ++i
+            i += 1
         choice = input("Enter your choice: ")
         if choice == "n":
             self.schedule = []
