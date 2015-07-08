@@ -1,8 +1,9 @@
 <template name="mainPage">
   <h2>Check out our {{numberOfCards}} cool cards! {{> loginButtons }}</h2>
-  <div class="row">
+  <div class="row mainPage">
     <div class="col-xs-6">
       <h3> All Cards </h3>
+      <input type="text" class="filter form-control" placeholder="Filter..." />
       {{#each cards}}
         <div class="card-container">
           {{> card}}

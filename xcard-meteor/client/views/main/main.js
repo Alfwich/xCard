@@ -1,5 +1,9 @@
 (function(){
 
+	var mainFilterInput = "xCard.main.cardFilter";
+
+	Session.set( mainFilterInput, "" );
+
 	Template.mainPage.events({
 		"click button.report": function(card) {
 			console.log( this );
@@ -15,6 +19,10 @@
 
 		"click button.remove": function() {
 			Meteor.call( "removeCard", this._id );
+		},
+
+		"keyup input.filter": function(e) {
+			Session.set( mainFilterInput, e.currentTarget.value );
 		}
 
 	});
@@ -29,7 +37,6 @@
 
 			// Populate the card for each ownership entry
 			result = _.forEach(result, function(ele) {
-				//arr[idx]["card"] = new CardModel( CardsCollection.findOne( ele["cardId"] ) );
 				ele.card = new CardModel( CardsCollection.findOne( ele["cardId"] ) );
 			});
 
@@ -43,10 +50,15 @@
 		},
 
 		cards: function() {
-			var result = CardsCollection.find({},{ sort: { title: 1 } }).fetch();
+		var filterRegex = RegExp(".*" + Session.get( mainFilterInput ) + ".*","gi")
+					result = [],
+					options = { sort: { title: 1 } };
+
+			result = CardsCollection.find( { title: { $regex: filterRegex }}, options).fetch();
 
 			// Create a CardModel from each result of the query
 			result = result.map( function(ele){ return new CardModel(ele); });
+
 			return result;
 		}
 	});

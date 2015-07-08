@@ -12,7 +12,7 @@ Meteor.startup( function() {
       // Only load a valid page is it is defined as a valid page
       if( _.contains( this.validPages, page ) ) {
         location.hash = page;
-        xCard.Session.set( "xCard.currentPage", page + "Page" );
+        Session.set( "xCard.currentPage", page + "Page" );
       }
     }
   }
@@ -31,7 +31,7 @@ Template.pageLoader.events( {
 Template.pageLoader.helpers( {
   // Attempts to load the template provided by its name
   loadPage : function() {
-    var page = xCard.Session.get("xCard.currentPage"),
+    var page = Session.get("xCard.currentPage"),
         result = { template : Template["mainPage"] }
 
     if( _.isString(page) && Template[page] !== undefined ) {
