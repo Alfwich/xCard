@@ -33,7 +33,7 @@ class Player:
         self.schedule = [self.cards[cardChoiceIndex]]
         del self.cards[cardChoiceIndex]
 
-    def addCardToHand(self, card):
+    def acquireCard(self, card):
         self.cards.append(card)
 
 
@@ -95,8 +95,8 @@ class Game:
 def main():
     players = [Player("Alan"), Player("Betty")]
 
-    players[0].addCardToHand(Card("Punch", -10))
-    players[1].addCardToHand(Card("Health Potion", 5))
+    players[0].acquireCard(Card("Punch", -10))
+    players[1].acquireCard(Card("Health Potion", 5))
 
     for player in players:
         print("Player: {}".format(player.name))
