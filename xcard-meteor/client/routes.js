@@ -4,3 +4,6 @@ Router.map( function(){
 		path: /\/.*/
 	});
 });
+
+// Add the valid pages for the client application
+xCard.validPages = [ "main" ];
