@@ -86,6 +86,11 @@ class Game:
         for player in self.players:
             print("{} has {} health.".format(player.name, player.health))
 
+    def applySchedule(self, schedule):
+        for card in schedule:
+            assert(card.target != None)
+            self.players[card.target].health += card.healthDelta
+
 
 def main():
     players = [Player("Alan"), Player("Betty")]
@@ -110,9 +115,13 @@ def main():
             print("{} is the list of winners.".format(game.winners()))
             break
 
+        gameSchedule = []
         for player in players:
             player.chooseSchedule(players)
             print("{}.schedule = {}".format(player.name, player.schedule))
+            gameSchedule.extend(player.schedule)
+
+        game.applySchedule(gameSchedule)
 
         turnNumber += 1
 
