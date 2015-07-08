@@ -28,6 +28,7 @@
 	});
 
 	Template.mainPage.helpers({
+
 		numberOfCards: function() {
 			return CardsCollection.find().count();
 		},
@@ -50,7 +51,7 @@
 		},
 
 		cards: function() {
-		var filterRegex = RegExp(".*" + Session.get( mainFilterInput ) + ".*","gi")
+			var filterRegex = RegExp(".*" + Session.get( mainFilterInput ) + ".*","gi")
 					result = [],
 					options = { sort: { title: 1 } };
 
