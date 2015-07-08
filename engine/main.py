@@ -21,12 +21,12 @@ class Player:
         cardChoiceInt = int(cardChoice)
         cardChoiceIndex = cardChoiceInt - 1
 
-        print("{}, please choose a target.".format(self.name))
+        print("  {}, please choose a target.".format(self.name))
         i = 1
         for player in players:
-            print("[{}] to target {}".format(i, player.name))
+            print("  [{}] to target {}".format(i, player.name))
             i += 1
-        targetChoice = input("Enter your target choice: ")
+        targetChoice = input("  Enter your target choice: ")
         targetChoiceInt = int(targetChoice)
         self.cards[cardChoiceIndex].target = targetChoiceInt - 1
 
