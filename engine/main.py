@@ -1,3 +1,16 @@
+class TARGET:
+    nextUniqueIdentifier = 1
+
+    @classmethod
+    def newUniqueIdentifier(cls):
+        newUID = cls.nextUniqueIdentifier
+        cls.nextUniqueIdentifier += 1
+        return newUID
+
+    def __init__(self):
+        self.uniqueIdentifier = TARGET.newUniqueIdentifier()
+
+
 class Player:
 
     def __init__(self, name):
@@ -5,15 +18,16 @@ class Player:
         self.cards = []
         self.schedule = []
         self.health = 100
+        self.TARGET = TARGET()
 
     def chooseSchedule(self, players):
-        print("{}, please choose your schedule.".format(self.name))
+        print("{}, please choose your SCHEDULE.".format(self.name))
         print("[n] for nothing.")
         i = 1
         for card in self.cards:
-            print("[{}] for Card(\"{}\")".format(i, card.name))
+            print("[{}] for CARD(\"{}\")".format(i, card.name))
             i += 1
-        cardChoice = input("Enter your card choice: ")
+        cardChoice = input("Enter your CARD choice: ")
         if cardChoice == "n":
             self.schedule = []
             return
@@ -21,14 +35,15 @@ class Player:
         cardChoiceInt = int(cardChoice)
         cardChoiceIndex = cardChoiceInt - 1
 
-        print("  {}, please choose a target.".format(self.name))
+        print("  {}, please choose a TARGET.".format(self.name))
         i = 1
         for player in players:
             print("  [{}] to target {}".format(i, player.name))
             i += 1
-        targetChoice = input("  Enter your target choice: ")
+        targetChoice = input("  Enter your TARGET choice: ")
         targetChoiceInt = int(targetChoice)
-        self.cards[cardChoiceIndex].target = targetChoiceInt - 1
+        self.cards[cardChoiceIndex].TARGET = players[
+            targetChoiceInt - 1].TARGET
 
         self.schedule = [self.cards[cardChoiceIndex]]
         del self.cards[cardChoiceIndex]
@@ -42,7 +57,7 @@ class Card:
     def __init__(self, name, healthDelta):
         self.name = name
         self.healthDelta = healthDelta
-        self.target = None
+        self.TARGET = None
 
 
 class Game:
@@ -86,10 +101,15 @@ class Game:
         for player in self.players:
             print("{} has {} health.".format(player.name, player.health))
 
+    def applyCardToTargetPlayer(self, card):
+        for player in self.players:
+            if player.TARGET == card.TARGET:
+                player.health += card.healthDelta
+
     def applySchedule(self, schedule):
         for card in schedule:
-            assert(card.target != None)
-            self.players[card.target].health += card.healthDelta
+            assert(card.TARGET != None)
+            self.applyCardToTargetPlayer(card)
 
 
 def main():
@@ -99,9 +119,9 @@ def main():
     players[1].acquireCard(Card("Health Potion", 5))
 
     for player in players:
-        print("Player: {}".format(player.name))
+        print("PLAYER: {}".format(player.name))
         for card in player.cards:
-            print("  Card: {}".format(card.name))
+            print("  CARD: {}".format(card.name))
 
     # decide to not redraw
 
@@ -112,7 +132,7 @@ def main():
         print("\n===Turn {} begins===".format(turnNumber))
         game.printPlayersHealths()
         if game.isOver():
-            print("{} is the list of winners.".format(game.winners()))
+            print("{} is the list of WINNERS.".format(game.winners()))
             break
 
         gameSchedule = []
