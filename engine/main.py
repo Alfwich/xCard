@@ -221,11 +221,18 @@ def test2Players(winner, p1health, p2health, inputList):
 
 
 def main():
+    # Tests cases below are all "equivalent games", except there are added
+    # "null actions".
     test2Players(1, 95, 100, ['1', '1', '1', '1'])
     test2Players(1, 95, 100, ['n', 'n', '1', '1', '1', '1'])
     test2Players(1, 95, 100, ['n', '1', '1', '1', '1', 'n'])
     test2Players(
         1, 95, 100, ['n', 'n', 'n', 'n', 'n', '1', '1', 'n', 'n', '1', '1', 'n'])
+
+    # The cases below are all different games.
+    test2Players(0, 100, 95, ['1', '2', 'n', 'n', 'n', 'n', '1', '2'])
+    test2Players(0, 105, 90, ['n', 'n', 'n', 'n', '1', '2', '1', '1'])
+    test2Players(1, 90, 105, ['n', 'n', '1', '1', '1', '2', 'n', 'n'])
 
 if __name__ == "__main__":
     main()
