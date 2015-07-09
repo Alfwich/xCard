@@ -36,14 +36,15 @@ class Player:
         self.health = 100
         self.TARGET = TARGET()
 
-    def chooseSchedule(self, players):
+    def chooseSchedule(self, players, inputCallbacks):
         print("{}, please choose your SCHEDULE.".format(self.name))
         print("[n] for nothing.")
         i = 1
         for card in self.cards:
             print("[{}] for CARD(\"{}\")".format(i, card.name))
             i += 1
-        cardChoice = input("Enter your CARD choice: ")
+        print("Enter your CARD choice: ", end="")
+        cardChoice = inputCallbacks.getInput()
         if cardChoice == "n":
             self.SCHEDULE = SCHEDULE()
             return
@@ -57,7 +58,8 @@ class Player:
         for player in players:
             print("  [{}] to target {}".format(i, player.name))
             i += 1
-        targetChoice = input("  Enter your TARGET choice: ")
+        print("  Enter your TARGET choice: ", end="")
+        targetChoice = inputCallbacks.getInput()
         targetChoiceInt = int(targetChoice)
 
         newACTION = self.cards[cardChoiceIndex].ACTION
@@ -83,6 +85,7 @@ class Game:
     def __init__(self, players):
         self.players = players
         self.SCHEDULE = SCHEDULE()
+        self.WINNER = []
 
     def isOver(self):
         actionPossible = False
@@ -105,16 +108,16 @@ class Game:
         return False
 
     def winners(self):
-        winners = []
+        self.WINNER = []
         maxHealthSeen = -1
         for player in self.players:
             if player.health > maxHealthSeen:
                 maxHealthSeen = player.health
-                winners = [player.name]
+                self.WINNER = [player.name]
             elif player.health == maxHealthSeen:
-                winners.append(player.name)
+                self.WINNER.append(player.name)
 
-        return winners
+        return self.WINNER
 
     def printPlayersHealths(self):
         for player in self.players:
@@ -131,7 +134,28 @@ class Game:
             self.applyACTIONToTARGET(incACTION)
 
 
-def main():
+class InputCallbacks:
+
+    @staticmethod
+    def getInput():
+        raise NotImplementedError()
+
+
+class STDINInputCallbacks(InputCallbacks):
+
+    @staticmethod
+    def getInput():
+        return input()
+
+
+class AllOnesInputCallbacks(InputCallbacks):
+
+    @staticmethod
+    def getInput():
+        return "1"
+
+
+def xCard(inputCallbacks):
     players = [Player("Alan"), Player("Betty")]
     actions = [ACTION(-10, None), ACTION(5, None)]
     cards = [CARD("Punch", actions[0]), CARD("Health Potition", actions[1])]
@@ -157,7 +181,7 @@ def main():
             break
 
         for player in players:
-            player.chooseSchedule(players)
+            player.chooseSchedule(players, inputCallbacks)
             print("{}.SCHEDULE = {}".format(player.name, player.SCHEDULE))
             game.SCHEDULE.ACTIONS.extend(player.SCHEDULE.ACTIONS)
 
@@ -165,6 +189,13 @@ def main():
         game.SCHEDULE = SCHEDULE()
 
         turnNumber += 1
+
+    return Game
+
+
+def main():
+    print(xCard(AllOnesInputCallbacks))
+    print(xCard(STDINInputCallbacks))
 
 if __name__ == "__main__":
     main()
