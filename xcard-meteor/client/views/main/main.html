@@ -16,17 +16,7 @@
       {{/each}}
     </div>
     <div class="col-xs-6">
-      <h3> Your Cards </h3>
-      {{#each ownedCards}}
-        <div class="card-container">
-          {{#with card}}
-            {{> card }}
-          {{/with}}
-          <div class="card-controls">
-      			<button class="remove btn btn-danger btn-xs">remove</button>
-          </div>
-        </div>
-      {{/each}}
+      {{> userPanel}}
     </div>
   </div>
 </template>
