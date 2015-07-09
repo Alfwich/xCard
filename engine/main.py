@@ -195,12 +195,13 @@ class ListInputCallbacks(InputCallbacks):
         return self.inputList.pop(0)
 
 
-def testTwoPlayersSecondPlayerWins():
+def test2Players(p1health, p2health, inputList):
     players = [Player("Player 1"), Player("Player 2")]
     players[0].acquireCard(cards[0])
     players[1].acquireCard(cards[1])
-    game = xCard(
-        copy.deepcopy(players), ListInputCallbacks(["1", "1", "1", "1"]))
+
+    game = xCard(players, ListInputCallbacks(inputList))
+
     assert(len(game.WINNERS) == 1)
     assert(game.WINNERS[0] == game.players[1])
 
@@ -209,18 +210,22 @@ def testTwoPlayersSecondPlayerWins():
     assert(game.players[0].name == players[0].name)
     assert(game.players[0].cards == [])
     assert(game.players[0].SCHEDULE == SCHEDULE())
-    assert(game.players[0].health == 95)
+    assert(game.players[0].health == p1health)
     assert(game.players[0].TARGET == players[0].TARGET)
 
     assert(game.players[1].name == players[1].name)
     assert(game.players[1].cards == [])
     assert(game.players[1].SCHEDULE == SCHEDULE())
-    assert(game.players[1].health == 100)
+    assert(game.players[1].health == p2health)
     assert(game.players[1].TARGET == players[1].TARGET)
 
 
 def main():
-    testTwoPlayersSecondPlayerWins()
+    test2Players(95, 100, ['1', '1', '1', '1'])
+    test2Players(95, 100, ['n', 'n', '1', '1', '1', '1'])
+    test2Players(95, 100, ['n', '1', '1', '1', '1', 'n'])
+    test2Players(
+        95, 100, ['n', 'n', 'n', 'n', 'n', '1', '1', 'n', 'n', '1', '1', 'n'])
 
 if __name__ == "__main__":
     main()
