@@ -10,6 +10,9 @@ class TARGET:
     def __init__(self):
         self.uniqueIdentifier = TARGET.newUniqueIdentifier()
 
+    def __eq__(self, other):
+        return type(other) is TARGET and self.uniqueIdentifier == other.uniqueIdentifier
+
 
 class ACTION:
 
@@ -22,6 +25,9 @@ class SCHEDULE:
 
     def __init__(self):
         self.ACTIONS = []
+
+    def __eq__(self, other):
+        return self.ACTIONS == other.ACTIONS
 
     def addAction(self, incACTION):
         self.ACTIONS.append(incACTION)
@@ -85,7 +91,7 @@ class Game:
     def __init__(self, players):
         self.players = players
         self.SCHEDULE = SCHEDULE()
-        self.WINNER = []
+        self.WINNERS = []
 
     def isOver(self):
         actionPossible = False
@@ -108,16 +114,16 @@ class Game:
         return False
 
     def winners(self):
-        self.WINNER = []
+        self.WINNERS = []
         maxHealthSeen = -1
         for player in self.players:
             if player.health > maxHealthSeen:
                 maxHealthSeen = player.health
-                self.WINNER = [player.name]
+                self.WINNERS = [player]
             elif player.health == maxHealthSeen:
-                self.WINNER.append(player.name)
+                self.WINNERS.append(player)
 
-        return self.WINNER
+        return self.WINNERS
 
     def printPlayersHealths(self):
         for player in self.players:
@@ -139,20 +145,6 @@ class InputCallbacks:
     @staticmethod
     def getInput():
         raise NotImplementedError()
-
-
-class STDINInputCallbacks(InputCallbacks):
-
-    @staticmethod
-    def getInput():
-        return input()
-
-
-class AllOnesInputCallbacks(InputCallbacks):
-
-    @staticmethod
-    def getInput():
-        return "1"
 
 
 def xCard(players, inputCallbacks):
@@ -177,27 +169,58 @@ def xCard(players, inputCallbacks):
             player.chooseSchedule(players, inputCallbacks)
             print("{}.SCHEDULE = {}".format(player.name, player.SCHEDULE))
             game.SCHEDULE.ACTIONS.extend(player.SCHEDULE.ACTIONS)
+            player.SCHEDULE = SCHEDULE()
 
         game.applySchedule()
         game.SCHEDULE = SCHEDULE()
 
         turnNumber += 1
 
-    return Game
+    return game
 
 import copy
 
 
-def main():
-    players = [Player("Alan"), Player("Betty")]
-    actions = [ACTION(-10, None), ACTION(5, None)]
-    cards = [CARD("Punch", actions[0]), CARD("Health Potition", actions[1])]
+actions = [ACTION(-10, None), ACTION(5, None)]
+cards = [CARD("Punch", actions[0]), CARD("Health Potition", actions[1])]
 
+
+class ListInputCallbacks(InputCallbacks):
+
+    def __init__(self, inputList):
+        self.inputList = inputList
+
+    def getInput(self):
+        assert(len(self.inputList) > 0)
+        return self.inputList.pop(0)
+
+
+def testTwoPlayersSecondPlayerWins():
+    players = [Player("Player 1"), Player("Player 2")]
     players[0].acquireCard(cards[0])
     players[1].acquireCard(cards[1])
+    game = xCard(
+        copy.deepcopy(players), ListInputCallbacks(["1", "1", "1", "1"]))
+    assert(len(game.WINNERS) == 1)
+    assert(game.WINNERS[0] == game.players[1])
 
-    print(xCard(copy.deepcopy(players), AllOnesInputCallbacks))
-    print(xCard(copy.deepcopy(players), STDINInputCallbacks))
+    assert(game.SCHEDULE == SCHEDULE())
+
+    assert(game.players[0].name == players[0].name)
+    assert(game.players[0].cards == [])
+    assert(game.players[0].SCHEDULE == SCHEDULE())
+    assert(game.players[0].health == 95)
+    assert(game.players[0].TARGET == players[0].TARGET)
+
+    assert(game.players[1].name == players[1].name)
+    assert(game.players[1].cards == [])
+    assert(game.players[1].SCHEDULE == SCHEDULE())
+    assert(game.players[1].health == 100)
+    assert(game.players[1].TARGET == players[1].TARGET)
+
+
+def main():
+    testTwoPlayersSecondPlayerWins()
 
 if __name__ == "__main__":
     main()
