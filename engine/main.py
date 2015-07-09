@@ -155,14 +155,7 @@ class AllOnesInputCallbacks(InputCallbacks):
         return "1"
 
 
-def xCard(inputCallbacks):
-    players = [Player("Alan"), Player("Betty")]
-    actions = [ACTION(-10, None), ACTION(5, None)]
-    cards = [CARD("Punch", actions[0]), CARD("Health Potition", actions[1])]
-
-    players[0].acquireCard(cards[0])
-    players[1].acquireCard(cards[1])
-
+def xCard(players, inputCallbacks):
     for player in players:
         print("PLAYER: {}".format(player.name))
         for card in player.cards:
@@ -192,10 +185,19 @@ def xCard(inputCallbacks):
 
     return Game
 
+import copy
+
 
 def main():
-    print(xCard(AllOnesInputCallbacks))
-    print(xCard(STDINInputCallbacks))
+    players = [Player("Alan"), Player("Betty")]
+    actions = [ACTION(-10, None), ACTION(5, None)]
+    cards = [CARD("Punch", actions[0]), CARD("Health Potition", actions[1])]
+
+    players[0].acquireCard(cards[0])
+    players[1].acquireCard(cards[1])
+
+    print(xCard(copy.deepcopy(players), AllOnesInputCallbacks))
+    print(xCard(copy.deepcopy(players), STDINInputCallbacks))
 
 if __name__ == "__main__":
     main()
