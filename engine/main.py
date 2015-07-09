@@ -162,7 +162,7 @@ def xCard(players, inputCallbacks, outputCallbacks):
         for card in player.cards:
             outputCallbacks.out("  CARD: {}".format(card.name))
 
-    # decide to not redraw
+    #todo decide to not redraw
 
     game = Game(players)
 
