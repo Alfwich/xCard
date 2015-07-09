@@ -206,16 +206,11 @@ class ListInputCallbacks(InputCallbacks):
         return self.inputList.pop(0)
 
 
-class STDOUTOutputCallbacks(OutputCallbacks):
+class IgnoredOutputCallbacks(OutputCallbacks):
 
     @staticmethod
     def out(msg, end="\n"):
-        #todo below is hack
-        if end == "\n":
-            print(msg)
-            return
-
-        print(msg, end)
+        pass
 
 
 def test2Players(winner, p1health, p2health, inputList):
@@ -223,7 +218,8 @@ def test2Players(winner, p1health, p2health, inputList):
     players[0].acquireCard(cards[0])
     players[1].acquireCard(cards[1])
 
-    game = xCard(players, ListInputCallbacks(inputList), STDOUTOutputCallbacks)
+    game = xCard(
+        players, ListInputCallbacks(inputList), IgnoredOutputCallbacks)
 
     assert(len(game.WINNERS) == 1)
     assert(game.WINNERS[0] == game.players[winner])
