@@ -186,19 +186,21 @@ import copy
 
 class TestInputOutput(InputOutput):
 
-    def __init__(self, inputList):
-        self.inputList = inputList
+    def __init__(self, inputString):
+        self.inputString = inputString
 
     def input(self):
-        assert(len(self.inputList) > 0)
-        return self.inputList.pop(0)
+        assert(len(self.inputString) > 0)
+        first = self.inputString[0]
+        self.inputString = self.inputString[1:]
+        return first
 
     @staticmethod
     def output(msg, end="\n"):
         pass
 
 
-def test2Players(winner, p1health, p2health, inputList):
+def test2Players(winner, p1health, p2health, inputString):
     actions = [ACTION(-10, None), ACTION(5, None)]
     cards = [CARD("Punch", actions[0]), CARD("Health Potition", actions[1])]
 
@@ -206,7 +208,7 @@ def test2Players(winner, p1health, p2health, inputList):
     players[0].acquireCard(cards[0])
     players[1].acquireCard(cards[1])
 
-    game = xCard(players, TestInputOutput(inputList))
+    game = xCard(players, TestInputOutput(inputString))
 
     assert(len(game.winners) == 1)
     assert(game.winners[0] == game.players[winner])
@@ -229,16 +231,15 @@ def test2Players(winner, p1health, p2health, inputList):
 def main():
     # Tests cases below are all "equivalent games", except there are added
     # "null actions".
-    test2Players(1, 95, 100, ['1', '1', '1', '1'])
-    test2Players(1, 95, 100, ['n', 'n', '1', '1', '1', '1'])
-    test2Players(1, 95, 100, ['n', '1', '1', '1', '1', 'n'])
-    test2Players(
-        1, 95, 100, ['n', 'n', 'n', 'n', 'n', '1', '1', 'n', 'n', '1', '1', 'n'])
+    test2Players(1, 95, 100, '1111')
+    test2Players(1, 95, 100, 'nn1111')
+    test2Players(1, 95, 100, 'n1111n')
+    test2Players(1, 95, 100, 'nnnnn11nn11n')
 
     # The cases below are all different games.
-    test2Players(0, 100, 95, ['1', '2', 'n', 'n', 'n', 'n', '1', '2'])
-    test2Players(0, 105, 90, ['n', 'n', 'n', 'n', '1', '2', '1', '1'])
-    test2Players(1, 90, 105, ['n', 'n', '1', '1', '1', '2', 'n', 'n'])
+    test2Players(0, 100, 95, '12nnnn12')
+    test2Players(0, 105, 90, 'nnnn1211')
+    test2Players(1, 90, 105, 'nn1112nn')
 
 if __name__ == "__main__":
     main()
