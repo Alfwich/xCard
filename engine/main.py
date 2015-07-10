@@ -200,9 +200,10 @@ class TestInputOutput(InputOutput):
         pass
 
 
-actions = [ACTION(-10, None), ACTION(5, None)]
-cards = {'punch': CARD('Punch', actions[0]), 'health potion': CARD(
-    'Health Potition', actions[1])}
+cards = {
+    'punch':         CARD('Punch',           ACTION(-10, None)),
+    'health potion': CARD('Health Potition', ACTION(5,   None))
+}
 
 
 def test2Players(winner, p1health, p2health, inputString):
