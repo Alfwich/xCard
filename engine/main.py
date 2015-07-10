@@ -135,7 +135,8 @@ class GAME:
                 player.health += action.healthDelta
 
     def applySchedule(self):
-        for action in self.schedule.actions:
+        while self.schedule.actions:
+            action = self.schedule.actions.pop()
             assert(action.target != None)
             self.applyACTIONToTARGET(action)
 
@@ -165,7 +166,7 @@ def xCard(players, io):
     while not game.isOver():
         io.output("\n===Turn {} begins===".format(turnNumber))
         game.printPlayersHealths(io)
-        
+
         for player in players:
             player.chooseSchedule(players, io)
             io.output("{}.schedule = {}".format(player.name, player.schedule))
@@ -173,7 +174,6 @@ def xCard(players, io):
             player.schedule = SCHEDULE()
 
         game.applySchedule()
-        game.schedule = SCHEDULE()
 
         turnNumber += 1
 
