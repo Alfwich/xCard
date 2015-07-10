@@ -132,7 +132,7 @@ class GAME:
     def applyACTIONToTARGET(self, action):
         for player in self.players:
             if player.target == action.target:
-                player.health += action.healthDelta
+                player.health = max(0, player.health + action.healthDelta)
 
     def applySchedule(self):
         while self.schedule.actions:
@@ -201,8 +201,9 @@ class TestInputOutput(InputOutput):
 
 
 cards = {
-    'punch':         CARD('punch',           ACTION(-10, None)),
-    'health potion': CARD('health potition', ACTION(5,   None))
+    'punch':         CARD('punch',           ACTION(-10,  None)),
+    'health potion': CARD('health potition', ACTION(5,    None)),
+    'instant death': CARD('instant death',   ACTION(-999, None))
 }
 
 
@@ -268,6 +269,31 @@ def test3Players(winners, p1health, p2health, p3health, inputString):
     assert(game.players[2].target == players[2].target)
 
 
+def test2PlayersOneDies():
+    players = [PLAYER('PLAYER 1'), PLAYER('PLAYER 2')]
+    players[0].acquireCard(cards['instant death'])
+    players[1].acquireCard(cards['health potion'])
+
+    game = xCard(players, TestInputOutput('11n'))
+
+    assert(len(game.winners) == 1)
+    assert(game.winners[0] == game.players[1])
+
+    assert(game.schedule == SCHEDULE())
+
+    assert(game.players[0].name == players[0].name)
+    assert(game.players[0].cards == [])
+    assert(game.players[0].schedule == SCHEDULE())
+    assert(game.players[0].health == 0)
+    assert(game.players[0].target == players[0].target)
+
+    assert(game.players[1].name == players[1].name)
+    assert(game.players[1].cards == [cards['health potion']])
+    assert(game.players[1].schedule == SCHEDULE())
+    assert(game.players[1].health == 100)
+    assert(game.players[1].target == players[1].target)
+
+
 def main():
     # Tests cases below are all 'equivalent games', except there are added
     # 'null actions'.
@@ -282,6 +308,8 @@ def main():
     test2Players(1, 90, 105, 'nn1112nn')
 
     test3Players([2, 3], 85, 100, 100, 'nnn' + '111111' + '111111')
+
+    test2PlayersOneDies()
 
 if __name__ == '__main__':
     main()
