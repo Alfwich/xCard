@@ -200,11 +200,12 @@ class TestInputOutput(InputOutput):
         pass
 
 
-def test2Players(winner, p1health, p2health, inputString):
-    actions = [ACTION(-10, None), ACTION(5, None)]
-    cards = {'punch': CARD('Punch', actions[0]), 'health potion': CARD(
-        'Health Potition', actions[1])}
+actions = [ACTION(-10, None), ACTION(5, None)]
+cards = {'punch': CARD('Punch', actions[0]), 'health potion': CARD(
+    'Health Potition', actions[1])}
 
+
+def test2Players(winner, p1health, p2health, inputString):
     players = [PLAYER('PLAYER 1'), PLAYER('PLAYER 2')]
     players[0].acquireCard(cards['punch'])
     players[1].acquireCard(cards['health potion'])
@@ -229,6 +230,43 @@ def test2Players(winner, p1health, p2health, inputString):
     assert(game.players[1].target == players[1].target)
 
 
+def test3Players(winners, p1health, p2health, p3health, inputString):
+    players = [PLAYER("PLAYER 1"), PLAYER("PLAYER 2"), PLAYER("PLAYER 3")]
+    players[0].acquireCard(cards['punch'])
+    players[0].acquireCard(cards['punch'])
+    players[1].acquireCard(cards['punch'])
+    players[1].acquireCard(cards['health potion'])
+    players[2].acquireCard(cards['health potion'])
+    players[2].acquireCard(cards['health potion'])
+
+    game = xCard(players, TestInputOutput(inputString))
+
+    assert(len(game.winners) == len(winners))
+    for i in range(0, len(winners)):
+        index = winners[i] - 1
+        assert(game.winners[i] == players[index])
+
+    assert(game.schedule == SCHEDULE())
+
+    assert(game.players[0].name == players[0].name)
+    assert(game.players[0].cards == [])
+    assert(game.players[0].schedule == SCHEDULE())
+    assert(game.players[0].health == p1health)
+    assert(game.players[0].target == players[0].target)
+
+    assert(game.players[1].name == players[1].name)
+    assert(game.players[1].cards == [])
+    assert(game.players[1].schedule == SCHEDULE())
+    assert(game.players[1].health == p2health)
+    assert(game.players[1].target == players[1].target)
+
+    assert(game.players[2].name == players[2].name)
+    assert(game.players[2].cards == [])
+    assert(game.players[2].schedule == SCHEDULE())
+    assert(game.players[2].health == p3health)
+    assert(game.players[2].target == players[2].target)
+
+
 def main():
     # Tests cases below are all 'equivalent games', except there are added
     # 'null actions'.
@@ -241,6 +279,8 @@ def main():
     test2Players(0, 100, 95, '12nnnn12')
     test2Players(0, 105, 90, 'nnnn1211')
     test2Players(1, 90, 105, 'nn1112nn')
+
+    test3Players([2, 3], 85, 100, 100, 'nnn' + '111111' + '111111')
 
 if __name__ == '__main__':
     main()
