@@ -68,11 +68,11 @@ class PLAYER:
         targetChoice = io.input()
         targetChoiceInt = int(targetChoice)
 
-        newACTION = self.cards[cardChoiceIndex].ACTION
+        newACTION = self.cards[cardChoiceIndex].action
         newACTION.target = players[
             targetChoiceInt - 1].target
 
-        self.schedule.addAction(self.cards[cardChoiceIndex].ACTION)
+        self.schedule.addAction(self.cards[cardChoiceIndex].action)
         del self.cards[cardChoiceIndex]
 
     def acquireCard(self, card):
@@ -83,7 +83,7 @@ class CARD:
 
     def __init__(self, name, action):
         self.name = name
-        self.ACTION = action
+        self.action = action
 
 
 class GAME:
