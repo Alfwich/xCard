@@ -202,11 +202,12 @@ class TestInputOutput(InputOutput):
 
 def test2Players(winner, p1health, p2health, inputString):
     actions = [ACTION(-10, None), ACTION(5, None)]
-    cards = [CARD('Punch', actions[0]), CARD('Health Potition', actions[1])]
+    cards = {'punch': CARD('Punch', actions[0]), 'health potion': CARD(
+        'Health Potition', actions[1])}
 
     players = [PLAYER('PLAYER 1'), PLAYER('PLAYER 2')]
-    players[0].acquireCard(cards[0])
-    players[1].acquireCard(cards[1])
+    players[0].acquireCard(cards['punch'])
+    players[1].acquireCard(cards['health potion'])
 
     game = xCard(players, TestInputOutput(inputString))
 
