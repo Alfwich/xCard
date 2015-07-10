@@ -162,14 +162,10 @@ def xCard(players, io):
     game = GAME(players)
 
     turnNumber = 1
-    while True:
+    while not game.isOver():
         io.output("\n===Turn {} begins===".format(turnNumber))
         game.printPlayersHealths(io)
-        if game.isOver():
-            io.output(
-                "{} is the list of WINNERS.".format(game.computerWinners()))
-            break
-
+        
         for player in players:
             player.chooseSchedule(players, io)
             io.output("{}.schedule = {}".format(player.name, player.schedule))
@@ -180,6 +176,8 @@ def xCard(players, io):
         game.schedule = SCHEDULE()
 
         turnNumber += 1
+
+    io.output("{} is the list of WINNERS.".format(game.computerWinners()))
 
     return game
 
