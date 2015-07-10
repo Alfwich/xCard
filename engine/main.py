@@ -207,6 +207,14 @@ cards = {
 }
 
 
+def assertPlayer(gamePlayer, name, cards, schedule, health, target):
+    assert(gamePlayer.name == name)
+    assert(gamePlayer.cards == cards)
+    assert(gamePlayer.schedule == schedule)
+    assert(gamePlayer.health == health)
+    assert(gamePlayer.target == target)
+
+
 def test2Players(winner, p1health, p2health, inputString):
     players = [PLAYER('PLAYER 1'), PLAYER('PLAYER 2')]
     players[0].acquireCard(cards['punch'])
@@ -219,17 +227,10 @@ def test2Players(winner, p1health, p2health, inputString):
 
     assert(game.schedule == SCHEDULE())
 
-    assert(game.players[0].name == players[0].name)
-    assert(game.players[0].cards == [])
-    assert(game.players[0].schedule == SCHEDULE())
-    assert(game.players[0].health == p1health)
-    assert(game.players[0].target == players[0].target)
-
-    assert(game.players[1].name == players[1].name)
-    assert(game.players[1].cards == [])
-    assert(game.players[1].schedule == SCHEDULE())
-    assert(game.players[1].health == p2health)
-    assert(game.players[1].target == players[1].target)
+    assertPlayer(game.players[0], players[0].name,
+                 [], SCHEDULE(), p1health, players[0].target)
+    assertPlayer(game.players[1], players[1].name,
+                 [], SCHEDULE(), p2health, players[1].target)
 
 
 def test3Players(winners, p1health, p2health, p3health, inputString):
@@ -250,23 +251,12 @@ def test3Players(winners, p1health, p2health, p3health, inputString):
 
     assert(game.schedule == SCHEDULE())
 
-    assert(game.players[0].name == players[0].name)
-    assert(game.players[0].cards == [])
-    assert(game.players[0].schedule == SCHEDULE())
-    assert(game.players[0].health == p1health)
-    assert(game.players[0].target == players[0].target)
-
-    assert(game.players[1].name == players[1].name)
-    assert(game.players[1].cards == [])
-    assert(game.players[1].schedule == SCHEDULE())
-    assert(game.players[1].health == p2health)
-    assert(game.players[1].target == players[1].target)
-
-    assert(game.players[2].name == players[2].name)
-    assert(game.players[2].cards == [])
-    assert(game.players[2].schedule == SCHEDULE())
-    assert(game.players[2].health == p3health)
-    assert(game.players[2].target == players[2].target)
+    assertPlayer(game.players[0], players[0].name,
+                 [], SCHEDULE(), p1health, players[0].target)
+    assertPlayer(game.players[1], players[1].name,
+                 [], SCHEDULE(), p2health, players[1].target)
+    assertPlayer(game.players[2], players[2].name,
+                 [], SCHEDULE(), p3health, players[2].target)
 
 
 def test2PlayersOneDies():
@@ -281,17 +271,10 @@ def test2PlayersOneDies():
 
     assert(game.schedule == SCHEDULE())
 
-    assert(game.players[0].name == players[0].name)
-    assert(game.players[0].cards == [])
-    assert(game.players[0].schedule == SCHEDULE())
-    assert(game.players[0].health == 0)
-    assert(game.players[0].target == players[0].target)
-
-    assert(game.players[1].name == players[1].name)
-    assert(game.players[1].cards == [cards['health potion']])
-    assert(game.players[1].schedule == SCHEDULE())
-    assert(game.players[1].health == 100)
-    assert(game.players[1].target == players[1].target)
+    assertPlayer(
+        game.players[0], players[0].name, [], SCHEDULE(), 0, players[0].target)
+    assertPlayer(game.players[1], players[1].name, [
+                 cards['health potion']], SCHEDULE(), 100, players[1].target)
 
 
 def main():
