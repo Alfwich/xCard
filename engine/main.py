@@ -181,8 +181,6 @@ def xCard(players, io):
 
     return game
 
-import copy
-
 
 class TestInputOutput(InputOutput):
 
