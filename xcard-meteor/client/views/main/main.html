@@ -1,19 +1,18 @@
+<template name="empty">
+</template>
+
+<template name="mainCardControls">
+	<button class="report btn btn-default btn-xs">info</button>
+	<button {{disableNoUser}} class="acquire btn btn-default btn-xs">acquire</button>
+	<button class="delete btn btn-danger btn-xs">delete</button>
+</template>
+
 <template name="mainPage">
   <h2>Check out our {{numberOfCards}} cool cards! {{> loginButtons }}</h2>
   <div class="row mainPage">
     <div class="col-xs-6">
       <h3> All Cards </h3>
-      <input type="text" class="filter form-control" placeholder="Filter..." />
-      {{#each cards}}
-        <div class="card-container">
-          {{> card}}
-          <div class="card-controls">
-      			<button class="report btn btn-default btn-xs">info</button>
-      			<button {{disableNoUser}} class="acquire btn btn-default btn-xs">acquire</button>
-      			<button class="delete btn btn-danger btn-xs">delete</button>
-          </div>
-        </div>
-      {{/each}}
+      {{> cardList type="all" }}
     </div>
     <div class="col-xs-6">
       {{> userPanel}}
