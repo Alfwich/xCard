@@ -201,8 +201,8 @@ class TestInputOutput(InputOutput):
 
 
 cards = {
-    'punch':         CARD('Punch',           ACTION(-10, None)),
-    'health potion': CARD('Health Potition', ACTION(5,   None))
+    'punch':         CARD('punch',           ACTION(-10, None)),
+    'health potion': CARD('health potition', ACTION(5,   None))
 }
 
 
