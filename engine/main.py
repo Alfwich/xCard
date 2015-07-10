@@ -92,6 +92,7 @@ class GAME:
         self.players = players
         self.schedule = SCHEDULE()
         self.winners = []
+        self.turnNumber = 1
 
     def isOver(self):
         actionPossible = False
@@ -125,7 +126,8 @@ class GAME:
 
         return self.winners
 
-    def printPlayersHealths(self, io):
+    def turnBegins(self, io):
+        io.output('\n===Turn {} begins==='.format(self.turnNumber))
         for player in self.players:
             io.output('{} has {} health.'.format(player.name, player.health))
 
@@ -134,11 +136,13 @@ class GAME:
             if player.target == action.target:
                 player.health = max(0, player.health + action.healthDelta)
 
-    def applySchedule(self):
+    def turnEnds(self):
         while self.schedule.actions:
             action = self.schedule.actions.pop()
             assert(action.target != None)
             self.applyACTIONToTARGET(action)
+
+        self.turnNumber += 1
 
     def chooseSchedules(self, io):
         for player in self.players:
@@ -168,14 +172,10 @@ def xCard(players, io):
     # todo decide to not redraw
 
     game = GAME(players)
-
-    turnNumber = 1
     while not game.isOver():
-        io.output('\n===Turn {} begins==='.format(turnNumber))
-        game.printPlayersHealths(io)
+        game.turnBegins(io)
         game.chooseSchedules(io)
-        game.applySchedule()
-        turnNumber += 1
+        game.turnEnds()
 
     io.output('{} is the list of WINNERS.'.format(game.computerWinners()))
 
