@@ -43,15 +43,15 @@ class PLAYER:
         self.target = TARGET()
 
     def chooseSchedule(self, players, io):
-        io.output("{}, please choose your SCHEDULE.".format(self.name))
-        io.output("[n] for nothing.")
+        io.output('{}, please choose your SCHEDULE.'.format(self.name))
+        io.output('[n] for nothing.')
         i = 1
         for card in self.cards:
-            io.output("[{}] for CARD(\"{}\")".format(i, card.name))
+            io.output('[{}] for CARD(\'{}\')'.format(i, card.name))
             i += 1
-        io.output("Enter your CARD choice: ", end="")
+        io.output('Enter your CARD choice: ', end='')
         cardChoice = io.input()
-        if cardChoice == "n":
+        if cardChoice == 'n':
             self.schedule = SCHEDULE()
             return
 
@@ -59,12 +59,12 @@ class PLAYER:
         cardChoiceIndex = cardChoiceInt - 1
         assert(cardChoiceIndex < len(self.cards))
 
-        io.output("  {}, please choose a TARGET.".format(self.name))
+        io.output('  {}, please choose a TARGET.'.format(self.name))
         i = 1
         for player in players:
-            io.output("  [{}] to target {}".format(i, player.name))
+            io.output('  [{}] to target {}'.format(i, player.name))
             i += 1
-        io.output("  Enter your TARGET choice: ", end="")
+        io.output('  Enter your TARGET choice: ', end='')
         targetChoice = io.input()
         targetChoiceInt = int(targetChoice)
 
@@ -127,7 +127,7 @@ class GAME:
 
     def printPlayersHealths(self, io):
         for player in self.players:
-            io.output("{} has {} health.".format(player.name, player.health))
+            io.output('{} has {} health.'.format(player.name, player.health))
 
     def applyACTIONToTARGET(self, action):
         for player in self.players:
@@ -143,7 +143,7 @@ class GAME:
     def chooseSchedules(self, io):
         for player in self.players:
             player.chooseSchedule(self.players, io)
-            io.output("{}.schedule = {}".format(player.name, player.schedule))
+            io.output('{}.schedule = {}'.format(player.name, player.schedule))
             self.schedule.actions.extend(player.schedule.actions)
             player.schedule = SCHEDULE()
 
@@ -161,9 +161,9 @@ class InputOutput:
 
 def xCard(players, io):
     for player in players:
-        io.output("PLAYER: {}".format(player.name))
+        io.output('PLAYER: {}'.format(player.name))
         for card in player.cards:
-            io.output("  CARD: {}".format(card.name))
+            io.output('  CARD: {}'.format(card.name))
 
     # todo decide to not redraw
 
@@ -171,13 +171,13 @@ def xCard(players, io):
 
     turnNumber = 1
     while not game.isOver():
-        io.output("\n===Turn {} begins===".format(turnNumber))
+        io.output('\n===Turn {} begins==='.format(turnNumber))
         game.printPlayersHealths(io)
         game.chooseSchedules(io)
         game.applySchedule()
         turnNumber += 1
 
-    io.output("{} is the list of WINNERS.".format(game.computerWinners()))
+    io.output('{} is the list of WINNERS.'.format(game.computerWinners()))
 
     return game
 
@@ -196,15 +196,15 @@ class TestInputOutput(InputOutput):
         return first
 
     @staticmethod
-    def output(msg, end="\n"):
+    def output(msg, end='\n'):
         pass
 
 
 def test2Players(winner, p1health, p2health, inputString):
     actions = [ACTION(-10, None), ACTION(5, None)]
-    cards = [CARD("Punch", actions[0]), CARD("Health Potition", actions[1])]
+    cards = [CARD('Punch', actions[0]), CARD('Health Potition', actions[1])]
 
-    players = [PLAYER("PLAYER 1"), PLAYER("PLAYER 2")]
+    players = [PLAYER('PLAYER 1'), PLAYER('PLAYER 2')]
     players[0].acquireCard(cards[0])
     players[1].acquireCard(cards[1])
 
@@ -229,8 +229,8 @@ def test2Players(winner, p1health, p2health, inputString):
 
 
 def main():
-    # Tests cases below are all "equivalent games", except there are added
-    # "null actions".
+    # Tests cases below are all 'equivalent games', except there are added
+    # 'null actions'.
     test2Players(1, 95, 100, '1111')
     test2Players(1, 95, 100, 'nn1111')
     test2Players(1, 95, 100, 'n1111n')
@@ -241,5 +241,5 @@ def main():
     test2Players(0, 105, 90, 'nnnn1211')
     test2Players(1, 90, 105, 'nn1112nn')
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
