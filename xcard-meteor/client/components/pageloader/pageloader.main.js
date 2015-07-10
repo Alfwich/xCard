@@ -8,6 +8,8 @@ xCard.PageLoader = {
     if( _.contains( xCard.validPages, page ) ) {
       location.hash = page;
       Session.set( "xCard.currentPage", page + "Page" );
+    } else {
+      console.warn( "Attempted to loadPage: '" + page + "' but was not declared as a valid page. Valid pages: " + xCard.validPages );
     }
   }
 }
@@ -18,3 +20,5 @@ $(window).on( "popstate", function(){
   var dest = location.hash.substr(1);
   xCard.PageLoader.loadPage( dest );
 });
+
+location.hash = "";

@@ -3,6 +3,25 @@
     var mainFilterInput = "xCard.cardList.filterString"
     Session.set( mainFilterInput, "" );
 
+  	var deckPageLoad = "xCard.deck.currentEditDeck";
+
+    var getAllUserCards = function(){
+      var result = CardOwnershipCollection.find().fetch();
+
+      // Populate the card for each ownership entry
+      result = _.forEach(result, function(ele) {
+        ele.card = new CardModel( CardsCollection.findOne( ele["cardId"] ) );
+      });
+
+      // Remove any entries where the card could not be loaded
+      // TODO: Find a better way to do this?
+      result = _.filter( result, function(ele) {
+        return !_.isUndefined( ele["card"].title );
+      });
+
+      return result;
+    }
+
     Template.userCards.events({
     		"click button.remove": function() {
     			Meteor.call( "removeCard", this._id );
@@ -11,20 +30,7 @@
 
     Template.userCards.helpers({
     		cards: function() {
-    			var result = CardOwnershipCollection.find().fetch();
-
-    			// Populate the card for each ownership entry
-    			result = _.forEach(result, function(ele) {
-    				ele.card = new CardModel( CardsCollection.findOne( ele["cardId"] ) );
-    			});
-
-    			// Remove any entries where the card could not be loaded
-    			// TODO: Find a better way to do this?
-    			result = _.filter( result, function(ele) {
-    				return !_.isUndefined( ele["card"].title );
-    			});
-
-    			return result;
+          return getAllUserCards();
     		}
     });
 
@@ -58,6 +64,34 @@
 
         // Create a CardModel from each result of the query
         result = result.map( function(ele){ return new CardModel(ele); });
+
+        return result;
+      }
+    });
+
+    Template.editDeckCards.events({
+      "click .addToDeck": function(){
+        Meteor.call( "addCardToDeck", Session.get(deckPageLoad), this._id );
+      },
+
+      "click .removeFromDeck": function() {
+        Meteor.call( "removeCardFromDeck", Session.get(deckPageLoad), this._id );
+      }
+    });
+
+    Template.editDeckCards.helpers({
+      cards: function() {
+        var result = getAllUserCards(),
+            ownershipIds = _.map( this.deck.cards, function(ele){
+              return ele.ownershipId;
+            });
+
+        result = _.map( result, function(ele) {
+          if( _.contains( ownershipIds, ele._id) ) {
+            ele.exists = true
+          };
+          return ele;
+        });
 
         return result;
       }

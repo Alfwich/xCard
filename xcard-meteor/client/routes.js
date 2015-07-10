@@ -6,4 +6,4 @@ Router.map( function(){
 });
 
 // Add the valid pages for the client application
-xCard.validPages = [ "main" ];
+xCard.validPages = [ "main", "deck" ];

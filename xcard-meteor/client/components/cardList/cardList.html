@@ -25,6 +25,23 @@
   {{/each}}
 </template>
 
+<template name="editDeckCards">
+  {{#each cards}}
+    <div class="card-container">
+      {{#with card}}
+        {{> card }}
+      {{/with}}
+      <div class="card-controls">
+        {{#if exists}}
+          <button class="removeFromDeck btn btn-default btn-xs">remove</button>
+        {{else}}
+          <button class="addToDeck btn btn-default btn-xs">add</button>
+        {{/if}}
+      </div>
+    </div>
+  {{/each}}
+</template>
+
 <template name="cardList">
   <div class="cardList">
     {{#if equals type "all"}}
@@ -32,6 +49,9 @@
     {{/if}}
     {{#if equals type "user"}}
       {{> userCards}}
+    {{/if}}
+    {{#if equals type "edit"}}
+      {{> editDeckCards}}
     {{/if}}
   </div>
 </template>

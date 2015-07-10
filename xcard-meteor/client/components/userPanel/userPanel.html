@@ -1,4 +1,12 @@
 
+<template name="userPanel">
+  <div class="userPanel">
+    <h3> Your Owned Cards </h3>
+    {{> cardList type="user" }}
+    <h3> Your Decks<button class="addNewDeck btn btn-default btn-xs">+</button></h3>
+    {{> userDecks}}
+  </div>
+</template>
 
 <template name="userDecks">
   <div class="userDecks">
@@ -13,21 +21,12 @@
                 <button class="removeDeck btn btn-danger btn-xs">Remove</button>
               </div>
               <div class="userDecksOutput">
-                {{> deck}}
+                {{> deck type="overview" deck=this}}
               </div>
             </td>
           </tr>
         {{/each}}
       </tbody>
     </table>
-  </div>
-</template>
-
-<template name="userPanel">
-  <div class="userPanel">
-    <h3> Your Owned Cards </h3>
-    {{> cardList type="user" }}
-    <h3> Your Decks<button class="addNewDeck btn btn-default btn-xs">+</button></h3>
-    {{> userDecks}}
   </div>
 </template>

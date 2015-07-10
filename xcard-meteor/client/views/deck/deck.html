@@ -1,0 +1,15 @@
+<template name="deckPage">
+  <button class="returnToMain">Back</button>
+  {{#with loadDeck}}
+  <div class="row">
+    <div class="col-xs-3">
+      <h3>Your Collection</h3>
+      {{> cardList type="edit" deck=this}}
+    </div>
+    <div class="col-xs-9">
+      <h3>Deck</h3>
+      {{> deck type="detailed" deck=this}}
+    </div>
+  </div>
+  {{/with}}
+</template>

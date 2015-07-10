@@ -1,6 +1,21 @@
 <template name="deck">
-  <div class="deckRow">
-    {{name}}
-    {{cards}}
-  </div>
+  {{#if equals type "overview"}}
+    {{#with deck}}
+      <div class="deckRow">
+        {{name}}
+        {{cards}}
+      </div>
+    {{/with}}
+  {{/if}}
+  {{#if equals type "detailed"}}
+    {{#with deck}}
+      <div class="deckRow">
+        {{name}}
+        {{#each cards}}
+          {{> card}}
+          <div class="card-controls"></div>
+        {{/each}}
+      </div>
+    {{/with}}
+  {{/if}}
 </template>
