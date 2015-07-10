@@ -42,16 +42,15 @@ class PLAYER:
         self.health = 100
         self.target = TARGET()
 
-    def chooseSchedule(self, players, inputCallbacks, outputCallbacks):
-        outputCallbacks.out(
-            "{}, please choose your SCHEDULE.".format(self.name))
-        outputCallbacks.out("[n] for nothing.")
+    def chooseSchedule(self, players, io):
+        io.output("{}, please choose your SCHEDULE.".format(self.name))
+        io.output("[n] for nothing.")
         i = 1
         for card in self.cards:
-            outputCallbacks.out("[{}] for CARD(\"{}\")".format(i, card.name))
+            io.output("[{}] for CARD(\"{}\")".format(i, card.name))
             i += 1
-        outputCallbacks.out("Enter your CARD choice: ", end="")
-        cardChoice = inputCallbacks.getInput()
+        io.output("Enter your CARD choice: ", end="")
+        cardChoice = io.input()
         if cardChoice == "n":
             self.schedule = SCHEDULE()
             return
@@ -60,13 +59,13 @@ class PLAYER:
         cardChoiceIndex = cardChoiceInt - 1
         assert(cardChoiceIndex < len(self.cards))
 
-        outputCallbacks.out("  {}, please choose a TARGET.".format(self.name))
+        io.output("  {}, please choose a TARGET.".format(self.name))
         i = 1
         for player in players:
-            outputCallbacks.out("  [{}] to target {}".format(i, player.name))
+            io.output("  [{}] to target {}".format(i, player.name))
             i += 1
-        outputCallbacks.out("  Enter your TARGET choice: ", end="")
-        targetChoice = inputCallbacks.getInput()
+        io.output("  Enter your TARGET choice: ", end="")
+        targetChoice = io.input()
         targetChoiceInt = int(targetChoice)
 
         newACTION = self.cards[cardChoiceIndex].ACTION
@@ -126,10 +125,9 @@ class GAME:
 
         return self.winners
 
-    def printPlayersHealths(self, outputCallbacks):
+    def printPlayersHealths(self, io):
         for player in self.players:
-            outputCallbacks.out(
-                "{} has {} health.".format(player.name, player.health))
+            io.output("{} has {} health.".format(player.name, player.health))
 
     def applyACTIONToTARGET(self, action):
         for player in self.players:
@@ -142,25 +140,22 @@ class GAME:
             self.applyACTIONToTARGET(action)
 
 
-class InputCallbacks:
+class InputOutput:
 
     @staticmethod
-    def getInput():
+    def input():
+        raise NotImplementedError()
+
+    @staticmethod
+    def output(msg, end):
         raise NotImplementedError()
 
 
-class OutputCallbacks:
-
-    @staticmethod
-    def out(msg, end):
-        raise NotImplementedError()
-
-
-def xCard(players, inputCallbacks, outputCallbacks):
+def xCard(players, io):
     for player in players:
-        outputCallbacks.out("PLAYER: {}".format(player.name))
+        io.output("PLAYER: {}".format(player.name))
         for card in player.cards:
-            outputCallbacks.out("  CARD: {}".format(card.name))
+            io.output("  CARD: {}".format(card.name))
 
     # todo decide to not redraw
 
@@ -168,17 +163,16 @@ def xCard(players, inputCallbacks, outputCallbacks):
 
     turnNumber = 1
     while True:
-        outputCallbacks.out("\n===Turn {} begins===".format(turnNumber))
-        game.printPlayersHealths(outputCallbacks)
+        io.output("\n===Turn {} begins===".format(turnNumber))
+        game.printPlayersHealths(io)
         if game.isOver():
-            outputCallbacks.out(
+            io.output(
                 "{} is the list of WINNERS.".format(game.computerWinners()))
             break
 
         for player in players:
-            player.chooseSchedule(players, inputCallbacks, outputCallbacks)
-            outputCallbacks.out(
-                "{}.schedule = {}".format(player.name, player.schedule))
+            player.chooseSchedule(players, io)
+            io.output("{}.schedule = {}".format(player.name, player.schedule))
             game.schedule.actions.extend(player.schedule.actions)
             player.schedule = SCHEDULE()
 
@@ -192,20 +186,17 @@ def xCard(players, inputCallbacks, outputCallbacks):
 import copy
 
 
-class ListInputCallbacks(InputCallbacks):
+class TestInputOutput(InputOutput):
 
     def __init__(self, inputList):
         self.inputList = inputList
 
-    def getInput(self):
+    def input(self):
         assert(len(self.inputList) > 0)
         return self.inputList.pop(0)
 
-
-class IgnoredOutputCallbacks(OutputCallbacks):
-
     @staticmethod
-    def out(msg, end="\n"):
+    def output(msg, end="\n"):
         pass
 
 
@@ -217,8 +208,7 @@ def test2Players(winner, p1health, p2health, inputList):
     players[0].acquireCard(cards[0])
     players[1].acquireCard(cards[1])
 
-    game = xCard(
-        players, ListInputCallbacks(inputList), IgnoredOutputCallbacks)
+    game = xCard(players, TestInputOutput(inputList))
 
     assert(len(game.winners) == 1)
     assert(game.winners[0] == game.players[winner])
