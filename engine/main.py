@@ -140,6 +140,13 @@ class GAME:
             assert(action.target != None)
             self.applyACTIONToTARGET(action)
 
+    def chooseSchedules(self, io):
+        for player in self.players:
+            player.chooseSchedule(self.players, io)
+            io.output("{}.schedule = {}".format(player.name, player.schedule))
+            self.schedule.actions.extend(player.schedule.actions)
+            player.schedule = SCHEDULE()
+
 
 class InputOutput:
 
@@ -166,15 +173,8 @@ def xCard(players, io):
     while not game.isOver():
         io.output("\n===Turn {} begins===".format(turnNumber))
         game.printPlayersHealths(io)
-
-        for player in players:
-            player.chooseSchedule(players, io)
-            io.output("{}.schedule = {}".format(player.name, player.schedule))
-            game.schedule.actions.extend(player.schedule.actions)
-            player.schedule = SCHEDULE()
-
+        game.chooseSchedules(io)
         game.applySchedule()
-
         turnNumber += 1
 
     io.output("{} is the list of WINNERS.".format(game.computerWinners()))
