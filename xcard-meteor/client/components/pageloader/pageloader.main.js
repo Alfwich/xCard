@@ -5,7 +5,7 @@
 xCard.PageLoader = {
   loadPage : function( page ) {
     // Only load a valid page is it is defined as a valid page
-    if( _.contains( xCard.validPages, page ) ) {
+    if( _.isString(page) && page.length && _.contains( xCard.validPages, page ) ) {
       location.hash = page;
       Session.set( "xCard.currentPage", page + "Page" );
     } else {

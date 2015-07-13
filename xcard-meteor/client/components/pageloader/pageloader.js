@@ -2,12 +2,13 @@ Template.pageLoader.events( {
 });
 
 Template.pageLoader.helpers( {
+
   // Attempts to load the template provided by its name
   loadPage : function() {
     var page = Session.get("xCard.currentPage"),
-        result = { template : Template["mainPage"] }
+        result = { template : Template[xCard.defaultPage + "Page"] }
 
-    if( _.isString(page) && Template[page] !== undefined ) {
+    if( _.isString(page) && page.length && Template[page] !== undefined ) {
       result.template = Template[page];
     }
 
