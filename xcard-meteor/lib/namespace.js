@@ -1,0 +1,4 @@
+// xCard namespace
+xCard = {
+  helpers: {}
+}
