@@ -5,10 +5,11 @@ Meteor.methods({
       CardsCollection.remove(id);
     }
   },
-  
-  removeCard: function(ownershipId) {
-    if( ownershipId ) {
-      CardOwnershipCollection.remove( ownershipId );
+
+  removeCard: function(cardId) {
+    var ownership = CardOwnershipCollection.findOne( { cardId: cardId } );
+    if( ownership ) {
+      CardOwnershipCollection.remove( ownership._id );
     }
   }
 });
