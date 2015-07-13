@@ -1,5 +1,5 @@
 var mainFilterInput = "xCard.cardList.filterString",
-    getAllUserCards = function(){
+    getAllUserCards = function() {
   var result = CardOwnershipCollection.find().fetch();
 
   // Populate the card for each ownership entry
@@ -36,11 +36,11 @@ Template.allCards.events({
 	},
 
 	"click button.acquire": function() {
-		Meteor.call( "acquireCard", this._id );
+    this.acquireCard();
 	},
 
 	"click button.delete": function() {
-		Meteor.call( "deleteCard", this._id );
+    this.deleteCard();
 	},
 
 	"keyup input.filter": function(e) {

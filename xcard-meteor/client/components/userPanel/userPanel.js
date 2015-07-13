@@ -5,13 +5,10 @@ Template.userPanel.events({
 	}
 });
 
-Template.userPanel.helpers({
-});
-
 Template.userDecks.events({
 	"click button.removeDeck": function() {
 		if( confirm( "Are you sure you want to remove this deck?" ) ) {
-			Meteor.call( "removeDeck", this._id );
+			this.removeDeck();
 		}
 	},
 
@@ -21,8 +18,7 @@ Template.userDecks.events({
 	},
 
 	"click button.changeName": function() {
-		var newName = prompt( "Please enter new name" );
-		Meteor.call( "updateDeck", this._id, { name: newName } );
+		this.changeName( prompt( "Please enter new name" ) );
 	}
 })
 

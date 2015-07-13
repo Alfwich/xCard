@@ -1,7 +1,14 @@
+<template name="singleCard">
+	<div class="head">{{head}}</div>
+	<div class="picture"></div>
+	<div class="body">{{body}}</div>
+</template>
 <template name="card">
-	<div class="card">
-		<div class="head">{{head}}</div>
-		<div class="picture"></div>
-		<div class="body">{{body}}</div>
-	</div>
+	{{#if isArray this}}
+		{{#each this}}
+			<div class="card">{{> singleCard}}</div>
+		{{/each}}
+	{{else}}
+		<div class="card">{{> singleCard}}</div>
+	{{/if}}
 </template>

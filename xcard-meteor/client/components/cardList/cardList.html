@@ -1,3 +1,17 @@
+<template name="cardList">
+  <div class="cardList">
+    {{#if equals type "all"}}
+      {{> allCards}}
+    {{/if}}
+    {{#if equals type "user"}}
+      {{> userCards}}
+    {{/if}}
+    {{#if equals type "edit"}}
+      {{> editDeckCards}}
+    {{/if}}
+  </div>
+</template>
+
 <template name="userCards">
   {{#each cards}}
     <div class="card-container">
@@ -40,18 +54,4 @@
       </div>
     </div>
   {{/each}}
-</template>
-
-<template name="cardList">
-  <div class="cardList">
-    {{#if equals type "all"}}
-      {{> allCards}}
-    {{/if}}
-    {{#if equals type "user"}}
-      {{> userCards}}
-    {{/if}}
-    {{#if equals type "edit"}}
-      {{> editDeckCards}}
-    {{/if}}
-  </div>
 </template>

@@ -22,3 +22,7 @@ Template.registerHelper( "ifTrue", function(a,result) {
 Template.registerHelper( "ifFalse", function(a,result) {
   return ifTrueThen( !a, result );
 });
+
+Template.registerHelper( "isArray", function(a) {
+    return _.isArray(a);
+});

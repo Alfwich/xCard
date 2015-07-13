@@ -5,4 +5,12 @@ CardModel = function(raw) {
   this._id = _.get(raw,"_id");
   this.title = _.get(raw, "title", "No Title");
   this.body = _.get(raw, "body", "No Body");
+};
+
+CardModel.prototype.acquireCard = function(cardId) {
+  Meteor.call( "acquireCard", this._id );
+}
+
+CardModel.prototype.deleteCard = function(cardId) {
+  Meteor.call( "deleteCard", this._id );
 }
