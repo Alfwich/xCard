@@ -23,17 +23,23 @@ DeckModel = function(raw) {
       return result;
   }));
 
-  this.addCard = function( ownershipId ) {
-    //TODO: Make this function with a cardId rather than an ownershipId.
-    //      This would work such that a check would be made to see if there is
-    //      an available card from the user's owned cards, thats NOT already
-    //      present in the current deck, and add it to this deck.
-    Meteor.call("addCardToDeck", this._id, ownershipId);
-  };
 
-  this.removeCard = function( ownershipId ) {
-    //TODO: Make this function with a cardId rather than an ownershipId.
-    //      See Above
-    Meteor.call("removeCardFromDeck", this._id, ownershipId);
-  }
+};
+
+DeckModel.prototype.addCard = function( ownershipId ) {
+  //TODO: Make this function with a cardId rather than an ownershipId.
+  //      This would work such that a check would be made to see if there is
+  //      an available card from the user's owned cards, thats NOT already
+  //      present in the current deck, and add it to this deck.
+  Meteor.call("addCardToDeck", this._id, ownershipId);
+};
+
+DeckModel.prototype.changeName = function( newName ) {
+  Meteor.call( "updateDeck", this._id, { name: newName } );
+};
+
+DeckModel.prototype.removeCard = function( ownershipId ) {
+  //TODO: Make this function with a cardId rather than an ownershipId.
+  //      See Above
+  Meteor.call("removeCardFromDeck", this._id, ownershipId);
 }
