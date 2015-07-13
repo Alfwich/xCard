@@ -31,6 +31,12 @@ Meteor.methods({
     }
   },
 
+  updateDeck: function(deckId, updateFields) {
+    if( deckId && updateFields ) {
+      UserDecks.update( deckId, { $set: updateFields } );
+    }
+  },
+
   addCardToDeck: function(deckId, ownershipId) {
     var deck = UserDecks.findOne(deckId),
         ownership = CardOwnershipCollection.findOne( ownershipId );
