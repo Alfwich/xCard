@@ -38,8 +38,17 @@ DeckModel.prototype.changeName = function( newName ) {
   Meteor.call( "updateDeck", this._id, { name: newName } );
 };
 
+DeckModel.prototype.editDeck = function() {
+	Session.set( xCard.session.deckPageLoad, this._id );
+	xCard.PageLoader.loadPage( "deck" );
+}
+
+DeckModel.prototype.removeDeck = function() {
+	Meteor.call( "removeDeck", this._id );
+}
+
 DeckModel.prototype.removeCard = function( ownershipId ) {
   //TODO: Make this function with a cardId rather than an ownershipId.
   //      See Above
   Meteor.call("removeCardFromDeck", this._id, ownershipId);
-}
+};
