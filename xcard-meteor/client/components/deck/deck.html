@@ -1,21 +1,29 @@
+<template name="deckOverview">
+  {{#with deck}}
+    <div class="deckRow">
+      {{name}}
+      {{cards}}
+    </div>
+  {{/with}}
+</template>
+
+<template name="deckDetailed">
+  {{#with deck}}
+    <div class="deckRow">
+      {{name}}
+      {{#each cards}}
+        {{> card}}
+        <div class="card-controls"></div>
+      {{/each}}
+    </div>
+  {{/with}}
+</template>
+
 <template name="deck">
   {{#if equals type "overview"}}
-    {{#with deck}}
-      <div class="deckRow">
-        {{name}}
-        {{cards}}
-      </div>
-    {{/with}}
+    {{> deckOverview}}
   {{/if}}
   {{#if equals type "detailed"}}
-    {{#with deck}}
-      <div class="deckRow">
-        {{name}}
-        {{#each cards}}
-          {{> card}}
-          <div class="card-controls"></div>
-        {{/each}}
-      </div>
-    {{/with}}
+    {{> deckDetailed}}
   {{/if}}
 </template>
