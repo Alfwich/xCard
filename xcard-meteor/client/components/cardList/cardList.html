@@ -9,15 +9,16 @@
     {{#if equals type "edit"}}
       {{> editDeckCards}}
     {{/if}}
+    {{#if equals type "deck"}}
+      {{> deckCards}}
+    {{/if}}
   </div>
 </template>
 
 <template name="userCards">
   {{#each cards}}
     <div class="card-container">
-      {{#with card}}
-        {{> card }}
-      {{/with}}
+      {{> card }}
       <div class="card-controls">
         <button class="remove btn btn-danger btn-xs">remove</button>
       </div>
@@ -42,16 +43,22 @@
 <template name="editDeckCards">
   {{#each cards}}
     <div class="card-container">
-      {{#with card}}
-        {{> card }}
-      {{/with}}
+      {{> card }}
       <div class="card-controls">
-        {{#if exists}}
-          <button class="removeFromDeck btn btn-default btn-xs">remove</button>
-        {{else}}
-          <button class="addToDeck btn btn-default btn-xs">add</button>
-        {{/if}}
+        <button class="removeFromDeck btn btn-default btn-xs">Add 1</button>
+        <button class="addToDeck btn btn-default btn-xs">Remove 1</button>
       </div>
     </div>
   {{/each}}
+</template>
+
+<template name="deckCards">
+  {{#with deck}}
+    {{#each groupCards}}
+      <div class="card-container">
+        {{> card }}
+        <div class="card-controls"></div>
+      </div>
+    {{/each}}
+  {{/with}}
 </template>

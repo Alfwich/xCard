@@ -1,33 +1,23 @@
 var mainFilterInput = "xCard.cardList.filterString",
     getAllUserCards = function() {
-  var result = CardOwnershipCollection.find().fetch();
+      var result = CardOwnershipCollection.find().fetch();
 
-  // Populate the card for each ownership entry
-  result = _.forEach(result, function(ele) {
-    ele.card = new CardModel( CardsCollection.findOne( ele["cardId"] ) );
-  });
+      // Populate the card for each ownership entry
+      result = _.map(result, function(ele) {
+        return new CardModel( CardsCollection.findOne( ele["cardId"] ) );
+      });
 
-  // Remove any entries where the card could not be loaded
-  // TODO: Find a better way to do this?
-  result = _.filter( result, function(ele) {
-    return !_.isUndefined( ele["card"].title );
-  });
+      /* Remove any entries where the card could not be loaded
+      // TODO: Find a better way to do this?
+      result = _.filter( result, function(ele) {
+        return !_.isUndefined( ele["card"].title );
+      });
+      */
 
-  return result;
-}
+      return xCard.helpers.groupCards( result );
+    }
 
-// USER CARDS
-Template.userCards.events({
-		"click button.remove": function() {
-			Meteor.call( "removeCard", this._id );
-		},
-});
 
-Template.userCards.helpers({
-		cards: function() {
-      return getAllUserCards();
-		}
-});
 
 // ALL CARDS
 Template.allCards.events({
@@ -65,31 +55,51 @@ Template.allCards.helpers({
   }
 });
 
+// USER CARDS
+Template.userCards.events({
+		"click button.remove": function() {
+			Meteor.call( "removeCard", this._id );
+		},
+});
+
+Template.userCards.helpers({
+		cards: function() {
+      return getAllUserCards();
+		}
+});
+
 // EDIT DECK CARDS
 Template.editDeckCards.events({
-  "click .addToDeck": function(){
-    Meteor.call( "addCardToDeck", Session.get(xCard.session.deckPageLoad), this._id );
+  "click .addToDeck": function() {
+    this.deck.removeCard( this );
   },
 
   "click .removeFromDeck": function() {
-    Meteor.call( "removeCardFromDeck", Session.get(xCard.session.deckPageLoad), this._id );
+    if( this.deck ) {
+      this.deck.addCard( this );
+    }
   }
 });
 
 Template.editDeckCards.helpers({
   cards: function() {
     var result = getAllUserCards(),
-        ownershipIds = _.map( this.deck.cards, function(ele){
-          return ele.ownershipId;
-        });
+        deck = this.deck;
 
+    // Add the deck model to each card. This is to allow cards to reference a deck
+    // without having to pull and unpack the deck from a collection
     result = _.map( result, function(ele) {
-      if( _.contains( ownershipIds, ele._id) ) {
-        ele.exists = true
-      };
+      ele.deck = deck;
       return ele;
     });
 
     return result;
+  }
+});
+
+// DECK CARDS
+Template.deckCards.helpers({
+  groupCards: function(){
+    return xCard.helpers.groupCards( this.cards );
   }
 });

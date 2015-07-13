@@ -5,6 +5,7 @@ CardModel = function(raw) {
   this._id = _.get(raw,"_id");
   this.title = _.get(raw, "title", "No Title");
   this.body = _.get(raw, "body", "No Body");
+  this.count = 1;
 };
 
 CardModel.prototype.acquireCard = function(cardId) {

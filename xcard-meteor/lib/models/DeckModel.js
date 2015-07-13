@@ -4,7 +4,12 @@ DeckModel = function(raw) {
   this.cards = _.get(raw,"cards", []);
   this.name = _.get(raw,"name", "New Deck");
 
+  this.processCards();
+};
+
+DeckModel.prototype.processCards = function() {
   // Generate an array of CardModels for each card in the deck
+  // and removes empty cards
   this.cards = _.filter( _.map( this.cards, function(ele){
     var ownership = CardOwnershipCollection.findOne( ele ),
         result = "";
@@ -22,16 +27,39 @@ DeckModel = function(raw) {
 
       return result;
   }));
+}
 
+DeckModel.prototype.addCard = function( card ) {
+  // Get an array of all ownershipIds for the deck
+  var deckOwnershipIds = _.uniq( _.pluck( this.cards, "ownershipId") ),
+
+  // Find a single cardOwnership object that is the requested card and not within the deck
+      userOwnership = CardOwnershipCollection.findOne( { cardId: card._id, _id: { $nin: deckOwnershipIds } } );
+
+  if(userOwnership) {
+    Meteor.call("addCardToDeck", this._id, userOwnership._id );
+  }
 
 };
 
-DeckModel.prototype.addCard = function( ownershipId ) {
-  //TODO: Make this function with a cardId rather than an ownershipId.
-  //      This would work such that a check would be made to see if there is
-  //      an available card from the user's owned cards, thats NOT already
-  //      present in the current deck, and add it to this deck.
-  Meteor.call("addCardToDeck", this._id, ownershipId);
+DeckModel.prototype.removeCard = function(card) {
+
+  // Get an array of ownershipIds from the deck's cards where the card._id
+  // is equal to the provided card._id
+  var deckOwnershipIds = _.uniq( _.filter( _.map( this.cards, function(ele) {
+    var result = "";
+
+    if(ele._id == card._id) {
+      result = ele.ownershipId;
+    }
+
+    return result;
+  })));
+
+  // If there is at least one card remove it from the deck
+  if( deckOwnershipIds.length ) {
+    Meteor.call("removeCardFromDeck", this._id, deckOwnershipIds[0] );
+  }
 };
 
 DeckModel.prototype.changeName = function( newName ) {
@@ -46,9 +74,3 @@ DeckModel.prototype.editDeck = function() {
 DeckModel.prototype.removeDeck = function() {
 	Meteor.call( "removeDeck", this._id );
 }
-
-DeckModel.prototype.removeCard = function( ownershipId ) {
-  //TODO: Make this function with a cardId rather than an ownershipId.
-  //      See Above
-  Meteor.call("removeCardFromDeck", this._id, ownershipId);
-};

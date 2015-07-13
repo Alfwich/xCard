@@ -3,12 +3,18 @@
 	<div class="picture"></div>
 	<div class="body">{{body}}</div>
 </template>
+
 <template name="card">
-	{{#if isArray this}}
-		{{#each this}}
-			<div class="card">{{> singleCard}}</div>
-		{{/each}}
+	{{#if equals count 1}}
+		<div class="card">
+			{{> singleCard}}
+		</div>
 	{{else}}
-		<div class="card">{{> singleCard}}</div>
+		<div class="countMeter">
+			X{{count}}
+		</div>
+		<div class="card">
+			{{> singleCard}}
+		</div>
 	{{/if}}
 </template>

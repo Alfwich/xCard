@@ -11,10 +11,7 @@
   {{#with deck}}
     <div class="deckRow">
       {{name}}
-      {{#each cards}}
-        {{> card}}
-        <div class="card-controls"></div>
-      {{/each}}
+      {{> cardList type="deck" deck=this}}
     </div>
   {{/with}}
 </template>
