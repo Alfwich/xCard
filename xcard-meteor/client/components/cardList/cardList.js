@@ -1,7 +1,5 @@
-var mainFilterInput = "xCard.cardList.filterString"
-Session.set( mainFilterInput, "" );
-
-var getAllUserCards = function(){
+var mainFilterInput = "xCard.cardList.filterString",
+    getAllUserCards = function(){
   var result = CardOwnershipCollection.find().fetch();
 
   // Populate the card for each ownership entry
@@ -18,6 +16,7 @@ var getAllUserCards = function(){
   return result;
 }
 
+// USER CARDS
 Template.userCards.events({
 		"click button.remove": function() {
 			Meteor.call( "removeCard", this._id );
@@ -30,6 +29,7 @@ Template.userCards.helpers({
 		}
 });
 
+// ALL CARDS
 Template.allCards.events({
   "click button.report": function(card) {
 		console.log( this );
@@ -52,7 +52,7 @@ Template.allCards.helpers({
 
   cards: function() {
 
-    var filterRegex = RegExp(".*" + Session.get( mainFilterInput ) + ".*","gi"),
+    var filterRegex = RegExp(".*" + (Session.get(mainFilterInput)||"") + ".*","gi"),
         result = [],
         options = { sort: { title: 1 } };
 
@@ -65,6 +65,7 @@ Template.allCards.helpers({
   }
 });
 
+// EDIT DECK CARDS
 Template.editDeckCards.events({
   "click .addToDeck": function(){
     Meteor.call( "addCardToDeck", Session.get(xCard.session.deckPageLoad), this._id );
