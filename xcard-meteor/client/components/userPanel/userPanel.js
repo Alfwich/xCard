@@ -1,40 +1,38 @@
-(function(){
-	var deckPageLoad = "xCard.deck.currentEditDeck";
+var deckPageLoad = "xCard.deck.currentEditDeck";
 
-	Template.userPanel.events({
-		"click .addNewDeck": function() {
-			Meteor.call( "newDeck" );
+Template.userPanel.events({
+	"click .addNewDeck": function() {
+		Meteor.call( "newDeck" );
+	}
+});
+
+Template.userPanel.helpers({
+});
+
+Template.userDecks.events({
+	"click button.removeDeck": function() {
+		if( confirm( "Are you sure you want to remove this deck?" ) ) {
+			Meteor.call( "removeDeck", this._id );
 		}
-	});
+	},
 
-	Template.userPanel.helpers({
-	});
+	"click button.editDeck": function() {
+		Session.set( deckPageLoad, this._id );
+		xCard.PageLoader.loadPage( "deck" );
+	},
 
-	Template.userDecks.events({
-		"click button.removeDeck": function() {
-			if( confirm( "Are you sure you want to remove this deck?" ) ) {
-				Meteor.call( "removeDeck", this._id );
-			}
-		},
+	"click button.changeName": function() {
+		var newName = prompt( "Please enter new name" );
+		Meteor.call( "updateDeck", this._id, { name: newName } );
+	}
+})
 
-		"click button.editDeck": function() {
-			Session.set( deckPageLoad, this._id );
-			xCard.PageLoader.loadPage( "deck" );
-		},
+Template.userDecks.helpers({
+	ownedDecks: function() {
+		var result = UserDecks.find().fetch();
 
-		"click button.changeName": function() {
-			var newName = prompt( "Please enter new name" );
-			Meteor.call( "updateDeck", this._id, { name: newName } );
-		}
-	})
+		result = _.map(result, function(ele){ return new DeckModel(ele); } );
 
-	Template.userDecks.helpers({
-		ownedDecks: function() {
-			var result = UserDecks.find().fetch();
-
-			result = _.map(result, function(ele){ return new DeckModel(ele); } );
-
-			return result;
-		}
-	})
-})();
+		return result;
+	}
+})

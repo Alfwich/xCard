@@ -37,9 +37,7 @@ Meteor.methods({
 
     if( deck && ownership ) {
       deck.cards.push( ownership._id );
-
       deck.cards = _.uniq( deck.cards );
-
       UserDecks.update( deck._id, { $set: { cards: deck.cards } } );
     }
   },

@@ -21,6 +21,3 @@ Template.card.helpers({
 		return this.body;
 	}
 });
-
-Template.card.rendered = function(){
-}

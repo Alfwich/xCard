@@ -1,5 +1,3 @@
-Template.pageLoader.events( {
-});
 
 Template.pageLoader.helpers( {
 
@@ -15,6 +13,3 @@ Template.pageLoader.helpers( {
     return result;
   }
 });
-
-Template.pageLoader.rendered = function() {
-}
