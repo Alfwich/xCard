@@ -1,8 +1,6 @@
 var mainFilterInput = "xCard.cardList.filterString"
 Session.set( mainFilterInput, "" );
 
-var deckPageLoad = "xCard.deck.currentEditDeck";
-
 var getAllUserCards = function(){
   var result = CardOwnershipCollection.find().fetch();
 
@@ -69,11 +67,11 @@ Template.allCards.helpers({
 
 Template.editDeckCards.events({
   "click .addToDeck": function(){
-    Meteor.call( "addCardToDeck", Session.get(deckPageLoad), this._id );
+    Meteor.call( "addCardToDeck", Session.get(xCard.session.deckPageLoad), this._id );
   },
 
   "click .removeFromDeck": function() {
-    Meteor.call( "removeCardFromDeck", Session.get(deckPageLoad), this._id );
+    Meteor.call( "removeCardFromDeck", Session.get(xCard.session.deckPageLoad), this._id );
   }
 });
 

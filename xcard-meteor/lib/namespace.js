@@ -1,4 +1,5 @@
 // xCard namespace
 xCard = {
-  helpers: {}
+  helpers: {},
+  session: {}
 }

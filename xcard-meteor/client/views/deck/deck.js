@@ -1,5 +1,5 @@
 
-var deckPageLoad = "xCard.deck.currentEditDeck";
+xCard.session.deckPageLoad = "xCard.deck.deckPageLoad";
 
 Template.deckPage.events({
 	"click .returnToMain": function() {
@@ -9,7 +9,7 @@ Template.deckPage.events({
 
 Template.deckPage.helpers({
   loadDeck: function(){
-    var deck = UserDecks.findOne( Session.get( deckPageLoad ) ),
+    var deck = UserDecks.findOne( Session.get( xCard.session.deckPageLoad ) ),
         result = null;
 
     if( deck) {

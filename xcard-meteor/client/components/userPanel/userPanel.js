@@ -1,4 +1,3 @@
-var deckPageLoad = "xCard.deck.currentEditDeck";
 
 Template.userPanel.events({
 	"click .addNewDeck": function() {
@@ -17,7 +16,7 @@ Template.userDecks.events({
 	},
 
 	"click button.editDeck": function() {
-		Session.set( deckPageLoad, this._id );
+		Session.set( xCard.session.deckPageLoad, this._id );
 		xCard.PageLoader.loadPage( "deck" );
 	},
 
