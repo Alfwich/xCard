@@ -1,7 +1,7 @@
 Meteor.methods({
   newDeck: function() {
     if( Meteor.userId() ) {
-      UserDecks.insert( { owner: Meteor.userId(), cards: [], name: "New Deck" });
+      UserDecks.insert( { owner: Meteor.userId(), cards: {}, name: "New Deck" } );
     }
   },
 
@@ -22,21 +22,44 @@ Meteor.methods({
         ownership = CardOwnershipCollection.findOne( ownershipId );
 
     if( deck && ownership ) {
-      deck.cards.push( ownership._id );
-      deck.cards = _.uniq( deck.cards );
+      var deckOwnership = deck.cards[ownership._id];
+      if( deckOwnership ) {
+          // Only add the card if we have available cards to add
+          if( deckOwnership.count < ownership.count ) {
+            deckOwnership.count++;
+          }
+      } else {
+        deckOwnership = { ownershipId: ownership._id, count: 1 };
+      }
+
+      deck.cards[ownership._id] = deckOwnership;
       UserDecks.update( deck._id, { $set: { cards: deck.cards } } );
     }
   },
 
   removeCardFromDeck: function(deckId, ownershipId) {
-    var deck = UserDecks.findOne(deckId);
 
-    if( deck ) {
-      var index = deck.cards.indexOf(ownershipId);
-      if( index > -1 ) {
-        deck.cards.splice(index,1);
-        UserDecks.update( deck._id, { $set: { cards: deck.cards } } );
+    var deck = UserDecks.findOne(deckId),
+        ownership = CardOwnershipCollection.findOne( ownershipId );
+
+    if( deck && ownership ) {
+      var deckOwnership = deck.cards[ownership._id];
+      if( deckOwnership ) {
+          // Only add the card if we have available cards to add
+          if( deckOwnership.count > 0 ) {
+            deckOwnership.count--;
+          }
+          
+          if( deckOwnership.count ) {
+            deck.cards[ownership._id] = deckOwnership;
+          } else {
+            delete deck.cards[ownership._id];
+          }
+
+          UserDecks.update( deck._id, { $set: { cards: deck.cards } } );
       }
+
+
     }
   }
 });

@@ -16,6 +16,7 @@ xCard.helpers.globalObject = function(k) {
 // attribute for each card left in the array
 xCard.helpers.groupCards = function(arr) {
 
+  console.log( arr );
   // Combine the cards into groups with _id as the ordered attribute
   arr = _.groupBy( _.filter( arr ), function(ele) {
     return ele._id;

@@ -4,17 +4,12 @@ var mainFilterInput = "xCard.cardList.filterString",
 
       // Populate the card for each ownership entry
       result = _.map(result, function(ele) {
-        return new CardModel( CardsCollection.findOne( ele["cardId"] ) );
+        var card = new CardModel( CardsCollection.findOne( ele["cardId"] ), ele.count );
+        card.count = ele.count;
+        return card;
       });
 
-      /* Remove any entries where the card could not be loaded
-      // TODO: Find a better way to do this?
-      result = _.filter( result, function(ele) {
-        return !_.isUndefined( ele["card"].title );
-      });
-      */
-
-      return xCard.helpers.groupCards( result );
+      return result;
     }
 
 
@@ -99,7 +94,4 @@ Template.editDeckCards.helpers({
 
 // DECK CARDS
 Template.deckCards.helpers({
-  groupCards: function(){
-    return xCard.helpers.groupCards( this.cards );
-  }
 });

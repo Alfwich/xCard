@@ -9,34 +9,28 @@ DeckModel = function(raw) {
 
 DeckModel.prototype.processCards = function() {
   // Generate an array of CardModels for each card in the deck
-  // and removes empty cards
-  this.cards = _.filter( _.map( this.cards, function(ele){
-    var ownership = CardOwnershipCollection.findOne( ele ),
-        result = "";
+  this.cards = _(this.cards)
+    .map( function(deckOwnership) {
+      var ownership = CardOwnershipCollection.findOne(deckOwnership.ownershipId),
+          card = "";
 
-    if( ownership ) {
-      var card = CardsCollection.findOne( ownership.cardId );
-
-        if( ownership && card ) {
-          result = new CardModel( card );
-          result.ownershipId = ownership._id;
-        }
+      if( ownership ) {
+        card = new CardModel(CardsCollection.findOne(ownership.cardId));
+        card.count = deckOwnership.count;
       } else {
-        console.warn("Attempted to unpack deck with invalid cardId: " + ele);
+        console.warn( "Attempted to unpack ownership object which did not exist: " + deckOwnership.ownershipId);
       }
 
-      return result;
-  }));
+      return card;
+    })
+    .filter()
+    .value();
 }
 
 DeckModel.prototype.addCard = function( card ) {
-  // Get an array of all ownershipIds for the deck
-  var deckOwnershipIds = _.uniq( _.pluck( this.cards, "ownershipId") ),
+  var userOwnership = CardOwnershipCollection.findOne( { cardId: card._id } );
 
-  // Find a single cardOwnership object that is the requested card and not within the deck
-      userOwnership = CardOwnershipCollection.findOne( { cardId: card._id, _id: { $nin: deckOwnershipIds } } );
-
-  if(userOwnership) {
+  if( userOwnership ) {
     Meteor.call("addCardToDeck", this._id, userOwnership._id );
   }
 
@@ -44,21 +38,10 @@ DeckModel.prototype.addCard = function( card ) {
 
 DeckModel.prototype.removeCard = function(card) {
 
-  // Get an array of ownershipIds from the deck's cards where the card._id
-  // is equal to the provided card._id
-  var deckOwnershipIds = _.uniq( _.filter( _.map( this.cards, function(ele) {
-    var result = "";
+  var userOwnership = CardOwnershipCollection.findOne( { cardId: card._id } );
 
-    if(ele._id == card._id) {
-      result = ele.ownershipId;
-    }
-
-    return result;
-  })));
-
-  // If there is at least one card remove it from the deck
-  if( deckOwnershipIds.length ) {
-    Meteor.call("removeCardFromDeck", this._id, deckOwnershipIds[0] );
+  if( userOwnership ) {
+    Meteor.call("removeCardFromDeck", this._id, userOwnership._id );
   }
 };
 
