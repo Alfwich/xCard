@@ -6,3 +6,8 @@ xCard.helpers.removeId = function(ele) {
   }
   return ele;
 }
+
+// Returns the value for a given key on the global object.
+xCard.helpers.globalObject = function(k) {
+  return window[k];
+};
