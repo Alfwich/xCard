@@ -1,7 +1,3 @@
-// Returns the value for a given key on the global object.
-globalObject = function(k) {
-  return window[k];
-};
 
 var ifTrueThen = function( condition, result ) {
   return condition ? result : "";
