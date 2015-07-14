@@ -1,59 +1,62 @@
 .card {
-	width: 200px;
-  height: 300px;
-  border: 1px solid #555;
-  border-radius: 5px;
-  padding: 2px;
-	margin: auto;
-	white-space: nowrap;
-	overflow: hidden;
-	font-size: 15px;
-	position: relative;
-	box-shadow: 7px 6px 12px 0px #AAA;
-	background-color: #FFF;
+	
+	.card {
+		width: 200px;
+	  height: 300px;
+	  border: 1px solid #555;
+	  border-radius: 5px;
+	  padding: 2px;
+		margin: auto;
+		white-space: nowrap;
+		overflow: hidden;
+		font-size: 15px;
+		position: relative;
+		box-shadow: 7px 6px 12px 0px #AAA;
+		background-color: #FFF;
 
-	.head {
-		font-size: 110%;
-		font-weight: bold;
-	}
-
-	.picture {
-		width: 100%;
-		background-color: #EEE;
-		height: 150px;
-		border: 1px solid #000;
-
-		img {
-			width: 100%;
-			height: 100%;
+		.head {
+			font-size: 110%;
+			font-weight: bold;
 		}
+
+		.picture {
+			width: 100%;
+			background-color: #EEE;
+			height: 150px;
+			border: 1px solid #000;
+
+			img {
+				width: 100%;
+				height: 100%;
+			}
+		}
+
+		.body {
+			white-space: normal;
+			font-size: 12px;
+		}
+
+		.controls {
+			position: absolute;
+			right: 2px;
+			bottom: 2px;
+		}
+
 	}
 
-	.body {
-		white-space: normal;
-		font-size: 12px;
-	}
-
-	.controls {
+	.countMeter {
 		position: absolute;
-		right: 2px;
-		bottom: 2px;
+	  right: -10px;
+	  bottom: 50%;
+	  font-size: 15px;
+	  background-color: #222;
+	  color: #EEE;
+	  display: block;
+	  z-index: 10;
+	  padding: 2px;
+	  border-radius: 2px;
+	  border: 1px solid #AAA;
+	  width: 40px;
+	  text-align: center;
 	}
-
-}
-
-.countMeter {
-	position: absolute;
-  right: -10px;
-  bottom: 50%;
-  font-size: 15px;
-  background-color: #222;
-  color: #EEE;
-  display: block;
-  z-index: 10;
-  padding: 2px;
-  border-radius: 2px;
-  border: 1px solid #AAA;
-  width: 40px;
-  text-align: center;
 }

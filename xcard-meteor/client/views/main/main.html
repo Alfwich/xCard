@@ -1,14 +1,16 @@
 <template name="mainPage">
-  <div class="loginPanel">
-    {{> loginButtons}}
-  </div>
-  <div class="row mainPage">
-    <div class="col-xs-6">
-      <h3>{{filterText}}({{numberOfCards}})</h3>
-      {{> cardList type="all" }}
+  <div class="mainPage">
+    <div class="loginPanel">
+      {{> loginButtons}}
     </div>
-    <div class="col-xs-6">
-      {{> userPanel}}
+    <div class="row">
+      <div class="col-xs-6">
+        <h3>{{filterText}}({{numberOfCards}})</h3>
+        {{> cardList type="all" }}
+      </div>
+      <div class="col-xs-6">
+        {{> userPanel}}
+      </div>
     </div>
   </div>
 </template>

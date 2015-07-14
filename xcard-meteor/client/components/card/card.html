@@ -7,16 +7,18 @@
 </template>
 
 <template name="card">
-	{{#if equals count 1}}
-		<div class="card">
-			{{> singleCard}}
-		</div>
-	{{else}}
-		<div class="countMeter">
-			X{{count}}
-		</div>
-		<div class="card">
-			{{> singleCard}}
-		</div>
-	{{/if}}
+	<div class="card">
+		{{#if equals count 1}}
+			<div class="card">
+				{{> singleCard}}
+			</div>
+		{{else}}
+			<div class="countMeter">
+				X{{count}}
+			</div>
+			<div class="card">
+				{{> singleCard}}
+			</div>
+		{{/if}}
+	</div>
 </template>

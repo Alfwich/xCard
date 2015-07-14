@@ -1,14 +1,16 @@
 <template name="deckPage">
-  <button class="returnToMain btn btn-default">Back</button>
-  {{#with loadDeck}}
-  <div class="row">
-    <div class="col-xs-6">
-      <h2>Your Collection</h2>
-      {{> cardList type="edit" deck=this}}
+  <div class="deckPage">
+    <button class="returnToMain btn btn-default">Back</button>
+    {{#with loadDeck}}
+    <div class="row">
+      <div class="col-xs-6">
+        <h2>Your Collection</h2>
+        {{> cardList type="edit" deck=this}}
+      </div>
+      <div class="col-xs-6">
+        {{> deck type="detailed" deck=this}}
+      </div>
     </div>
-    <div class="col-xs-6">
-      {{> deck type="detailed" deck=this}}
-    </div>
+    {{/with}}
   </div>
-  {{/with}}
 </template>
