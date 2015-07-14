@@ -5,6 +5,6 @@ Template.topBar.events({
   },
 
   "click li.rooms": function() {
-    xCard.PageLoader.loadPage( "room" );
+    xCard.PageLoader.loadPage( "rooms" );
   },
 });
