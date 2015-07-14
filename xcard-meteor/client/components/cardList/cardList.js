@@ -3,16 +3,16 @@ var mainFilterInput = "xCard.cardList.filterString",
       var result = CardOwnershipCollection.find().fetch();
 
       // Populate the card for each ownership entry
-      result = _.map(result, function(ele) {
-        var card = new CardModel( CardsCollection.findOne( ele["cardId"] ), ele.count );
+      result = _(result).map( function(ele) {
+        var card = new CardModel( CardsCollection.findOne( ele["cardId"] ) );
         card.count = ele.count;
         return card;
-      });
+      }).filter( function(ele) {
+        return ele.title.length;
+      }).value();
 
       return result;
     }
-
-
 
 // ALL CARDS
 Template.allCards.events({
@@ -44,7 +44,11 @@ Template.allCards.helpers({
     result = CardsCollection.find( { title: { $regex: filterRegex }}, options).fetch();
 
     // Create a CardModel from each result of the query
-    result = result.map( function(ele){ return new CardModel(ele); });
+    result = _(result).filter( function(ele) {
+      return !_.isUndefined( ele.title );
+    }).map( function(ele){
+      return new CardModel(ele);
+    }).value();
 
     return result;
   }
