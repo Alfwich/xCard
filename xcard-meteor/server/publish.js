@@ -9,6 +9,8 @@ Meteor.publish( "cardOwnership", function() {
 
 Meteor.publish( "userDecks", function() {
 	return UserDeckCollection.find( { owner: this.userId } );
-})
+});
 
-// TODO: Create a publification that returns the current user-owned cards
+Meteor.publish( "allRooms", function() {
+	return RoomCollection.find();
+});

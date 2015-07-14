@@ -1,3 +1,4 @@
 CardCollection = new Mongo.Collection("Cards");
-CardOwnershipCollection = new Mongo.Collection("CardOwnership");
-UserDeckCollection = new Mongo.Collection( "UserDecks" )
+CardOwnershipCollection = new Mongo.Collection("CardOwnerships");
+UserDeckCollection = new Mongo.Collection("UserDecks")
+RoomCollection = new Mongo.Collection("Rooms");
