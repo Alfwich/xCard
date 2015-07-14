@@ -35,8 +35,7 @@ RANDOM_TITLES = [
 ]
 
 def genCard(name):
-	result = { "title": name, "body": "card body" }
-
+	result = { "title": name, "body": "card body", "image": "test0%d.jpg" % ( random.randint(1,9) ) }
 	return result
 
 def main():

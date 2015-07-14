@@ -5,6 +5,7 @@ CardModel = function(raw) {
   this._id = _.get(raw,"_id");
   this.title = _.get(raw, "title", "");
   this.body = _.get(raw, "body", "");
+  this.image = _.get(raw, "image", "");
   this.count = 1;
 };
 

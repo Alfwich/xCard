@@ -5,7 +5,7 @@ Template.singleCard.helpers({
 	},
 
 	imageSource: function() {
-		return "test0" + _.random(1,9) + ".jpg";
+		return this.image;
 	},
 
 	body : function(){
