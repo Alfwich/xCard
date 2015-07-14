@@ -1,5 +1,6 @@
 var mainFilterInput = "xCard.cardList.filterString",
     userFilterInput = "xCard.cardList.userFilterString",
+    editFilterInput = "xCard.cardList.editFilterString",
     getAllUserCards = function(filterString) {
       var result = CardOwnershipCollection.find({}).fetch(),
           filterRegex = RegExp(".*" + (filterString||"") + ".*","gi");
@@ -85,12 +86,16 @@ Template.editDeckCards.events({
     if( this.deck ) {
       this.deck.addCard( this );
     }
+  },
+
+  "keyup input.filter": function(e) {
+    Session.set(editFilterInput, e.currentTarget.value);
   }
 });
 
 Template.editDeckCards.helpers({
   cards: function() {
-    var result = getAllUserCards(""),
+    var result = getAllUserCards(Session.get(editFilterInput)),
         deck = this.deck;
 
     // Add the deck model to each card. This is to allow cards to reference a deck
