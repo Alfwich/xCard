@@ -22,7 +22,7 @@ xCard.helpers.getAllUserCards = function(filterString) {
 
   // Populate the card for each ownership entry
   result = _(result).map( function(ele) {
-    var card = new CardModel( CardsCollection.findOne( {
+    var card = new CardModel( CardCollection.findOne( {
       _id: ele["cardId"],
       title: { $regex: filterRegex }
     }));

@@ -27,7 +27,7 @@ Template.allCards.helpers({
         result = [],
         options = { sort: { title: 1 } };
 
-    result = CardsCollection.find( { title: { $regex: filterRegex }}, options).fetch();
+    result = CardCollection.find( { title: { $regex: filterRegex }}, options).fetch();
 
     // Create a CardModel from each result of the query
     result = _(result).filter( function(ele) {

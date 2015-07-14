@@ -15,7 +15,7 @@ DeckModel.prototype.processCards = function() {
           card = "";
 
       if( ownership ) {
-        card = new CardModel(CardsCollection.findOne(ownership.cardId));
+        card = new CardModel(CardCollection.findOne(ownership.cardId));
         card.count = deckOwnership.count;
       } else {
         console.warn( "Attempted to unpack ownership object which did not exist: " + deckOwnership.ownershipId);

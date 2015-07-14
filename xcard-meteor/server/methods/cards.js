@@ -2,7 +2,7 @@
 Meteor.methods({
   deleteCard: function(id) {
     if( id ) {
-      CardsCollection.remove(id);
+      CardCollection.remove(id);
     }
   }
 });
