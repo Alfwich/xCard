@@ -1,0 +1,24 @@
+<template name="roomsPage">
+  <div class="roomsPage">
+    <div class="row">
+      <div class="col-xs-2">
+        <div class="roomControls">
+          <button class="addNewRoom btn btn-default">New Room</button>
+        </div>
+        <table class="rooms table">
+          <thead></thead>
+          <tbody>
+            {{#each rooms}}
+              <tr><td><div class="room">{{name}}</div></td></tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xs-10">
+        {{#with roomData}}
+          {{this}}
+        {{/with}}
+      </div>
+    </div>
+  </div>
+</template>
