@@ -23,20 +23,19 @@
 <template name="deckDetailed">
   {{#with deck}}
     <div class="deckRow">
-      <h2>
-        {{name}}
-        <button class="renameDeck btn btn-default">Rename Deck</button>
-      </h2>
+      <h2 class="renameDeck">{{name}}</h2>
       {{> cardList type="deck" deck=this}}
     </div>
   {{/with}}
 </template>
 
 <template name="deck">
-  {{#if equals type "overview"}}
-    {{> deckOverview}}
-  {{/if}}
-  {{#if equals type "detailed"}}
-    {{> deckDetailed}}
-  {{/if}}
+  <div class="deck">
+    {{#if equals type "overview"}}
+      {{> deckOverview}}
+    {{/if}}
+    {{#if equals type "detailed"}}
+      {{> deckDetailed}}
+    {{/if}}
+  </div>
 </template>

@@ -10,7 +10,11 @@ Template.deckOverview.helpers({
 
 Template.deckDetailed.events({
   "click .renameDeck": function() {
-    this.changeName(prompt("Please enter new name"));
+    var newName = prompt("Please enter new name");
+
+    if( newName ) {
+      this.changeName(newName);
+    }
   }
 });
 Template.deckDetailed.helpers({
