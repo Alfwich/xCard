@@ -15,19 +15,14 @@ Template.userDecks.events({
 	"click button.editDeck": function() {
 		Session.set( xCard.session.deckPageLoad, this._id );
 		xCard.PageLoader.loadPage( "deck" );
-	},
-
-	"click button.changeName": function() {
-		this.changeName( prompt( "Please enter new name" ) );
 	}
+
 })
 
 Template.userDecks.helpers({
 	ownedDecks: function() {
 		var result = UserDecks.find().fetch();
-
 		result = _.map(result, function(ele){ return new DeckModel(ele); } );
-
 		return result;
 	}
 })
