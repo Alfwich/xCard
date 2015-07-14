@@ -1,8 +1,10 @@
 <template name="mainPage">
-  <h2>Check out our {{numberOfCards}} cool cards! {{> loginButtons }}</h2>
+  <div class="loginPanel">
+    {{> loginButtons}}
+  </div>
   <div class="row mainPage">
     <div class="col-xs-6">
-      <h3> All Cards </h3>
+      <h3>{{filterText}}({{numberOfCards}})</h3>
       {{> cardList type="all" }}
     </div>
     <div class="col-xs-6">

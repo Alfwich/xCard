@@ -1,8 +1,21 @@
 <template name="deckOverview">
   {{#with deck}}
     <div class="deckRow">
-      {{name}}
-      {{cards}}
+      <h2>{{name}}</h2>
+      <table class="table">
+        <thead>
+          <th>Card Name</th>
+          <th>Qty</th>
+        </thead>
+        <tbody>
+          {{#each cards}}
+            <tr>
+              <td>{{title}}</td>
+              <td>{{count}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
     </div>
   {{/with}}
 </template>
@@ -10,7 +23,7 @@
 <template name="deckDetailed">
   {{#with deck}}
     <div class="deckRow">
-      Deck: {{name}}
+      <h2>{{name}}</h2>
       {{> cardList type="deck" deck=this}}
     </div>
   {{/with}}

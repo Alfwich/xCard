@@ -50,6 +50,8 @@ Template.allCards.helpers({
       return new CardModel(ele);
     }).value();
 
+    Session.set( xCard.session.filteredCardsCount, result.length );
+
     return result;
   }
 });
