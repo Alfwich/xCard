@@ -1,10 +1,12 @@
 var mainFilterInput = "xCard.cardList.filterString",
-    getAllUserCards = function() {
-      var result = CardOwnershipCollection.find().fetch();
+    userFilterInput = "xCard.cardList.userFilterString",
+    getAllUserCards = function(filterString) {
+      var result = CardOwnershipCollection.find({}).fetch(),
+          filterRegex = RegExp(".*" + (filterString||"") + ".*","gi");
 
       // Populate the card for each ownership entry
       result = _(result).map( function(ele) {
-        var card = new CardModel( CardsCollection.findOne( ele["cardId"] ) );
+        var card = new CardModel( CardsCollection.findOne( { _id: ele["cardId"], title: {$regex: filterRegex } } ) );
         card.count = ele.count;
         return card;
       }).filter( function(ele) {
@@ -61,11 +63,15 @@ Template.userCards.events({
 		"click button.remove": function() {
 			Meteor.call( "removeCard", this._id );
 		},
+
+    "keyup input.filter": function(e) {
+      Session.set(userFilterInput, e.currentTarget.value);
+    }
 });
 
 Template.userCards.helpers({
 		cards: function() {
-      return getAllUserCards();
+      return getAllUserCards(Session.get(userFilterInput));
 		}
 });
 
@@ -84,7 +90,7 @@ Template.editDeckCards.events({
 
 Template.editDeckCards.helpers({
   cards: function() {
-    var result = getAllUserCards(),
+    var result = getAllUserCards(""),
         deck = this.deck;
 
     // Add the deck model to each card. This is to allow cards to reference a deck
