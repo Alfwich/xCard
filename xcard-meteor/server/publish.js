@@ -4,13 +4,17 @@ Meteor.publish( "cardData" , function() {
 });
 
 Meteor.publish( "cardOwnership", function() {
-	return CardOwnershipCollection.find( { owner: this.userId } );
+	return CardOwnershipCollection.find({ owner: this.userId });
 });
 
 Meteor.publish( "userDecks", function() {
-	return UserDeckCollection.find( { owner: this.userId } );
+	return UserDeckCollection.find({ owner: this.userId });
 });
 
 Meteor.publish( "allRooms", function() {
 	return RoomCollection.find();
+});
+
+Meteor.publish( "roomMembership", function() {
+	return RoomMembership.find({ owner: this.userId });
 });
