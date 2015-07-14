@@ -22,5 +22,3 @@ $(window).on( "popstate", function(){
     xCard.PageLoader.loadPage( dest );
   }
 });
-
-location.hash = "main";

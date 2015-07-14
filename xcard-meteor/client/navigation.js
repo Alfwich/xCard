@@ -6,7 +6,9 @@ Router.map( function(){
 });
 
 // Add the valid pages for the client application
-xCard.validPages = [ "main", "deck" ];
-xCard.defaultPage = "main";
+xCard.validPages = [ "home", "deck" ];
+xCard.defaultPage = xCard.validPages[0];
+
+location.hash = xCard.defaultPage;
 
 document.title = "xCard Card Game";

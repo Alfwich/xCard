@@ -3,7 +3,7 @@ xCard.session.deckPageLoad = "xCard.deck.deckPageLoad";
 
 Template.deckPage.events({
 	"click .returnToMain": function() {
-		xCard.PageLoader.loadPage( "main" );
+		xCard.PageLoader.loadPage( "home" );
 	}
 });
 
@@ -15,7 +15,7 @@ Template.deckPage.helpers({
     if( deck) {
       result = new DeckModel( deck );
     } else {
-      xCard.PageLoader.loadPage( "main" );
+      xCard.PageLoader.loadPage( "home" );
     }
 
     return result;

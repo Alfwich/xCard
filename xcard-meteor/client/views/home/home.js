@@ -1,6 +1,6 @@
-xCard.session.filteredCardsCount = "xCard.main.filteredCards";
+xCard.session.filteredCardsCount = "xCard.home.filteredCards";
 
-Template.mainPage.helpers({
+Template.homePage.helpers({
 
 	numberOfCards: function() {
 		return Session.get(xCard.session.filteredCardsCount) || CardCollection.find().count();
