@@ -23,7 +23,10 @@
 <template name="deckDetailed">
   {{#with deck}}
     <div class="deckRow">
-      <h2>{{name}}</h2>
+      <h2>
+        {{name}}
+        <button class="renameDeck btn btn-default">Rename Deck</button>
+      </h2>
       {{> cardList type="deck" deck=this}}
     </div>
   {{/with}}
