@@ -1,9 +1,12 @@
 
 <template name="userPanel">
   <div class="userPanel">
-    <h3> Your Owned Cards </h3>
-    {{> cardList type="user" }}
-    <h3> Your Decks<button class="addNewDeck btn btn-default btn-xs">+</button></h3>
+    <div class="ownedCards">
+      <h3> Your Owned Cards </h3>
+      {{> cardList type="user" }}
+    </div>
+
+    <h3> Your Decks<button class="addNewDeck btn btn-default">Create New Deck</button></h3>
     {{> userDecks}}
   </div>
 </template>
@@ -16,9 +19,9 @@
           <tr>
             <td>
               <div class="deckControls">
-                <button class="editDeck btn btn-default btn-xs">Edit</button>
-                <button class="changeName btn btn-default btn-xs">Change Name</button>
-                <button class="removeDeck btn btn-danger btn-xs">Remove</button>
+                <button class="editDeck btn btn-default">Edit</button>
+                <button class="changeName btn btn-default">Change Name</button>
+                <button class="removeDeck btn btn-danger">Remove</button>
               </div>
               <div class="userDecksOutput">
                 {{> deck type="overview" deck=this}}
