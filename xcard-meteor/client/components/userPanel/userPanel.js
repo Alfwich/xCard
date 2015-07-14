@@ -21,7 +21,7 @@ Template.userDecks.events({
 
 Template.userDecks.helpers({
 	ownedDecks: function() {
-		var result = UserDecks.find().fetch();
+		var result = UserDeckCollection.find().fetch();
 		result = _.map(result, function(ele){ return new DeckModel(ele); } );
 		return result;
 	}

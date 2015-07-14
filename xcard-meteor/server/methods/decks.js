@@ -1,24 +1,24 @@
 Meteor.methods({
   newDeck: function() {
     if( Meteor.userId() ) {
-      UserDecks.insert( { owner: Meteor.userId(), cards: {}, name: "New Deck" } );
+      UserDeckCollection.insert( { owner: Meteor.userId(), cards: {}, name: "New Deck" } );
     }
   },
 
   removeDeck: function(deckId) {
     if( deckId ) {
-      UserDecks.remove(deckId);
+      UserDeckCollection.remove(deckId);
     }
   },
 
   updateDeck: function(deckId, updateFields) {
     if( deckId && updateFields ) {
-      UserDecks.update( deckId, { $set: updateFields } );
+      UserDeckCollection.update( deckId, { $set: updateFields } );
     }
   },
 
   addCardToDeck: function(deckId, ownershipId) {
-    var deck = UserDecks.findOne(deckId),
+    var deck = UserDeckCollection.findOne(deckId),
         ownership = CardOwnershipCollection.findOne( ownershipId );
 
     if( deck && ownership ) {
@@ -33,13 +33,13 @@ Meteor.methods({
       }
 
       deck.cards[ownership._id] = deckOwnership;
-      UserDecks.update( deck._id, { $set: { cards: deck.cards } } );
+      UserDeckCollection.update( deck._id, { $set: { cards: deck.cards } } );
     }
   },
 
   removeCardFromDeck: function(deckId, ownershipId) {
 
-    var deck = UserDecks.findOne(deckId),
+    var deck = UserDeckCollection.findOne(deckId),
         ownership = CardOwnershipCollection.findOne( ownershipId );
 
     if( deck && ownership ) {
@@ -56,7 +56,7 @@ Meteor.methods({
             delete deck.cards[ownership._id];
           }
 
-          UserDecks.update( deck._id, { $set: { cards: deck.cards } } );
+          UserDeckCollection.update( deck._id, { $set: { cards: deck.cards } } );
       }
 
 
