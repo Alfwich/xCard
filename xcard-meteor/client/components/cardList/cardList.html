@@ -17,7 +17,7 @@
 
 <template name="userCards">
   <div class="userCards">
-    <input type="text" class="filter form-control" placeholder="Filter..." />
+    <input type="text" class="filter form-control" placeholder="Filter..." value="{{filterValue}}"/>
     {{#each cards}}
       <div class="card-container">
         {{> card }}
@@ -31,7 +31,7 @@
 
 <template name="allCards">
   <div class="allCards">
-    <input type="text" class="filter form-control" placeholder="Filter..." />
+    <input type="text" class="filter form-control" placeholder="Filter..." value="{{filterValue}}"/>
     {{#each cards}}
       <div class="card-container">
         {{> card}}
@@ -47,7 +47,7 @@
 
 <template name="editDeckCards">
   <div class="editDeckCards">
-    <input type="text" class="filter form-control" placeholder="Filter..." />
+    <input type="text" class="filter form-control" placeholder="Filter..." value="{{filterValue}}"/>
     {{#each cards}}
       <div class="card-container">
         {{> card }}
