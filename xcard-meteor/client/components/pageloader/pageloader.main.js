@@ -18,7 +18,9 @@ xCard.PageLoader = {
 // Setup hash navigation function
 $(window).on( "popstate", function(){
   var dest = location.hash.substr(1);
-  xCard.PageLoader.loadPage( dest );
+  if( dest ) {
+    xCard.PageLoader.loadPage( dest );
+  }
 });
 
-location.hash = "";
+location.hash = "main";
