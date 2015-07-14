@@ -1,3 +1,4 @@
+xCard.session.currentRoomId = "xCard.rooms.currentRoomId";
 
 Template.roomsPage.events({
   "click .addNewRoom": function() {
@@ -5,7 +6,7 @@ Template.roomsPage.events({
   },
 
   "click .room": function() {
-    console.log( "Should join room" );
+    this.joinRoom();
   }
 });
 
@@ -21,6 +22,14 @@ Template.roomsPage.helpers({
   },
 
   roomData: function() {
-    return {};
+    var roomMembership = RoomMembership.findOne(),
+        result = {};
+
+    if( roomMembership ) {
+      result = new RoomModel(RoomCollection.findOne(roomMembership.roomId))
+      Session.set(xCard.session.currentRoomId, result._id);
+    }
+
+    return result;
   }
 });
