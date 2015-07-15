@@ -13,3 +13,10 @@ Template.pageLoader.helpers( {
     return result;
   }
 });
+
+Template.pageLoader.rendered = function() {
+  var dest = location.hash.substr(1);
+  if( dest ) {
+    xCard.PageLoader.loadPage( dest );
+  }
+}
