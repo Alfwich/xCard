@@ -51,7 +51,7 @@ DeckModel.prototype.changeName = function( newName ) {
 
 DeckModel.prototype.editDeck = function() {
 	Session.set( xCard.session.deckPageLoad, this._id );
-	xCard.PageLoader.loadPage( "deck" );
+	xCard.PageLoader.loadPage( "editDeck" );
 }
 
 DeckModel.prototype.removeDeck = function() {

@@ -3,7 +3,7 @@ Template.decksPage.events({
 	"click .addNewDeck": function() {
 		Meteor.call( "newDeck", function( err, deckId) {
 			Session.set( xCard.session.deckPageLoad, deckId );
-			xCard.PageLoader.loadPage( "deck" );
+			xCard.PageLoader.loadPage( "editDeck" );
 		});
 	}
 });
@@ -13,13 +13,13 @@ Template.decksPage.events({
 		if( confirm( "Are you sure you want to remove this deck?" ) ) {
 			this.removeDeck();
 		}
-		
+
 		e.stopPropagation()
 	},
 
 	"click .editDeck": function() {
 		Session.set( xCard.session.deckPageLoad, this._id );
-		xCard.PageLoader.loadPage( "deck" );
+		xCard.PageLoader.loadPage( "editDeck" );
 	}
 
 })

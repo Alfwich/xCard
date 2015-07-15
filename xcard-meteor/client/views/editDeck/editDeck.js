@@ -1,7 +1,7 @@
 
-xCard.session.deckPageLoad = "xCard.deck.deckPageLoad";
+xCard.session.deckPageLoad = "xCard.editDeck.deckPageLoad";
 
-Template.deckPage.helpers({
+Template.editDeckPage.helpers({
   loadDeck: function(){
     var deck = UserDeckCollection.findOne( Session.get( xCard.session.deckPageLoad ) ),
         result = null;
