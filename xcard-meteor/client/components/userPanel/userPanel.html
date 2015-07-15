@@ -5,8 +5,7 @@
     <div class="ownedCards">
       {{> cardList type="user" }}
     </div>
-
-    <h3> Your Decks<button class="addNewDeck btn btn-default">Create New Deck</button></h3>
+    <h3> Your Decks<button class="addNewDeck btn btn-default" {{disableNoUser}}>Create New Deck</button></h3>
     {{> userDecks}}
   </div>
 </template>
