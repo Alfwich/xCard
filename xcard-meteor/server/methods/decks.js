@@ -1,8 +1,12 @@
 Meteor.methods({
   newDeck: function() {
+    var result = null;
+
     if( Meteor.userId() ) {
-      UserDeckCollection.insert( { owner: Meteor.userId(), cards: {}, name: "New Deck" } );
+      result = UserDeckCollection.insert( { owner: Meteor.userId(), cards: {}, name: "New Deck" } );
     }
+
+    return result;
   },
 
   removeDeck: function(deckId) {
@@ -49,7 +53,7 @@ Meteor.methods({
           if( deckOwnership.count > 0 ) {
             deckOwnership.count--;
           }
-          
+
           if( deckOwnership.count ) {
             deck.cards[ownership._id] = deckOwnership;
           } else {
