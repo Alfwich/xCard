@@ -1,3 +1,20 @@
+var sendServerChatMessage = function(msg,roomId) {
+  RoomChat.insert({
+      owner: "server",
+      name: "Server",
+      roomId: roomId,
+      msg: msg,
+      created: new Date()
+  });
+}
+
+var clientJoinedMessage = function(user, roomId) {
+  sendServerChatMessage(user.username + "has joined the room", roomId);
+}
+
+var sendGlobalChatMessage = function(msg) {
+
+}
 
 Meteor.methods({
   createRoom: function(roomName) {
@@ -12,9 +29,15 @@ Meteor.methods({
       var membershipEntry = RoomMembership.findOne({ owner: Meteor.userId() });
       if( membershipEntry ) {
         RoomMembership.update(membershipEntry._id, { $set: { roomId: roomId } });
+        clientJoinedMessage(Meteor.user(), roomId);
       } else {
-        membershipEntry = { owner: Meteor.userId(), roomId: roomId };
+        membershipEntry = {
+          owner: Meteor.userId(),
+          userName: Meteor.user().username,
+          roomId: roomId
+        };
         RoomMembership.insert( membershipEntry );
+        clientJoinedMessage(Meteor.user(), roomId);
       }
     }
   },

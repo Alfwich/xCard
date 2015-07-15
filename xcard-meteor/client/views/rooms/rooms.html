@@ -14,17 +14,19 @@
       <div class="col-xs-10">
         {{#with roomData}}
           <div class="roomName">{{name}}</div>
-          <div id="chat" class="chat">
-            <table class="chatTable">
-              <tbody>
-                {{#each chatLines}}
-                  <tr>
-                    <td><strong>{{name}}</strong>: {{msg}}</td>
-                    <td class="createdDate"><em class="unselectable">{{created}}</em></td>
-                  </tr>
+          <div class="chat">
+            <div class="chatTable row">
+              <div id="chat" class="chatLines col-xs-10">
+              {{#each chatLines}}
+                  <div><strong>{{name}}</strong>: {{msg}}</div>
+              {{/each}}
+              </div>
+              <div class="users col-xs-2">
+                {{#each users}}
+                  <div class="user">{{userName}}</div>
                 {{/each}}
-              </tbody>
-            </table>
+              </div>
+            </div>
           </div>
           <input class="chatInput form-control" type="text" placeholder="Send message..." {{disableNoUser}} />
         {{else}}

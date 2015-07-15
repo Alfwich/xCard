@@ -34,3 +34,7 @@ xCard.helpers.getAllUserCards = function(filterString) {
 
   return result;
 }
+
+xCard.helpers.getAllUsersInRoom = function(roomId) {
+  return RoomMembership.find({ roomId: roomId }, { sort: { userName: 1 } }).fetch();
+}

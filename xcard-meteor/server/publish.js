@@ -16,7 +16,7 @@ Meteor.publish( "allRooms", function() {
 });
 
 Meteor.publish( "roomMembership", function() {
-	return RoomMembership.find({ owner: this.userId });
+	return RoomMembership.find();
 });
 
 // Return the chat entries for the room the current user is within

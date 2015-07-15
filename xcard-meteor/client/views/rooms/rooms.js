@@ -30,8 +30,8 @@ Template.roomsPage.helpers({
   },
 
   roomData: function() {
-    var roomMembership = RoomMembership.findOne(),
-        sessionRoomId = Session.get(xCard.session.currentRoomId),
+    var sessionRoomId = Session.get(xCard.session.currentRoomId ),
+        roomMembership = RoomMembership.findOne({ owner: Meteor.userId() }),
         result = null;
 
     if( roomMembership ) {

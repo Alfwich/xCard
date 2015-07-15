@@ -2,6 +2,7 @@
 RoomModel = function(raw) {
   this._id = _.get(raw,"_id");
   this.name = _.get(raw,"name","");
+  this.users = xCard.helpers.getAllUsersInRoom( this._id );
 }
 
 RoomModel.prototype.joinRoom = function() {
