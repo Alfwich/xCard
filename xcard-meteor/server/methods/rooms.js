@@ -9,11 +9,13 @@ var sendServerChatMessage = function(msg,roomId) {
 }
 
 var clientJoinedMessage = function(user, roomId) {
-  sendServerChatMessage(user.username + "has joined the room", roomId);
+  sendServerChatMessage(user.username + " has joined the room", roomId);
 }
 
 var sendGlobalChatMessage = function(msg) {
-
+  _.foreach( RoomCollection.find().fetch(), function(room) {
+    sendServerChatMessage( room._id, id );
+  });
 }
 
 Meteor.methods({
@@ -28,8 +30,10 @@ Meteor.methods({
     if( room && this.userId ) {
       var membershipEntry = RoomMembership.findOne({ owner: Meteor.userId() });
       if( membershipEntry ) {
-        RoomMembership.update(membershipEntry._id, { $set: { roomId: roomId } });
-        clientJoinedMessage(Meteor.user(), roomId);
+        if( membershipEntry.roomId != roomId ) {
+          RoomMembership.update(membershipEntry._id, { $set: { roomId: roomId } });
+          clientJoinedMessage(Meteor.user(), roomId);
+        }
       } else {
         membershipEntry = {
           owner: Meteor.userId(),

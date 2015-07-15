@@ -12,23 +12,8 @@
         </div>
       </div>
       <div class="col-xs-10">
-        {{#with roomData}}
-          <div class="roomName">{{name}}</div>
-          <div class="chat">
-            <div class="chatTable row">
-              <div id="chat" class="chatLines col-xs-10">
-              {{#each chatLines}}
-                  <div><strong>{{name}}</strong>: {{msg}}</div>
-              {{/each}}
-              </div>
-              <div class="users col-xs-2">
-                {{#each users}}
-                  <div class="user">{{userName}}</div>
-                {{/each}}
-              </div>
-            </div>
-          </div>
-          <input class="chatInput form-control" type="text" placeholder="Send message..." {{disableNoUser}} />
+        {{#with room}}
+          {{> chatRoom room=room}}
         {{else}}
           <h2> Not in a room </h2>
         {{/with}}

@@ -7,14 +7,6 @@ Template.roomsPage.events({
 
   "click .room": function() {
     this.joinRoom();
-  },
-
-  "keyup .chatInput": function(e) {
-    if( e.keyCode == 13 || e.keyCode == 10 ) {
-      this.sendChatMessage( e.currentTarget.value );
-      e.currentTarget.value = "";
-      e.preventDefault();
-    }
   }
 });
 
@@ -29,50 +21,26 @@ Template.roomsPage.helpers({
     return result;
   },
 
-  roomData: function() {
-    var sessionRoomId = Session.get(xCard.session.currentRoomId ),
-        roomMembership = RoomMembership.findOne({ owner: Meteor.userId() }),
-        result = null;
+  room: function() {
+    var sessionRoomId = Session.get(xCard.session.currentRoomId),
+        room = new RoomModel(RoomCollection.findOne(sessionRoomId));
 
-    if( roomMembership ) {
-      result = new RoomModel(RoomCollection.findOne(roomMembership.roomId))
-      Session.set(xCard.session.currentRoomId, result._id);
-
-      // Subscribe to the rooms chat
-      Meteor.subscribe("roomChat", result._id);
-    } else if( sessionRoomId ) {
-      result = new RoomModel(sessionRoomId);
-
-      // Subscribe to the rooms chat
-      Meteor.subscribe("roomChat", result._id);
-    }
-
-    return result;
+    return room;
   },
 
   isSelected: function() {
     return Session.get(xCard.session.currentRoomId) == this._id ? "selected" : "";
-  },
-
-  chatLines: function() {
-    var result = RoomChat.find({ roomId: Session.get(xCard.session.currentRoomId) }).fetch();
-    return result;
   }
+
 });
 
-// Add observer for the RoomChat to scroll the chat div to the bottom when
-// a new message is recieved. We wrap the scroll in a timeout to allow Meteor
-// to update the view. The timeout handle is cached to allow us to only call the
-// scroll code exactly once for frequent updates.
-var scrollTimeoutHandle = null;
-RoomChat.find().observe({
+
+RoomMembership.find().observe({
     added: function(ele) {
-      clearTimeout( scrollTimeoutHandle );
-      scrollTimeoutHandle = setTimeout(function(){
-        var chatDiv = document.getElementById("chat");
-        if( chatDiv ) {
-          chatDiv.scrollTop = chatDiv.scrollHeight;
-        }
-      }, 50 );
+      if( ele.owner == Meteor.userId() ) {
+        Session.set(xCard.session.currentRoomId, ele.roomId);
+        // Subscribe to the rooms chat
+        Meteor.subscribe("roomChat", ele.roomId);
+      }
     }
 });

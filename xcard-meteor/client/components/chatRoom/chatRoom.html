@@ -1,0 +1,20 @@
+<template name="chatRoom">
+  <div class="chatRoom">
+    <div class="roomName">{{name}}</div>
+    <div class="chat">
+      <div class="chatTable row">
+        <div id="chat" class="chatLines col-xs-10">
+        {{#each chatLines}}
+            <div><strong>{{name}}</strong>: {{msg}}</div>
+        {{/each}}
+        </div>
+        <div class="users col-xs-2">
+          {{#each users}}
+            <div class="user">{{userName}}</div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    <input class="chatInput form-control" type="text" placeholder="Send message..." {{disableNoUser}} />
+  </div>
+</template>
