@@ -31,11 +31,17 @@ Template.roomsPage.helpers({
 
   roomData: function() {
     var roomMembership = RoomMembership.findOne(),
+        sessionRoomId = Session.get(xCard.session.currentRoomId),
         result = null;
 
     if( roomMembership ) {
       result = new RoomModel(RoomCollection.findOne(roomMembership.roomId))
       Session.set(xCard.session.currentRoomId, result._id);
+
+      // Subscribe to the rooms chat
+      Meteor.subscribe("roomChat", result._id);
+    } else if( sessionRoomId ) {
+      result = new RoomModel(sessionRoomId);
 
       // Subscribe to the rooms chat
       Meteor.subscribe("roomChat", result._id);
@@ -64,7 +70,9 @@ RoomChat.find().observe({
       clearTimeout( scrollTimeoutHandle );
       scrollTimeoutHandle = setTimeout(function(){
         var chatDiv = document.getElementById("chat");
-        chatDiv.scrollTop = chatDiv.scrollHeight;
+        if( chatDiv ) {
+          chatDiv.scrollTop = chatDiv.scrollHeight;
+        }
       }, 50 );
     }
 });

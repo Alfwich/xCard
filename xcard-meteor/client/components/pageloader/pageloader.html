@@ -1,8 +1,10 @@
 <template name="pageLoader">
   <div id="pageLoader">
     {{> topBar}}
-	  {{#with loadPage }}
-	    {{> template }}
-	  {{/with}}
+    <div id="content">
+  	  {{#with loadPage }}
+  	    {{> template }}
+  	  {{/with}}
+    </div>
   </div>
 </template>
