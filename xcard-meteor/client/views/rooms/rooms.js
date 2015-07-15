@@ -45,7 +45,7 @@ Template.roomsPage.helpers({
   },
 
   chatLines: function() {
-    var result = RoomChat.find().fetch();
+    var result = RoomChat.find({ roomId: Session.get(xCard.session.currentRoomId)}).fetch();
     return result;
   }
 });
