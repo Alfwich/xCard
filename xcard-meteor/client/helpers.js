@@ -24,5 +24,9 @@ Template.registerHelper( "ifFalse", function(a,result) {
 });
 
 Template.registerHelper( "isArray", function(a) {
-    return _.isArray(a);
+  return _.isArray(a);
+});
+
+Template.registerHelper( "isUndefined", function(a) {
+  return _.isUndefined(a) ? true : false;
 });

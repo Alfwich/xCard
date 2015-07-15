@@ -27,6 +27,11 @@ Template.allCards.helpers({
         result = [],
         options = { sort: { title: 1 } };
 
+    // TODO: Refactor. This functionality should be factored into its own method
+    if( this.disableFilter ) {
+      filterRegex = RegExp(".*", "gi");
+    }
+
     result = CardCollection.find( { title: { $regex: filterRegex }}, options).fetch();
 
     // Create a CardModel from each result of the query
@@ -36,7 +41,9 @@ Template.allCards.helpers({
       return new CardModel(ele);
     }).value();
 
-    Session.set( xCard.session.filteredCardsCount, result.length );
+    if( !this.disableFilter ) {
+      Session.set( xCard.session.filteredCardsCount, result.length );
+    }
 
     return result;
   },

@@ -1,0 +1,14 @@
+<template name="cardsPage">
+  <div class="cardsPage">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2>All Cards</h2>
+        {{> cardList type="all"}}
+      </div>
+      <div class="col-xs-6">
+        <h2>Your Cards</h2>
+        {{> cardList type="user"}}
+      </div>
+    </div>
+  </div>
+</template>

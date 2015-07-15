@@ -7,4 +7,13 @@ Template.topBar.events({
   "click li.rooms": function() {
     xCard.PageLoader.loadPage( "rooms" );
   },
+
+  "click li.cards": function() {
+    xCard.PageLoader.loadPage( "cards" );
+  },
+
+  "click li.decks": function() {
+    xCard.PageLoader.loadPage( "decks" );
+  }
+
 });
