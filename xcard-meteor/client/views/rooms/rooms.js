@@ -44,8 +44,12 @@ Template.roomsPage.helpers({
     return result;
   },
 
+  isSelected: function() {
+    return Session.get(xCard.session.currentRoomId) == this._id ? "selected" : "";
+  },
+
   chatLines: function() {
-    var result = RoomChat.find({ roomId: Session.get(xCard.session.currentRoomId)}).fetch();
+    var result = RoomChat.find({ roomId: Session.get(xCard.session.currentRoomId) }).fetch();
     return result;
   }
 });
