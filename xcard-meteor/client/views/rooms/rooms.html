@@ -30,6 +30,8 @@
             </table>
           </div>
           <input class="chatInput form-control" type="text" placeholder="Send message..." {{disableNoUser}} />
+        {{else}}
+          <h2> Not in a room </h2>
         {{/with}}
       </div>
     </div>

@@ -31,7 +31,7 @@ Template.roomsPage.helpers({
 
   roomData: function() {
     var roomMembership = RoomMembership.findOne(),
-        result = {};
+        result = null;
 
     if( roomMembership ) {
       result = new RoomModel(RoomCollection.findOne(roomMembership.roomId))
