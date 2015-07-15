@@ -16,7 +16,20 @@
       </div>
       <div class="col-xs-10">
         {{#with roomData}}
-          {{this}}
+          <div class="roomName">{{name}}</div>
+          <div id="chat" class="chat">
+            <table class="chatTable">
+              <tbody>
+                {{#each chatLines}}
+                  <tr>
+                    <td><strong>{{name}}</strong>: {{msg}}</td>
+                    <td class="createdDate"><em class="unselectable">{{created}}</em></td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+          <input class="chatInput form-control" type="text" placeholder="Send message..." {{disableNoUser}} />
         {{/with}}
       </div>
     </div>

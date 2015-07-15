@@ -9,6 +9,4 @@ Router.map( function(){
 xCard.validPages = [ "home", "deck", "rooms" ];
 xCard.defaultPage = xCard.validPages[0];
 
-location.hash = xCard.defaultPage;
-
 document.title = "xCard Card Game";

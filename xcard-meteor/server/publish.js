@@ -18,3 +18,8 @@ Meteor.publish( "allRooms", function() {
 Meteor.publish( "roomMembership", function() {
 	return RoomMembership.find({ owner: this.userId });
 });
+
+// Return the chat entries for the room the current user is within
+Meteor.publish( "roomChat", function( currentRoom ) {
+	return RoomChat.find({ roomId: currentRoom });
+})
