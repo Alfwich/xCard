@@ -1,13 +1,13 @@
 <template name="deckPage">
   <div class="deckPage">
-    <button class="returnToMain btn btn-default">Back</button>
     {{#with loadDeck}}
     <div class="row">
       <div class="col-xs-6">
-        <h2>Your Collection</h2>
+        <h2>Your Cards</h2>
         {{> cardList type="edit" deck=this}}
       </div>
       <div class="col-xs-6">
+        <h2>Deck Cards</h2>
         {{> deck type="detailed" deck=this}}
       </div>
     </div>

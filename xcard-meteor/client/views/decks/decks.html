@@ -1,4 +1,22 @@
 <template name="decksPage">
-  <div class="decksPage">
+  <h3> Your Decks<button class="addNewDeck btn btn-default" {{disableNoUser}}>Create New Deck</button></h3>
+  <div class="userDecks">
+    <table class="table">
+      <tbody>
+        {{#each ownedDecks}}
+          <tr>
+            <td>
+              <div class="deckControls">
+                <button class="editDeck btn btn-default">Edit</button>
+                <button class="removeDeck btn btn-danger">Remove</button>
+              </div>
+              <div class="userDecksOutput">
+                {{> deck type="overview" deck=this}}
+              </div>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </div>
 </template>
