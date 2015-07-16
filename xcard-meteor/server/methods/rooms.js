@@ -1,4 +1,4 @@
-var sendServerChatMessage = function(msg,roomId) {
+var sendRoomChatMessage = function(msg,roomId) {
   RoomChat.insert({
       owner: "server",
       name: "Server",
@@ -9,19 +9,20 @@ var sendServerChatMessage = function(msg,roomId) {
 }
 
 var clientJoinedMessage = function(user, roomId) {
-  sendServerChatMessage(user.username + " has joined the room", roomId);
+  sendRoomChatMessage(user.username + " has joined the room", roomId);
 }
 
 var sendGlobalChatMessage = function(msg) {
   _.foreach( RoomCollection.find().fetch(), function(room) {
-    sendServerChatMessage( room._id, id );
+    sendRoomChatMessage( room, room._id );
   });
 }
 
 Meteor.methods({
   createRoom: function(roomName) {
     if( roomName && Meteor.userId() ) {
-      RoomCollection.insert({ creator: Meteor.userId(), name: roomName });
+      var roomId = RoomCollection.insert({ creator: Meteor.userId(), name: roomName });
+      sendRoomChatMessage( "Room: '" + roomName + "' created on " + new Date(), roomId );
     }
   },
 

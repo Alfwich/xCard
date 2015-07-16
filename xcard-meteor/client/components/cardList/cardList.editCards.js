@@ -3,13 +3,7 @@ var editFilterInput = "xCard.cardList.editFilterString";
 // EDIT DECK CARDS
 Template.editDeckCards.events({
   "click .addToDeck": function() {
-    this.deck.removeCard( this );
-  },
-
-  "click .removeFromDeck": function() {
-    if( this.deck ) {
-      this.deck.addCard( this );
-    }
+    this.deck.addCard( this );
   },
 
   "keyup input.filter": function(e) {
@@ -18,6 +12,7 @@ Template.editDeckCards.events({
 });
 
 Template.editDeckCards.helpers({
+  
   cards: function() {
     var result = xCard.helpers.getAllUserCards(Session.get(editFilterInput)),
         deck = this.deck;

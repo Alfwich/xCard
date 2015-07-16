@@ -8,6 +8,7 @@ DeckModel = function(raw) {
 };
 
 DeckModel.prototype.processCards = function() {
+  var deck = this;
   // Generate an array of CardModels for each card in the deck
   this.cards = _(this.cards)
     .map( function(deckOwnership) {
@@ -16,6 +17,7 @@ DeckModel.prototype.processCards = function() {
 
       if( ownership ) {
         card = new CardModel(CardCollection.findOne(ownership.cardId));
+        card.deck = deck;
         card.count = deckOwnership.count;
       } else {
         console.warn( "Attempted to unpack ownership object which did not exist: " + deckOwnership.ownershipId);
@@ -24,6 +26,7 @@ DeckModel.prototype.processCards = function() {
       return card;
     })
     .filter()
+    .sortBy("title")
     .value();
 }
 
