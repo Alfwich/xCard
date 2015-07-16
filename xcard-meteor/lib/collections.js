@@ -4,3 +4,4 @@ UserDeckCollection = new Mongo.Collection("UserDecks")
 RoomCollection = new Mongo.Collection("Rooms");
 RoomMembership = new Mongo.Collection("RoomMemberships");
 RoomChat = new Mongo.Collection("RoomChat");
+GameCollection = new Mongo.Collection("Games");

@@ -1,0 +1,12 @@
+<template name="gamesPage">
+  <div class="gamesPage">
+    <div class="row">
+      <div class="col-xs-12">
+        <button class="newGame">Create new game</button>
+        {{#each games}}
+          {{this}}
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</template>

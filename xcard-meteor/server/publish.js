@@ -23,3 +23,7 @@ Meteor.publish( "roomMembership", function() {
 Meteor.publish( "roomChat", function( currentRoom ) {
 	return RoomChat.find({ roomId: currentRoom });
 })
+
+Meteor.publish( "games", function() {
+	return Games.find();
+})

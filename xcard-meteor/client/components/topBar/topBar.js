@@ -14,6 +14,10 @@ Template.topBar.events({
 
   "click li.decks": function() {
     xCard.PageLoader.loadPage( "decks" );
+  },
+
+  "click li.games": function() {
+    xCard.PageLoader.loadPage( "games" );
   }
 
 });
