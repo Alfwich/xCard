@@ -1,10 +1,12 @@
 
 Template.decksPage.events({
 	"click .addNewDeck": function() {
-		Meteor.call( "newDeck", function( err, deckId) {
-			Session.set( xCard.session.deckPageLoad, deckId );
-			xCard.PageLoader.loadPage( "editDeck" );
-		});
+		if(Meteor.userId()) {
+			Meteor.call( "newDeck", function( err, deckId) {
+				Session.set( xCard.session.deckPageLoad, deckId );
+				xCard.PageLoader.loadPage( "editDeck" );
+			});
+		}
 	}
 });
 

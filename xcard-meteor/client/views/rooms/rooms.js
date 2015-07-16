@@ -2,7 +2,9 @@ xCard.session.currentRoomId = "xCard.rooms.currentRoomId";
 
 Template.roomsPage.events({
   "click .addNewRoom": function() {
-    Meteor.call( "createRoom", prompt( "Please enter Room name") );
+    if(Meteor.userId()) {
+      Meteor.call( "createRoom", prompt( "Please enter Room name") );
+    }
   },
 
   "click .room": function() {
