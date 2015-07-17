@@ -37,7 +37,7 @@ Template.roomsPage.helpers({
 });
 
 
-RoomMembership.find().observe({
+RoomMembershipCollection.find().observe({
     added: function(ele) {
       if( ele.owner == Meteor.userId() ) {
         Session.set(xCard.session.currentRoomId, ele.roomId);

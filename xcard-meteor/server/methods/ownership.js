@@ -2,7 +2,7 @@
 Meteor.methods({
   acquireCard: function(cardId) {
     if( Meteor.userId() ) {
-      var ownership = CardOwnershipCollection.findOne( { cardId: cardId } );
+      var ownership = CardOwnershipCollection.findOne( { owner: Meteor.userId(), cardId: cardId } );
       if( ownership ) {
         ownership.count += 1;
         CardOwnershipCollection.update( ownership._id, { $set: { count: ownership.count } } );
@@ -13,7 +13,7 @@ Meteor.methods({
   },
 
   removeCard: function(cardId) {
-    var ownership = CardOwnershipCollection.findOne( { cardId: cardId } );
+    var ownership = CardOwnershipCollection.findOne( { owner: Meteor.userId(), cardId: cardId } );
     if( ownership ) {
       ownership.count -= 1;
       if( ownership.count ) {

@@ -16,14 +16,14 @@ Meteor.publish( "allRooms", function() {
 });
 
 Meteor.publish( "roomMembership", function() {
-	return RoomMembership.find();
+	return RoomMembershipCollection.find();
 });
 
 // Return the chat entries for the room the current user is within
 Meteor.publish( "roomChat", function( currentRoom ) {
-	return RoomChat.find({ roomId: currentRoom });
+	return RoomChatCollection.find({ roomId: currentRoom });
 })
 
 Meteor.publish( "games", function() {
-	return Games.find();
+	return GameCollection.find();
 })

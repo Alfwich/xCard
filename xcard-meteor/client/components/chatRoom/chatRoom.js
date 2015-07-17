@@ -12,7 +12,7 @@ var scrollTimeoutHandle = null;
 
 Template.chatRoom.helpers({
   chatLines: function() {
-    var result = RoomChat.find({ roomId: this.room._id }).fetch();
+    var result = RoomChatCollection.find({ roomId: this.room._id }).fetch();
     return result;
   },
 
@@ -40,7 +40,7 @@ Template.chatRoom.rendered = function() {
 // a new message is recieved. We wrap the scroll in a timeout to allow Meteor
 // to update the view. The timeout handle is cached to allow us to only call the
 // scroll code exactly once for frequent updates.
-RoomChat.find().observe({
+RoomChatCollection.find().observe({
     added: function(ele) {
       scrollChatToBottom();
     }

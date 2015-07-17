@@ -1,5 +1,5 @@
 var sendRoomChatMessage = function(msg,roomId) {
-  RoomChat.insert({
+  RoomChatCollection.insert({
       owner: "server",
       name: "Server",
       roomId: roomId,
@@ -29,10 +29,10 @@ Meteor.methods({
   joinRoom: function( roomId ) {
     var room = RoomCollection.findOne(roomId);
     if( room && this.userId ) {
-      var membershipEntry = RoomMembership.findOne({ owner: Meteor.userId() });
+      var membershipEntry = RoomMembershipCollection.findOne({ owner: Meteor.userId() });
       if( membershipEntry ) {
         if( membershipEntry.roomId != roomId ) {
-          RoomMembership.update(membershipEntry._id, { $set: { roomId: roomId } });
+          RoomMembershipCollection.update(membershipEntry._id, { $set: { roomId: roomId } });
           clientJoinedMessage(Meteor.user(), roomId);
         }
       } else {
@@ -41,7 +41,7 @@ Meteor.methods({
           userName: Meteor.user().username,
           roomId: roomId
         };
-        RoomMembership.insert( membershipEntry );
+        RoomMembershipCollection.insert( membershipEntry );
         clientJoinedMessage(Meteor.user(), roomId);
       }
     }
@@ -60,7 +60,7 @@ Meteor.methods({
         created: new Date()
       };
 
-      RoomChat.insert( chatMessageEntry );
+      RoomChatCollection.insert( chatMessageEntry );
     }
 
   }
