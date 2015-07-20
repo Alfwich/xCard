@@ -6,7 +6,6 @@ Template.gamesPage.events({
   },
 
   "click .useDeck": function() {
-    console.log( this );
     Meteor.call( "handleGameAction", {
       type: "select-deck",
       deckId: UserDeckCollection.findOne()._id},

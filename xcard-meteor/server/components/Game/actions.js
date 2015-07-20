@@ -8,7 +8,7 @@ GameActions = new Mongo.Collection("GAMEACTIONS");
 GameActions.find().observe({
     added: function(action) {
       var gameContainer = GameCollection.findOne(action.game);
-
+      
       if( gameContainer && action ) {
         var game = new Game( gameContainer.game );
 
@@ -19,6 +19,6 @@ GameActions.find().observe({
       }
 
       // After the action has been completed then remove it from the collection
-      GameActions.remove(action);
+      GameActions.remove( action._id );
     }
 });

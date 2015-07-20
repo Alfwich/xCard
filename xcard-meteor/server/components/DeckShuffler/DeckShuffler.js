@@ -15,12 +15,16 @@ DeckShuffler = function(deck) {
             // Add the number of cards to the array equal to the number of cards
             // of this type in the deck
             for( var i = 0; i < ele.count; i++ ) {
-              result.push(""+card._id);
+              result.push(card._id);
             }
           }
         }
     });
   }
+
+  result = _(result)
+    .shuffle()
+    .value();
 
   return _.shuffle(result);
 }
