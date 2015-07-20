@@ -35,7 +35,12 @@ RANDOM_TITLES = [
 ]
 
 def genCard(name):
-	result = { "title": name, "body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius metus quis tempus venenatis. Ut non ultricies mi, a blandit lorem. Vestibulum blandit sem et sem semper maximus. Vestibulum quis accumsan odio, vel eleifend elit. Curabitur ultrices risus ac auctor malesuada. Aenean accumsan leo at elit commodo faucibus. Praesent tempus enim vitae fringilla faucibus. Pellentesque sodales maur", "image": "test0%d.jpg" % ( random.randint(1,9) ) }
+	result = {
+		"_id": ''.join([random.choice('0123456789abcdef') for x in range(24)]),
+		"title": name,
+		"body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius metus quis tempus venenatis. Ut non ultricies mi, a blandit lorem. Vestibulum blandit sem et sem semper maximus. Vestibulum quis accumsan odio, vel eleifend elit. Curabitur ultrices risus ac auctor malesuada. Aenean accumsan leo at elit commodo faucibus. Praesent tempus enim vitae fringilla faucibus. Pellentesque sodales maur",
+		"image": "test0%d.jpg" % ( random.randint(1,9) )
+	}
 	return result
 
 def main():
