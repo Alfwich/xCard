@@ -1,6 +1,6 @@
 <template name="useGameCard">
   {{#if userId}}
-    <button class="btn btn-default btn-xs">Use Card</button>
+    <button class="btn btn-default btn-xs useGameCard">Use Card</button>
   {{/if}}
 </template>
 
@@ -8,7 +8,7 @@
   {{#if userId}}
     {{#with ownedDecks}}
       <h2> Select a deck </h2>
-      {{> deckList type="custom" data=decks customClass="gameSelectDeck"}}
+      {{> deckList type="custom" data=decks customClass="selectDeck"}}
     {{/with}}
   {{/if}}
 </template>
@@ -80,7 +80,7 @@
             <div class="col-xs-8">
               <div class="playerCards">
                 {{#with playerCards}}
-                  {{> cardList type="custom" data=cards controls="useGameCard"}}
+                  {{> cardList type="custom" data=cards customClass="useGameCard"}}
                 {{/with}}
               </div>
             </div>

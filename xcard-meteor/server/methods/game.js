@@ -24,8 +24,8 @@ Meteor.methods({
     return result;
   },
 
-  handleGameAction: function(action,game) {
-    action.game = game;
+  handleGameAction: function(action) {
+    action.game = action.gameId;
     action.playerId = this.userId;
     GameActions.insert( action );
   }

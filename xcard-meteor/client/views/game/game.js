@@ -14,24 +14,21 @@ var getPlayerAttribute = function(game, attr, def) {
   return result;
 }
 
-Template.useGameCard.events({
-  "click button": function(e) {
-    Meteor.call( "handleGameAction", {
-        type: "use-card",
-        cardId: this.data._id
-      },
-      Session.get( xCard.session.currentGameId )
-    );
-  }
-})
-
 Template.gamePage.events({
   "click .selectDeck": function() {
+    console.log( this );
     Meteor.call( "handleGameAction", {
       type: "select-deck",
-      deckId: UserDeckCollection.findOne()._id
-    }, this._id, function(){
-      console.log( arguments);
+      deckId: this.data._id,
+      gameId: Session.get( xCard.session.currentGameId )
+    });
+  },
+
+  "click .useGameCard": function() {
+    Meteor.call( "handleGameAction", {
+        type: "use-card",
+        cardId: this.data._id,
+        gameId: Session.get( xCard.session.currentGameId )
     });
   }
 });
@@ -57,8 +54,6 @@ Template.gamePage.helpers({
 
     return gameContainer;
   },
-
-
 
   isActivePlayer: function() {
     return this.game.isActivePlayer ? "active" : "";
