@@ -31,7 +31,8 @@ xCard.helpers.getAllUserCards = function(filterString) {
     return card;
   }).filter( function(ele) {
     return ele.title.length;
-  }).value();
+  }).sortBy("title")
+  .value();
 
   return result;
 }
