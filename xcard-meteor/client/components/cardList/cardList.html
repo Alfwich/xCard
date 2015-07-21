@@ -12,6 +12,20 @@
     {{#if equals type "deck"}}
       {{> deckCards}}
     {{/if}}
+    {{#if equals type "custom"}}
+      {{> customCards data=data}}
+    {{/if}}
+  </div>
+</template>
+
+<template name="customCards">
+  <div class="customCards">
+    {{#each data}}
+      <div class="card-container">
+        {{> card }}
+        <div class="card-controls"></div>
+      </div>
+    {{/each}}
   </div>
 </template>
 

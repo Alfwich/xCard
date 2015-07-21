@@ -8,7 +8,6 @@
             <th>Game Id</th>
             <th>Creator</th>
             <th>Game State</th>
-            <th>Player State</th>
             <th>Actions</th>
           </thead>
           <tbody>
@@ -23,42 +22,9 @@
                       {{current}}
                     {{/with}}
                   </td>
-                  <td>
-                    {{#each playerData}}
-                      <h3>Player: {{playerId}}</h3>
-                      <ul>
-                        <li>
-                          <strong>Deck:</strong>
-                          {{#each deck}}
-                            {{this}}
-                          {{/each}}
-                        </li>
-                        <li>
-                          <strong>Hand:</strong>
-                          {{#each hand}}
-                            {{this}}
-                          {{/each}}
-                        </li>
-                        <li>
-                          <strong>Discard:</strong>
-                          {{#each discard}}
-                            {{this}}
-                          {{/each}}
-                        </li>
-                        <li>
-                          <strong>Battlefield:</strong>
-                          {{#each battlefield}}
-                            {{this}}
-                          {{/each}}
-                        </li>
-                      </ul>
-                    {{/each}}
-                  </td>
                 {{/with}}
                 <td>
-                  {{#if equals game.state.current "begin" }}
-                    <button class="useDeck">Use A Deck</button>
-                  {{/if}}
+                  <button class="enterGame">Enter Game</button>
                 </td>
               </tr>
             {{/each}}

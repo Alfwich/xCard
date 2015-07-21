@@ -1,26 +1,21 @@
 
+xCard.session.currentGameId = "xCard.game.currentGameId";
+
 Template.gamesPage.events({
   "click .newGame": function(){
     Meteor.call( "createGame", function(err,result){
     });
   },
 
-  "click .useDeck": function() {
-    Meteor.call( "handleGameAction", {
-      type: "select-deck",
-      deckId: UserDeckCollection.findOne()._id},
-      this._id
-    );
+  "click .enterGame": function() {
+    Session.set( xCard.session.currentGameId, this._id );
+    xCard.PageLoader.loadPage( "game" );
   }
 });
 
 Template.gamesPage.helpers({
   games: function() {
     return GameCollection.find().fetch();
-  },
-
-  playerData: function() {
-    return _.map( this.players, function(ele){ return ele; } );
   }
 
 });

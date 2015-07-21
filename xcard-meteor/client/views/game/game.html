@@ -1,0 +1,40 @@
+<template name="gamePage">
+  <div class="gamePage">
+    {{#with gameData}}
+
+      {{#if equals game.state.current "init"}}
+        <div class="row">
+          <div class="gameMessages col-xs-10">
+            {{#each game.messages}}
+              <div class="chatMessage">{{this}}</div>
+            {{/each}}
+          </div>
+        </div>
+        <button class="selectDeck">Select A Deck</button>
+      {{/if}}
+
+      {{#if equals game.state.current "playing"}}
+        <div class="row">
+          <div class="gameMessages col-xs-10">
+            {{#each game.messages}}
+              <div class="chatMessage">{{this}}</div>
+            {{/each}}
+          </div> 
+          <div class="players col-xs-2">
+            <h3>Players</h3>
+            {{#each players}}
+              <div class="playerName">{{this.playerName}}</div>
+            {{/each}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="playerCards">
+            {{#with playerCards}}
+              {{> cardList type="custom" data=cards}}
+            {{/with}}
+          </div>
+        </div>
+      {{/if}}
+    {{/with}}
+  </div>
+</template>

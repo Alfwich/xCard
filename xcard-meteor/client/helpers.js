@@ -27,6 +27,10 @@ Template.registerHelper( "isArray", function(a) {
   return _.isArray(a);
 });
 
+Template.registerHelper( "isString", function(a) {
+  return _.isString(a);
+});
+
 Template.registerHelper( "isUndefined", function(a) {
   return _.isUndefined(a) ? true : false;
 });

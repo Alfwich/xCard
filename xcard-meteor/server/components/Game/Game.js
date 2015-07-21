@@ -20,6 +20,7 @@ Game.prototype._initPlayers = function(players) {
       this.playersMap[playerId] = playerIndex;
       this.players[playerIndex++] = {
         playerId: playerId,
+        playerName: UserCollection.findOne(playerId).username,
         deck: null,
         hand: null,
         discard: [],
@@ -29,6 +30,8 @@ Game.prototype._initPlayers = function(players) {
         maxMana: 1,
         mana: 1,
       };
+
+      this.addGameMessage( UserCollection.findOne(playerId).username + " has joined the game." );
     }.bind(this));
   }
 }
@@ -38,7 +41,7 @@ Game.prototype.handleAction = function(action) {
 
   // Resolve the playerId for the acting player
   action.playerGameId = this.playersMap[action.playerId];
-  action.playerName = UserCollection.findOne(action.playerId).username;
+  var player = this.players[action.playerGameId];
 
   if( action.playerGameId ) {
     // Switch based on the action.
@@ -48,6 +51,7 @@ Game.prototype.handleAction = function(action) {
         var deck = UserDeckCollection.findOne(action.deckId);
         if( deck ) {
           this.players[action.playerGameId].deck = DeckShuffler( deck );
+          this.addGameMessage( player.playerName + " has chosen a deck." );
           result = true;
         }
       break;
@@ -57,19 +61,21 @@ Game.prototype.handleAction = function(action) {
       break;
 
       case "use-card":
-        console.log( this.state );
-        var card = CardCollection.findOne( action.cardId ),
-            player = this.players[action.playerGameId];
+        var card = CardCollection.findOne( action.cardId );
 
         if( action.playerGameId == this.state.activePlayer &&
             card &&
             _.contains(this.players[action.playerGameId].hand, action.cardId ) ) {
 
           // Do card actions
-          this.addGameMessage( action.playerName + " used card " + action.cardId );
+          this.addGameMessage( player.playerName + " used card " + action.cardId );
 
           // Remove the card from the players hand and place into discard
           player.discard.push( player.hand.splice(player.hand.indexOf(action.cardId), 1) );
+
+
+          // Draw a single card from the players deck and place in hand
+          player.hand.push( player.deck.splice(0,1) );
 
           // Change active player to the next player
           this.state.activePlayer =
@@ -118,6 +124,7 @@ Game.prototype.updateGameState = function() {
       if( alivePlayers.length < 2 ) {
         this.state.current = "finished";
         // Do some winning player cleanup
+        this.addGameMessage( alivePlayers[0].playerName + " has won the game!" );
       }
 
   }
