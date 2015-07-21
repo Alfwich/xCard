@@ -13,17 +13,23 @@
       {{> deckCards}}
     {{/if}}
     {{#if equals type "custom"}}
-      {{> customCards data=data}}
+      {{> customCards}}
     {{/if}}
   </div>
 </template>
 
 <template name="customCards">
   <div class="customCards">
-    {{#each data}}
+    {{#each unpackData}}
       <div class="card-container">
-        {{> card }}
-        <div class="card-controls"></div>
+        {{#with card}}
+          {{> card }}
+        {{/with}}
+        <div class="card-controls">
+          {{#if isDefined controls}}
+            {{> controlsTemplate}}
+          {{/if}}
+        </div>
       </div>
     {{/each}}
   </div>

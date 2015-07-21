@@ -1,5 +1,5 @@
 
-var scrollTimeoutHandle = null;
+var scrollTimeoutHandle = null,
     scrollChatToBottom = function() {
       clearTimeout( scrollTimeoutHandle );
       scrollTimeoutHandle = setTimeout(function(){
@@ -8,7 +8,7 @@ var scrollTimeoutHandle = null;
           chatDiv.scrollTop = chatDiv.scrollHeight;
         }
       }, 50 );
-    }
+    };
 
 Template.chatRoom.helpers({
   chatLines: function() {

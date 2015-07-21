@@ -1,40 +1,77 @@
+<template name="useGameCard">
+  {{#if userId}}
+    <button class="btn btn-default btn-xs">Use Card</button>
+  {{/if}}
+</template>
+
+<template name="gameMessages">
+  <div id="gameStateOutput" class="gameMessages col-xs-10">
+    {{#each game.messages}}
+      <div  class="chatMessage">{{this}}</div>
+    {{/each}}
+  </div>
+</template>
+
 <template name="gamePage">
   <div class="gamePage">
     {{#with gameData}}
+      <div class="gameContainer {{isActivePlayer}}">
+        {{#if equals game.state.current "init"}}
+          <div class="row">
+            {{> gameMessages}}
+          </div>
+          {{#if userId}}
+            <button class="selectDeck">Select A Deck</button>
+          {{/if}}
+        {{/if}}
 
-      {{#if equals game.state.current "init"}}
-        <div class="row">
-          <div class="gameMessages col-xs-10">
-            {{#each game.messages}}
-              <div class="chatMessage">{{this}}</div>
-            {{/each}}
+        {{#if equals game.state.current "playing"}}
+          <div class="row">
+            {{> gameMessages}}
+            <div class="players col-xs-2">
+              <h3>Players</h3>
+              {{#each players}}
+                <div class="playerName">{{this.playerName}}</div>
+              {{/each}}
+            </div>
           </div>
-        </div>
-        <button class="selectDeck">Select A Deck</button>
-      {{/if}}
+          <div class="row">
+            <div class="col-xs-2">
+              <div class="playerStats">
+                <div class="playerHealth">
+                  Health: {{playerHealth}}
+                </div>
+                <div class="playerMana">
+                  Mana: {{playerCurrentMana}}/{{playerMaxMana}}
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-2">
+              <div class="playerZones">
+                <div class="playerDeck">
+                  {{playerDeck}}
+                </div>
+                <div class="playerExile">
+                  {{playerExile}}
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-8">
+              <div class="playerCards">
+                {{#with playerCards}}
+                  {{> cardList type="custom" data=cards controls="useGameCard"}}
+                {{/with}}
+              </div>
+            </div>
+          </div>
+        {{/if}}
 
-      {{#if equals game.state.current "playing"}}
-        <div class="row">
-          <div class="gameMessages col-xs-10">
-            {{#each game.messages}}
-              <div class="chatMessage">{{this}}</div>
-            {{/each}}
-          </div> 
-          <div class="players col-xs-2">
-            <h3>Players</h3>
-            {{#each players}}
-              <div class="playerName">{{this.playerName}}</div>
-            {{/each}}
+        {{#if equals game.state.current "finished"}}
+          <div class="row">
+            {{> gameMessages}}
           </div>
-        </div>
-        <div class="row">
-          <div class="playerCards">
-            {{#with playerCards}}
-              {{> cardList type="custom" data=cards}}
-            {{/with}}
-          </div>
-        </div>
-      {{/if}}
+        {{/if}}
+      </div>
     {{/with}}
   </div>
 </template>

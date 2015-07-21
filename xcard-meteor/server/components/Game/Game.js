@@ -36,6 +36,19 @@ Game.prototype._initPlayers = function(players) {
   }
 }
 
+Game.prototype.addGameMessage = function(msg) {
+  this.messages.push( msg );
+}
+
+Game.prototype.addSystemMessage = function(msg) {
+  this.addGameMessage( "###SYSTEM: " + msg );
+}
+
+Game.prototype.transitionState = function(newState) {
+  this.state.current = newState;
+  this.addSystemMessage( "TRANSITION TO '" + newState + "' STATE" );
+}
+
 Game.prototype.handleAction = function(action) {
   var result = null;
 
@@ -43,10 +56,12 @@ Game.prototype.handleAction = function(action) {
   action.playerGameId = this.playersMap[action.playerId];
   var player = this.players[action.playerGameId];
 
+  this.addSystemMessage( "(" + player.playerName + ") HANDLE ACTION:" + action.type );
   if( action.playerGameId ) {
     // Switch based on the action.
     // TODO: Create some way to gate actions based on the current game state
     switch(action.type) {
+      
       case "select-deck":
         var deck = UserDeckCollection.findOne(action.deckId);
         if( deck ) {
@@ -56,13 +71,9 @@ Game.prototype.handleAction = function(action) {
         }
       break;
 
-      case "shuffle-deck":
-        this.players[action.playerGameId].deck = _.shuffle(this.players[action.playerGameId].deck);
-      break;
-
       case "use-card":
         var card = CardCollection.findOne( action.cardId );
-
+        console.log( card );
         if( action.playerGameId == this.state.activePlayer &&
             card &&
             _.contains(this.players[action.playerGameId].hand, action.cardId ) ) {
@@ -73,13 +84,10 @@ Game.prototype.handleAction = function(action) {
           // Remove the card from the players hand and place into discard
           player.discard.push( player.hand.splice(player.hand.indexOf(action.cardId), 1) );
 
-
           // Draw a single card from the players deck and place in hand
-          player.hand.push( player.deck.splice(0,1) );
-
-          // Change active player to the next player
-          this.state.activePlayer =
-            (this.state.activePlayer == this.state.totalPlayers) ? 1 : this.state.activePlayer+1;
+          if( player.deck.length ) {
+            player.hand.push( player.deck.splice(0,1)[0] );
+          }
 
           result = true;
         }
@@ -95,8 +103,8 @@ Game.prototype.handleAction = function(action) {
   return result;
 }
 
-Game.prototype.addGameMessage = function(msg) {
-  this.messages.push( msg );
+Game.prototype.executeCardActions = function( card, game ) {
+
 }
 
 Game.prototype.updateGameState = function() {
@@ -105,7 +113,7 @@ Game.prototype.updateGameState = function() {
       // Check to see if all players have selected a deck. If this is true then
       // for each player draw 10 cards and start the game.
       if( _.every(this.players, function(player){ return player.deck; })) {
-        this.state.current = "playing"
+        this.transitionState( "playing" );
 
         // For each player take the top 10 cards from their deck and place into their hand
         _.each( this.players, function(player,playerGameId,players) {
@@ -122,9 +130,20 @@ Game.prototype.updateGameState = function() {
       });
 
       if( alivePlayers.length < 2 ) {
-        this.state.current = "finished";
-        // Do some winning player cleanup
-        this.addGameMessage( alivePlayers[0].playerName + " has won the game!" );
+        this.transitionState("finished");
+
+        if( alivePlayers.length == 1 ) {
+          // Do some winning player cleanup
+          this.addGameMessage( alivePlayers[0].playerName + " has won the game!" );
+        } else {
+          this.addGameMessage( "Draw between post-alive players" );
+        }
+      } else {
+        // Move the active player to the next player with cards
+        // Change active player to the next player
+        this.state.activePlayer =
+          (this.state.activePlayer == this.state.totalPlayers) ? 1 : this.state.activePlayer+1;
+        this.addSystemMessage( "CHANGED ACTIVE PLAYER" );
       }
 
   }

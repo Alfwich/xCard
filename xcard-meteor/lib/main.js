@@ -1,7 +1,8 @@
 
 // Function to delete the _id field of an object
-xCard.helpers.removeId = function(ele) {
+xCard.helpers.renameId = function(ele) {
   if( ele && ele["_id"] ) {
+    ele["__id"] = ele["_id"];
     delete ele["_id"];
   }
   return ele;

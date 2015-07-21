@@ -31,6 +31,10 @@ Template.registerHelper( "isString", function(a) {
   return _.isString(a);
 });
 
+Template.registerHelper( "isDefined", function(a) {
+  return !_.isUndefined(a);
+});
+
 Template.registerHelper( "isUndefined", function(a) {
-  return _.isUndefined(a) ? true : false;
+  return _.isUndefined(a);
 });

@@ -1,3 +1,31 @@
+
+var getPlayer = function( game ) {
+  return game.players[game.playerGameId];
+}
+
+var getPlayerAttribute = function( game, attr, def) {
+  var player = getPlayer( game ),
+      result = def;
+
+  if( player && !_.isUndefined( player[attr] ) ) {
+    result = player[attr];
+  }
+
+  return result;
+}
+
+Template.useGameCard.events({
+  "click button": function(e) {
+    console.log( this );
+    Meteor.call( "handleGameAction", {
+        type: "use-card",
+        cardId: this.card._id
+      },
+      Session.get( xCard.session.currentGameId )
+    );
+  }
+})
+
 Template.gamePage.events({
   "click .selectDeck": function() {
     Meteor.call( "handleGameAction", {
@@ -12,9 +40,19 @@ Template.gamePage.events({
 Template.gamePage.helpers({
   gameData: function() {
     var gameId = Session.get( xCard.session.currentGameId ),
-        game = GameCollection.findOne( gameId );
-    console.log( gameId, game );
-    return game;
+        gameContainer = GameCollection.findOne( gameId );
+
+    if( gameContainer ) {
+      gameContainer.game.playerGameId = gameContainer.game.playersMap[Meteor.userId()];
+      gameContainer.game.isActivePlayer = gameContainer.game.playerGameId == gameContainer.game.state.activePlayer;
+      console.log( gameContainer );
+    }
+
+    return gameContainer;
+  },
+
+  isActivePlayer: function() {
+    return this.game.isActivePlayer ? "isActive" : "";
   },
 
   players: function() {
@@ -22,18 +60,33 @@ Template.gamePage.helpers({
     return result;
   },
 
-  playerCards: function() {
+  playerHealth: function() {
+    return getPlayerAttribute( this.game, "health", 0 );
+  },
 
+  playerCurrentMana: function() {
+    return getPlayerAttribute( this.game, "mana", 0 );
+  },
+
+  playerMaxMana: function() {
+    return getPlayerAttribute( this.game, "maxMana", 0 );
+  },
+
+  playerDeck: function() {
+    return getPlayerAttribute( this.game, "deck", [] ).length + " cards in deck";
+  },
+
+  playerExile: function() {
+    return getPlayerAttribute( this.game, "exile", [] ).length + " cards in exile";
+  },
+
+  playerCards: function() {
     var result = {};
 
     if( this.game ) {
       // Find the correct player
-      var playerGameId = this.game.playersMap[Meteor.userId()],
-          player = this.game.players[playerGameId];
-
+      var player = this.game.players[this.game.playerGameId];
       result["cards"] = _.map( player.hand, function(ele){ return new CardModel( CardCollection.findOne( ""+ele) ); } );
-      console.log( result );
-
     }
 
     return result;
@@ -45,3 +98,24 @@ Template.gamePage.rendered = function() {
     xCard.PageLoader.loadPage( xCard.defaultPage );
   }
 }
+
+var scrollTimeoutHandle = null,
+    scrollGameStateToBottom = function() {
+      clearTimeout( scrollTimeoutHandle );
+      scrollTimeoutHandle = setTimeout(function(){
+        var chatDiv = document.getElementById("gameStateOutput");
+        if( chatDiv ) {
+          chatDiv.scrollTop = chatDiv.scrollHeight;
+        }
+      }, 50 );
+    };
+
+// Add observer for the RoomChat to scroll the chat div to the bottom when
+// a new message is recieved. We wrap the scroll in a timeout to allow Meteor
+// to update the view. The timeout handle is cached to allow us to only call the
+// scroll code exactly once for frequent updates.
+GameCollection.find().observe({
+    changed: function(from,to) {
+      scrollGameStateToBottom();
+    },
+});
