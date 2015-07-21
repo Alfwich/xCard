@@ -5,11 +5,18 @@
 </template>
 
 <template name="gameMessages">
-  <div id="gameStateOutput" class="gameMessages col-xs-10">
+  <div id="gameStateOutput" class="gameMessages">
     {{#each game.messages}}
       <div  class="chatMessage">{{this}}</div>
     {{/each}}
   </div>
+</template>
+
+<template name="gamePlayers">
+  <h3>Players</h3>
+  {{#each players}}
+    <div class="playerName {{isActive}}">{{player.playerName}}</div>
+  {{/each}}
 </template>
 
 <template name="gamePage">
@@ -18,7 +25,12 @@
       <div class="gameContainer {{isActivePlayer}}">
         {{#if equals game.state.current "init"}}
           <div class="row">
-            {{> gameMessages}}
+            <div class="col-xs-10">
+              {{> gameMessages}}
+            </div>
+            <div class="col-xs-2">
+              {{> gamePlayers}}
+            </div>
           </div>
           {{#if userId}}
             <button class="selectDeck">Select A Deck</button>
@@ -27,12 +39,11 @@
 
         {{#if equals game.state.current "playing"}}
           <div class="row">
-            {{> gameMessages}}
+            <div class="col-xs-10">
+              {{> gameMessages}}
+            </div>
             <div class="players col-xs-2">
-              <h3>Players</h3>
-              {{#each players}}
-                <div class="playerName">{{this.playerName}}</div>
-              {{/each}}
+              {{> gamePlayers}}
             </div>
           </div>
           <div class="row">
@@ -51,6 +62,9 @@
                 <div class="playerDeck">
                   {{playerDeck}}
                 </div>
+                <div class="playerDiscard">
+                  {{playerDiscard}}
+                </div>
                 <div class="playerExile">
                   {{playerExile}}
                 </div>
@@ -68,7 +82,12 @@
 
         {{#if equals game.state.current "finished"}}
           <div class="row">
-            {{> gameMessages}}
+            <div class="col-xs-10">
+              {{> gameMessages}}
+            </div>
+            <div class="col-xs-2">
+              {{> gamePlayers}}
+            </div>
           </div>
         {{/if}}
       </div>

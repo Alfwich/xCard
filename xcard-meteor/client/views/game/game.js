@@ -3,7 +3,7 @@ var getPlayer = function( game ) {
   return game.players[game.playerGameId];
 }
 
-var getPlayerAttribute = function( game, attr, def) {
+var getPlayerAttribute = function(game, attr, def) {
   var player = getPlayer( game ),
       result = def;
 
@@ -16,7 +16,6 @@ var getPlayerAttribute = function( game, attr, def) {
 
 Template.useGameCard.events({
   "click button": function(e) {
-    console.log( this );
     Meteor.call( "handleGameAction", {
         type: "use-card",
         cardId: this.card._id
@@ -52,12 +51,8 @@ Template.gamePage.helpers({
   },
 
   isActivePlayer: function() {
-    return this.game.isActivePlayer ? "isActive" : "";
-  },
-
-  players: function() {
-    var result = _.map(this.game.players, function(ele){ return ele; } );
-    return result;
+    console.log( this );
+    return this.game.isActivePlayer ? "active" : "";
   },
 
   playerHealth: function() {
@@ -80,6 +75,10 @@ Template.gamePage.helpers({
     return getPlayerAttribute( this.game, "exile", [] ).length + " cards in exile";
   },
 
+  playerDiscard: function() {
+    return getPlayerAttribute( this.game, "discard", [] ).length + " cards in discard";
+  },
+
   playerCards: function() {
     var result = {};
 
@@ -91,6 +90,18 @@ Template.gamePage.helpers({
 
     return result;
   }
+});
+
+Template.gamePlayers.helpers({
+  players: function() {
+    var result = _.map(this.game.players, function(ele){
+      return {
+        player: ele,
+        isActive: this.game.state.activePlayer == this.game.playersMap[ele.playerId] ? "isActive" : ""
+      };
+    }.bind(this));
+    return result;
+  },
 });
 
 Template.gamePage.rendered = function() {

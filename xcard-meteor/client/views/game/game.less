@@ -2,11 +2,11 @@
 
   .gameContainer {
 
-    transition: border 0.5s, padding 0.5s;
-    border: 5px solid rgba(0,0,0,0);
-
-    &.isActive {
-      border: 5px solid #0F0;
+    &:not(.active) {
+      button {
+        display: none;
+        visibility: hidden;
+      }
     }
 
     .gameMessages {
@@ -19,6 +19,16 @@
     }
 
     .players {
+      .playerName {
+        border-radius: 5px;
+        padding: 3px;
+        background-color: transparent;
+        transition: background-color 0.5s;
+
+        &.isActive {
+          background-color: #0F0;
+        }
+      }
     }
 
     .playerCards {
