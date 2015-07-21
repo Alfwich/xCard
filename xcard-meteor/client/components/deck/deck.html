@@ -1,41 +1,10 @@
-<template name="deckOverview">
-  {{#with deck}}
-    <div class="deckRow">
-      <h3>{{name}}</h3>
-      <table class="table">
-        <thead>
-          <th>Card Name</th>
-          <th>Qty</th>
-        </thead>
-        <tbody>
-          {{#each cards}}
-            <tr>
-              <td>{{title}}</td>
-              <td>{{count}}</td>
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-  {{/with}}
-</template>
 
-<template name="deckDetailed">
-  {{#with deck}}
-    <div class="deckRow">
-      <h3 class="renameDeck">{{name}}</h3>
-      {{> cardList type="deck" deck=this}}
-    </div>
-  {{/with}}
+<template name="deckTile">
+  <div class="deck-tile">
+    <div class="deckName">{{name}}</div>
+  </div>
 </template>
 
 <template name="deck">
-  <div class="deck">
-    {{#if equals type "overview"}}
-      {{> deckOverview}}
-    {{/if}}
-    {{#if equals type "detailed"}}
-      {{> deckDetailed}}
-    {{/if}}
-  </div>
+  {{> deckTile}}
 </template>

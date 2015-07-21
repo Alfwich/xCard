@@ -4,6 +4,15 @@
   {{/if}}
 </template>
 
+<template name="selectGameDeck">
+  {{#if userId}}
+    {{#with ownedDecks}}
+      <h2> Select a deck </h2>
+      {{> deckList type="custom" data=decks customClass="gameSelectDeck"}}
+    {{/with}}
+  {{/if}}
+</template>
+
 <template name="gameMessages">
   <div id="gameStateOutput" class="gameMessages">
     {{#each game.messages}}
@@ -32,9 +41,7 @@
               {{> gamePlayers}}
             </div>
           </div>
-          {{#if userId}}
-            <button class="selectDeck">Select A Deck</button>
-          {{/if}}
+          {{> selectGameDeck}}
         {{/if}}
 
         {{#if equals game.state.current "playing"}}

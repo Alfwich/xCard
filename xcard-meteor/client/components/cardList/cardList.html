@@ -21,14 +21,14 @@
 <template name="customCards">
   <div class="customCards">
     {{#each unpackData}}
-      <div class="card-container">
-        {{#with card}}
+      <div class="card-container {{customClass}}">
+        {{#with data}}
           {{> card }}
         {{/with}}
         <div class="card-controls">
-          {{#if isDefined controls}}
-            {{> controlsTemplate}}
-          {{/if}}
+          {{#with getTemplate controls}}
+            {{> loadTemplate}}
+          {{/with}}
         </div>
       </div>
     {{/each}}

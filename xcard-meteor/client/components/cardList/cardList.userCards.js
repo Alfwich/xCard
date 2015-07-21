@@ -1,4 +1,3 @@
-
 var userFilterInput = "xCard.cardList.userFilterString";
 
 Template.userCards.events({

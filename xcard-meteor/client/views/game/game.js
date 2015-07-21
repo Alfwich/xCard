@@ -18,7 +18,7 @@ Template.useGameCard.events({
   "click button": function(e) {
     Meteor.call( "handleGameAction", {
         type: "use-card",
-        cardId: this.card._id
+        cardId: this.data._id
       },
       Session.get( xCard.session.currentGameId )
     );
@@ -36,6 +36,14 @@ Template.gamePage.events({
   }
 });
 
+Template.selectGameDeck.helpers({
+  ownedDecks: function() {
+    var result = UserDeckCollection.find( { owner: Meteor.userId() } ).fetch();
+    result = _.map( result, function(ele){ return new DeckModel(ele); });
+    return { decks: result };
+  }
+})
+
 Template.gamePage.helpers({
   gameData: function() {
     var gameId = Session.get( xCard.session.currentGameId ),
@@ -50,8 +58,9 @@ Template.gamePage.helpers({
     return gameContainer;
   },
 
+
+
   isActivePlayer: function() {
-    console.log( this );
     return this.game.isActivePlayer ? "active" : "";
   },
 

@@ -1,13 +1,12 @@
+<template name="decksPageDeckControls">
+  <button class="removeDeck btn btn-danger">Remove</button>
+</template>
+
 <template name="decksPage">
   <h2>Your Decks</h2>
-  {{#each ownedDecks}}
-    <div class="userDeck editDeck">
-      <div class="deckName">{{name}}</div>
-      <div class="deckControls">
-        <button class="removeDeck btn btn-danger">Remove</button>
-      </div>
-    </div>
-  {{/each}}
+  {{#with userDecks}}
+    {{> deckList type="custom" data=decks customClass="userDeck" controls="decksPageDeckControls"}}
+  {{/with}}
   <div class="userDeck addNewDeck {{disableNoUser}}">
     <div class="deckName">New Deck</div>
   </div>

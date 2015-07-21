@@ -40,7 +40,7 @@ DeckModel.prototype.addCard = function( card ) {
 };
 
 DeckModel.prototype.removeCard = function(card) {
-
+  
   var userOwnership = CardOwnershipCollection.findOne( { cardId: card._id } );
 
   if( userOwnership ) {

@@ -7,29 +7,28 @@ Template.decksPage.events({
 				xCard.PageLoader.loadPage( "editDeck" );
 			});
 		}
-	}
-});
+	},
 
-Template.decksPage.events({
+	"click div.userDeck": function() {
+		if( this.data ) {
+			Session.set( xCard.session.deckPageLoad, this.data._id );
+			xCard.PageLoader.loadPage( "editDeck" );
+		}
+	},
+
 	"click button.removeDeck": function(e) {
 		if( confirm( "Are you sure you want to remove this deck?" ) ) {
-			this.removeDeck();
+			this.data.removeDeck();
 		}
 
 		e.stopPropagation()
-	},
-
-	"click .editDeck": function() {
-		Session.set( xCard.session.deckPageLoad, this._id );
-		xCard.PageLoader.loadPage( "editDeck" );
 	}
-
-})
+});
 
 Template.decksPage.helpers({
-	ownedDecks: function() {
+	userDecks: function() {
 		var result = UserDeckCollection.find().fetch();
 		result = _.map(result, function(ele){ return new DeckModel(ele); } );
-		return result;
+		return { decks: result };
 	}
 })
