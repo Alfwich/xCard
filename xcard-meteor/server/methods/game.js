@@ -5,7 +5,7 @@ Meteor.methods({
   // of.
   createGame: function() {
     var membership = RoomMembershipCollection.findOne({ owner: this.userId }),
-        allMemberships = RoomMembershipCollection.find({ roomId: membership.roomId }).fetch(),
+        allMemberships = RoomMembershipCollection.find({ roomId: membership ? membership.roomId : "" }).fetch(),
         players = _.map( allMemberships, function(ele){
           return ele.owner;
         }),

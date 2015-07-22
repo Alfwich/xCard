@@ -16,7 +16,6 @@ var getPlayerAttribute = function(game, attr, def) {
 
 Template.gamePage.events({
   "click .selectDeck": function() {
-    console.log( this );
     Meteor.call( "handleGameAction", {
       type: "select-deck",
       deckId: this.data._id,

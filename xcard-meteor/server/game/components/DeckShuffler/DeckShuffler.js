@@ -22,9 +22,7 @@ DeckShuffler = function(deck) {
     });
   }
 
-  result = _(result)
-    .shuffle()
-    .value();
+  result = _.shuffle(result);
 
-  return _.shuffle(result);
+  return result;
 }

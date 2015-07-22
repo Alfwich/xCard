@@ -17,7 +17,7 @@ GameState.prototype.addAction = function(actionType, method) {
   this.actions[actionType] = method;
 }
 
-GameState.prototype.addTransition = function(transitionDst, condition) {
+GameState.prototype.addTransition = function(condition) {
   this.transitions.push( condition );
 }
 
@@ -30,6 +30,13 @@ GameState.prototype.applyAction = function(gameState,userAction) {
   }
 
   return result;
+}
+
+GameState.prototype.callAction = function( actionName, gameState, userAction ) {
+  var action = this.actions[actionName];
+  if( action ) {
+    return action( gameState, userAction );
+  }
 }
 
 // Checks each transition to see if the current gameState warrents a transition

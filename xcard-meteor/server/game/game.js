@@ -11,8 +11,12 @@ GameActions.find().observe({
       
       if( gameContainer && action ) {
         var game = new Game( gameContainer.game );
+        action.playerGameId = game.playersMap[action.playerId];
+        action.player = game.players[action.playerGameId];
 
-        if(game.handleAction(action)) {
+        if( xCard.evaluator && xCard.evaluator.applyAction(game,action) ) {
+
+          // Update the game state if a change has been registered
           GameCollection.update(gameContainer._id, { $set: { game: game } });
         }
 
@@ -22,3 +26,7 @@ GameActions.find().observe({
       GameActions.remove( action._id );
     }
 });
+
+// Setup the game evaluator. States are added in the states folder
+xCard.evaluator = new xCardEvaluator();
+xCard.cardEvaluator = new CardEvaluator();
