@@ -1,24 +1,20 @@
 <template name="singleCard">
-	<div class="head">{{head}}</div>
+	<div class="head">{{title}}</div>
 	<div class="picture">
-		<img src="/img/card/{{imageSource}}" />
+		<img src="/img/card/{{image}}" />
 	</div>
 	<div class="body">{{body}}</div>
 </template>
 
 <template name="card">
 	<div class="card">
-		{{#if equals count 1}}
-			<div class="card">
-				{{> singleCard}}
-			</div>
-		{{else}}
+		{{#if greaterThan count 1}}
 			<div class="countMeter">
 				X{{count}}
 			</div>
-			<div class="card">
-				{{> singleCard}}
-			</div>
 		{{/if}}
+		<div class="card">
+			{{> singleCard}}
+		</div>
 	</div>
 </template>

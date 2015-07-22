@@ -15,6 +15,14 @@ Template.registerHelper( "equals", function(a,b) {
   return a == b;
 });
 
+Template.registerHelper( "greaterThan", function(a,b) {
+  return a > b;
+});
+
+Template.registerHelper( "lessThan", function(a,b) {
+  return a < b;
+});
+
 Template.registerHelper( "ifTrue", function(a,result) {
   return ifTrueThen( a, result );
 });
