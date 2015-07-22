@@ -5,13 +5,13 @@
       <div class="col-xs-6">
         <h2>Your Cards</h2>
         {{#with userCards}}
-          {{> cardList type="custom" data=cards customClass="editDeckUserCard"}}
+          {{> cardList data=cards customClass="editDeckUserCard"}}
         {{/with}}
       </div>
       <div class="col-xs-6">
         <h2>Deck Cards</h2>
         <h3 class="deckName">{{deck.name}}</h3>
-        {{> cardList data=deck.cards type="custom" customClass="editDeckCard" }}
+        {{> cardList data=deck.cards customClass="editDeckCard" }}
       </div>
     </div>
     {{/with}}

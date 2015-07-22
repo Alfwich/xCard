@@ -18,13 +18,13 @@
       <div class="col-xs-6">
         <h2>All Cards</h2>
         {{#with allCards}}
-          {{> cardList type="custom" data=cards controls="allCardControls"}}
+          {{> cardList data=cards controls="allCardControls"}}
         {{/with}}
       </div>
       <div class="col-xs-6">
         <h2>Your Cards</h2>
         {{#with userCards}}
-          {{> cardList type="custom" data=cards controls="userCardControls"}}
+          {{> cardList data=cards controls="userCardControls"}}
         {{/with}}
       </div>
     </div>
