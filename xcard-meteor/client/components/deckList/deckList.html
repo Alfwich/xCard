@@ -11,22 +11,10 @@
   {{/each}}
 </template>
 
-<template name="editDeckList">
-  {{#with deck}}
-    <div class="deckRow">
-      <h3 class="renameDeck">{{name}}</h3>
-      {{> cardList type="deck" deck=this}}
-    </div>
-  {{/with}}
-</template>
-
 <template name="deckList">
   <div class="deckList">
     {{#if equals type "custom"}}
       {{> customDeckList}}
-    {{/if}}
-    {{#if equals type "edit-list"}}
-      {{> editDeckList deck=deck}}
     {{/if}}
   </div>
 </template>

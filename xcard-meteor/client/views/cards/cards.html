@@ -1,13 +1,31 @@
+<template name="userCardControls">
+  {{#if userId}}
+    <button class="removeOwnedCard btn btn-danger btn-xs">remove</button>
+  {{/if}}
+</template>
+
+<template name="allCardControls">
+  {{#if userId}}
+    <button class="reportCard btn btn-default btn-xs">info</button>
+    <button class="acquireCard btn btn-default btn-xs">acquire</button>
+    <button class="deleteCard btn btn-danger btn-xs">delete</button>
+  {{/if}}
+</template>
+
 <template name="cardsPage">
   <div class="cardsPage">
     <div class="row">
       <div class="col-xs-6">
         <h2>All Cards</h2>
-        {{> cardList type="all"}}
+        {{#with allCards}}
+          {{> cardList type="custom" data=cards controls="allCardControls"}}
+        {{/with}}
       </div>
       <div class="col-xs-6">
         <h2>Your Cards</h2>
-        {{> cardList type="user"}}
+        {{#with userCards}}
+          {{> cardList type="custom" data=cards controls="userCardControls"}}
+        {{/with}}
       </div>
     </div>
   </div>

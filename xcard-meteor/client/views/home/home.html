@@ -3,7 +3,9 @@
     <div class="row">
       <div class="col-xs-12">
         <h2>All cards</h2>
-        {{> cardList type="all" disableFilter=true disableControls=true }}
+        {{#with allCards}}
+          {{> cardList type="custom" data=cards}}
+        {{/with}}
       </div>
     </div>
   </div>

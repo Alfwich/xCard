@@ -13,6 +13,10 @@ CardModel.prototype.acquireCard = function(cardId) {
   Meteor.call( "acquireCard", this._id );
 }
 
+CardModel.prototype.removeCard = function(cardId) {
+  Meteor.call( "removeCard", this._id );
+}
+
 CardModel.prototype.deleteCard = function(cardId) {
   Meteor.call( "deleteCard", this._id );
 }

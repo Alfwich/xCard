@@ -1,16 +1,10 @@
 <template name="cardList">
   <div class="cardList">
-    {{#if equals type "all"}}
-      {{> allCards}}
-    {{/if}}
     {{#if equals type "user"}}
       {{> userCards}}
     {{/if}}
     {{#if equals type "edit"}}
       {{> editDeckCards}}
-    {{/if}}
-    {{#if equals type "deck"}}
-      {{> deckCards}}
     {{/if}}
     {{#if equals type "custom"}}
       {{> customCards}}
@@ -44,26 +38,6 @@
         <div class="card-controls">
           <button class="remove btn btn-danger btn-xs">remove</button>
         </div>
-      </div>
-    {{/each}}
-  </div>
-</template>
-
-<template name="allCards">
-  <div class="allCards">
-    {{#if isUndefined disableFilter}}
-      <input type="text" class="filter form-control" placeholder="Filter..." value="{{filterValue}}"/>
-    {{/if}}
-    {{#each cards}}
-      <div class="card-container">
-        {{> card}}
-        {{#if isUndefined ../disableControls}}
-          <div class="card-controls">
-            <button class="report btn btn-default btn-xs">info</button>
-            <button {{ifFalse userId "disabled"}} class="acquire btn btn-default btn-xs">acquire</button>
-            <button class="delete btn btn-danger btn-xs">delete</button>
-          </div>
-        {{/if}}
       </div>
     {{/each}}
   </div>
