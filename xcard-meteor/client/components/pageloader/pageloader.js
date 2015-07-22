@@ -1,4 +1,3 @@
-
 Template.pageLoader.helpers( {
 
   // Attempts to load the template provided by its name
