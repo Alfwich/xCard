@@ -9,12 +9,13 @@ xCard.cardEvaluator.registerCard("Belonging To Myself", function(game,action) {
   _.each( game.playersMap, function(ele) {
     game.modifyPlayerValue( ele, "health", -1 );
   });
+  return true;
 });
 
 
 xCard.cardEvaluator.registerCard("Assassins Of History", function(game, action) {
   game.addGlobalGameMessage( action.player.playerName + " stabbed a random player!" ); 
   var randomPlayerId = _.random(1,game.state.totalPlayers);
-  console.log( randomPlayerId );
   game.modifyPlayerValue( randomPlayerId, "health", -3 );
+  return true;
 });
