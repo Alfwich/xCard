@@ -16,7 +16,10 @@ xCard.PageLoader = {
       Session.set( "xCard.currentPage", page + "Page" );
     } else {
       console.warn( "Attempted to loadPage: '" + page + "' but was not declared as a valid page. Valid pages: " + xCard.validPages );
+			return false;
     }
+
+		return true;
   }
 }
 

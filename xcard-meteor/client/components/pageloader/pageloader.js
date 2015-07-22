@@ -13,6 +13,14 @@ Template.pageLoader.helpers( {
   }
 });
 
+Template.pageLoader.events({
+  "click a": function(e) {
+    if(xCard.PageLoader.loadPage( $(e.currentTarget).attr("href") )) {
+      e.preventDefault();
+    }
+  }
+})
+
 Template.pageLoader.rendered = function() {
   var dest = location.hash.substr(1);
   if( dest ) {
