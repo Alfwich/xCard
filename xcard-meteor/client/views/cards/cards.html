@@ -17,13 +17,15 @@
     <div class="row">
       <div class="col-xs-6">
         <h2>All Cards</h2>
-        {{#with allCards}}
+        {{> filterBar filterId="cards.allCards"}}
+        {{#with allCards "cards.allCards"}}
           {{> cardList data=cards controls="allCardControls"}}
         {{/with}}
       </div>
       <div class="col-xs-6">
         <h2>Your Cards</h2>
-        {{#with userCards}}
+        {{> filterBar filterId="cards.userCards"}}
+        {{#with userCards "cards.userCards"}}
           {{> cardList data=cards controls="userCardControls"}}
         {{/with}}
       </div>

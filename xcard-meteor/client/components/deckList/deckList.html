@@ -4,9 +4,11 @@
       {{#with data}}
         {{> deck }}
       {{/with}}
-      {{#with getTemplate controls}}
-        {{> loadTemplate}}
-      {{/with}}
+      <div class="deck-controls">
+        {{#with getTemplate controls}}
+          {{> loadTemplate}}
+        {{/with}}
+      </div>
     </div>
   {{/each}}
 </template>

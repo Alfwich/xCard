@@ -24,18 +24,3 @@ Template.cardsPage.events({
     }
   },
 });
-
-Template.cardsPage.helpers({
-  "allCards": function() {
-    var allCards = CardCollection.find({},{sort:{title:1}}).fetch();
-    return {
-      cards: _.map(allCards,function(ele){ return new CardModel(ele); })
-    }
-  },
-
-  "userCards": function() {
-    return {
-      cards: xCard.helpers.getAllUserCards()
-    };
-  }
-})

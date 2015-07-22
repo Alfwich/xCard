@@ -3,7 +3,8 @@
     <div class="row">
       <div class="col-xs-12">
         <h2>All cards</h2>
-        {{#with allCards}}
+        {{> filterBar filterId="home.allCards"}}
+        {{#with allCards "home.allCards"}}
           {{> cardList data=cards}}
         {{/with}}
       </div>
