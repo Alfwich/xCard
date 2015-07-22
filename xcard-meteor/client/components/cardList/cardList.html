@@ -1,14 +1,6 @@
 <template name="cardList">
   <div class="cardList">
-    {{#if equals type "user"}}
-      {{> userCards}}
-    {{/if}}
-    {{#if equals type "edit"}}
-      {{> editDeckCards}}
-    {{/if}}
-    {{#if equals type "custom"}}
-      {{> customCards}}
-    {{/if}}
+    {{> customCards}}
   </div>
 </template>
 
@@ -26,45 +18,5 @@
         </div>
       </div>
     {{/each}}
-  </div>
-</template>
-
-<template name="userCards">
-  <div class="userCards">
-    <input type="text" class="filter form-control" placeholder="Filter..." value="{{filterValue}}"/>
-    {{#each cards}}
-      <div class="card-container">
-        {{> card }}
-        <div class="card-controls">
-          <button class="remove btn btn-danger btn-xs">remove</button>
-        </div>
-      </div>
-    {{/each}}
-  </div>
-</template>
-
-<template name="editDeckCards">
-  <div class="editDeckCards">
-    <input type="text" class="filter form-control" placeholder="Filter..." value="{{filterValue}}"/>
-    {{#each cards}}
-      <div class="card-container addToDeck">
-        {{> card }}
-        <div class="card-controls">
-        </div>
-      </div>
-    {{/each}}
-  </div>
-</template>
-
-<template name="deckCards">
-  <div class="deckCards">
-    {{#with deck}}
-      {{#each cards}}
-        <div class="card-container removeFromDeck">
-          {{> card }}
-          <div class="card-controls"></div>
-        </div>
-      {{/each}}
-    {{/with}}
   </div>
 </template>

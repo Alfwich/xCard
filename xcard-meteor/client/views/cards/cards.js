@@ -18,12 +18,6 @@ Template.cardsPage.events({
     }
   },
 
-  "click button.acquireCard": function() {
-    if( this.data ) {
-      this.data.acquireCard();
-    }
-  },
-
   "click button.deleteCard": function() {
     if( this.data ) {
       this.data.deleteCard();
