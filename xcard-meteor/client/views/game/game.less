@@ -1,5 +1,7 @@
 .gamePage {
 
+  margin-top: 10px;
+
   .gameContainer {
 
     &:not(.active) {
@@ -17,8 +19,9 @@
       height: 300px;
       overflow-y: scroll;
 
-      .chatMessage {
+      .stateMessage {
         background-color: #EEE;
+        border-bottom: 1px solid #DDD;
       }
     }
 
@@ -32,6 +35,25 @@
         &.isActive {
           background-color: #0F0;
         }
+
+        .playerAttr {
+          padding: 2px;
+          border-radius: 3px;
+
+          &.name {
+            font-weight: bold;
+          }
+
+          &.health {
+            background-color: #FF8484;
+          }
+
+          &.mana {
+            background-color: #8585EC;
+          }
+
+        }
+
       }
     }
 

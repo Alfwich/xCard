@@ -58,37 +58,22 @@ Template.gamePage.helpers({
     return this.game.isActivePlayer ? "active" : "";
   },
 
-  playerHealth: function() {
-    return getPlayerAttribute( this.game, "health", 0 );
+  playerAttribute: function(attr) {
+    return getPlayerAttribute( this.game, attr, "" );
   },
 
-  playerCurrentMana: function() {
-    return getPlayerAttribute( this.game, "mana", 0 );
+  playerZoneCount: function( zone ) {
+    return getPlayerAttribute( this.game, zone, [] ).length;
   },
 
-  playerMaxMana: function() {
-    return getPlayerAttribute( this.game, "maxMana", 0 );
-  },
-
-  playerDeck: function() {
-    return getPlayerAttribute( this.game, "deck", [] ).length + " cards in deck";
-  },
-
-  playerExile: function() {
-    return getPlayerAttribute( this.game, "exile", [] ).length + " cards in exile";
-  },
-
-  playerDiscard: function() {
-    return getPlayerAttribute( this.game, "discard", [] ).length + " cards in discard";
-  },
-
-  playerCards: function() {
-    var result = {};
+  handCards: function() {
+    var result = { cards:[] };
 
     if( this.game ) {
-      // Find the correct player
-      var player = this.game.players[this.game.playerGameId];
-      result["cards"] = _.map( player.hand, function(ele){ return new CardModel( CardCollection.findOne( ""+ele) ); } );
+      result.cards = _.map( getPlayerAttribute( this.game, "hand", [] ),
+        function(ele){
+          return new CardModel( CardCollection.findOne( ""+ele) );
+      });
     }
 
     return result;

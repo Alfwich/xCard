@@ -16,16 +16,21 @@
 <template name="gameMessages">
   <div id="gameStateOutput" class="gameMessages">
     {{#each game.messages}}
-      <div  class="chatMessage">{{this}}</div>
+      <div  class="stateMessage">{{this}}</div>
     {{/each}}
   </div>
 </template>
 
 <template name="gamePlayers">
-  <h3>Players</h3>
-  {{#each players}}
-    <div class="playerName {{isActive}}">{{player.playerName}}</div>
-  {{/each}}
+  <div class="players">
+    {{#each players}}
+      <div class="playerName {{isActive}}">
+        <div class="playerAttr name"> {{player.playerName}} </div>
+        <div class="playerAttr health">{{player.health}}</div>
+        <div class="playerAttr mana">{{player.mana}}/{{player.maxMana}}</div>
+      </div>
+    {{/each}}
+  </div>
 </template>
 
 <template name="gamePage">
@@ -49,7 +54,7 @@
             <div class="col-xs-10">
               {{> gameMessages}}
             </div>
-            <div class="players col-xs-2">
+            <div class="col-xs-2">
               {{> gamePlayers}}
             </div>
           </div>
@@ -57,29 +62,29 @@
             <div class="col-xs-2">
               <div class="playerStats">
                 <div class="playerHealth">
-                  Health: {{playerHealth}}
+                  Health: {{playerAttribute "health"}}
                 </div>
                 <div class="playerMana">
-                  Mana: {{playerCurrentMana}}/{{playerMaxMana}}
+                  Mana: {{playerAttribute "mana"}}/{{playerAttribute "maxMana"}}
                 </div>
               </div>
             </div>
             <div class="col-xs-2">
               <div class="playerZones">
                 <div class="playerDeck">
-                  {{playerDeck}}
+                  {{playerZoneCount "deck"}} cards in deck
                 </div>
                 <div class="playerDiscard">
-                  {{playerDiscard}}
+                  {{playerZoneCount "discard"}} cards in discard
                 </div>
                 <div class="playerExile">
-                  {{playerExile}}
+                  {{playerZoneCount "exile"}} cards in exile
                 </div>
               </div>
             </div>
             <div class="col-xs-8">
               <div class="playerCards">
-                {{#with playerCards}}
+                {{#with handCards}}
                   {{> cardList data=cards customClass="useGameCard"}}
                 {{/with}}
               </div>

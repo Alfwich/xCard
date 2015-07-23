@@ -42,12 +42,12 @@ GameState.prototype.callAction = function( actionName, gameState, userAction ) {
 
 // Checks each transition to see if the current gameState warrents a transition
 GameState.prototype.transitionState = function(gameState,userAction) {
-  var result = "";
+  var result = null;
 
   _.forEach( this.transitions, function(transition){
     result = transition.condition(gameState, userAction);
     if( result ) {
-      gameState.addSystemMessage( "TRANSITIONED STATE THROUGH '" + transition.name + "'" );
+      gameState.addSystemMessage( "TRANSITIONED TO STATE '" + result + "' FROM '" + this.name + "' THROUGH '" + transition.name + "'" );
       return true;
     }
   }.bind(this));
