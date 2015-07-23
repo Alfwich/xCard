@@ -13,7 +13,7 @@ Game = function(raw) {
   this.playersMap = get(raw, "playersMap", {});
   this.players = get(raw, "players", {});
   this.options = get(raw, "options", {});
-  this.state = get(raw, "state", { current: "init", activePlayer: 1 });
+  this.state = get(raw, "state", { current: "init", activePlayer: 1, totalPlayers: 0 });
   this.messages = get(raw, "messages", []);
 
   this._initPlayers(get(raw, "initPlayers", []));
@@ -21,12 +21,8 @@ Game = function(raw) {
 
 Game.prototype._initPlayers = function(players) {
   if( players.length ) {
-    var playerGameId = 1;
-    this.state.totalPlayers = players.length;
     _.each(players, function(playerId) {
-      this.playersMap[playerId] = playerGameId;
-      this.players[playerGameId++] = new Player( playerId, playerGameId );
-      this.addGlobalGameMessage( UserCollection.findOne(playerId).username + " has joined the game." );
+      this.addPlayer( playerId );
     }.bind(this));
   }
 }
@@ -58,6 +54,13 @@ Game.prototype.activePlayerDrawCard = function() {
   }
 }
 
-
-
-
+Game.prototype.addPlayer = function(playerId) {
+  if( _.isUndefined( this.playersMap[playerId] ) ) {
+    console.log( "Add player: " + arguments );
+    var playerGameId = (this.state.totalPlayers++) + 1;
+    this.playersMap[playerId] = playerGameId;
+    this.players[playerGameId] = new Player( playerId, playerGameId );
+    this.addGlobalGameMessage( UserCollection.findOne(playerId).username + " has joined the game." );
+    return true;
+  }
+}

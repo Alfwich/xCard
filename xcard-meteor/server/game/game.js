@@ -11,7 +11,7 @@ GameActions.find().observe({
 
       if( gameContainer && action ) {
         var game = new Game( gameContainer.game );
-        action.playerGameId = game.playersMap[action.playerId];
+        action.playerGameId = game.playersMap[action.requestingPlayerId];
         action.player = game.players[action.playerGameId];
 
         // Check to make sure that the requesting player is actually in the game,

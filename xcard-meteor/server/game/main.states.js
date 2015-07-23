@@ -20,6 +20,13 @@ initState.addAction( "select-deck", function(game,action) {
   }
 });
 
+initState.addAction( "add-player", function(game,action) {
+  console.log( action );
+  if( Meteor.users.findOne( action.playerId )) {
+    return game.addPlayer( action.playerId );
+  }
+});
+
 initState.addTransition( "initToPlaying", function(game,action) {
   // Check to see if all players have selected a deck. If this is true then
   // for each player draw 10 cards and start the game.
