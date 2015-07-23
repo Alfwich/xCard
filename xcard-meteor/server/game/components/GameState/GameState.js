@@ -1,11 +1,11 @@
 // GameState.js: Defines a current state of the xCard card game
 //  name:        The name of the defined state
-//  actions:     The available actions for the state. Actions from the client are passed to 
+//  actions:     The available actions for the state. Actions from the client are passed to
 //               a state through the applyAction method. Each action needs to return a truthy
 //               value if any state change has occured elsewise the changes will not get recorded.
 //               actions need to take the following form: fn(game,action) => bool
 //  transitions: If the action results in a change of state then the transitions will be checked
-//               to see if the current state warrents a state transition. Methods registered as a 
+//               to see if the current state warrents a state transition. Methods registered as a
 //               transition need to take the following form: fn(game,action) => newState
 GameState = function(name, actions, transitions) {
   this.name = name;
@@ -17,16 +17,17 @@ GameState.prototype.addAction = function(actionType, method) {
   this.actions[actionType] = method;
 }
 
-GameState.prototype.addTransition = function(condition) {
-  this.transitions.push( condition );
+GameState.prototype.addTransition = function(transitionName, condition) {
+  this.transitions.push( { name: transitionName, condition: condition } );
 }
 
 GameState.prototype.applyAction = function(gameState,userAction) {
   var action = this.actions[userAction.type],
       result = false;
 
-  if(action) { 
+  if(action) {
     result = action(gameState,userAction);
+    gameState.addSystemMessage( "APPLIED ACTION '" + userAction.type + "'" );
   }
 
   return result;
@@ -43,14 +44,13 @@ GameState.prototype.callAction = function( actionName, gameState, userAction ) {
 GameState.prototype.transitionState = function(gameState,userAction) {
   var result = "";
 
-  _.forEach( this.transitions, function(tran){
-    return result = tran(gameState, userAction);
+  _.forEach( this.transitions, function(transition){
+    result = transition.condition(gameState, userAction);
+    if( result ) {
+      gameState.addSystemMessage( "TRANSITIONED STATE THROUGH '" + transition.name + "'" );
+      return true;
+    }
   }.bind(this));
 
   return result ? result : this.name;
 }
-
-
-
-
-

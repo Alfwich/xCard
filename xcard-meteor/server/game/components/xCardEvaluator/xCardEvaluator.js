@@ -17,14 +17,9 @@ xCardEvaluator.prototype.applyAction = function(game, action) {
   var state = this.states[game.state.current],
       result = null;
 
-  if(state && (result = state.applyAction( game, action ))) {
-    var newState = state.transitionState( game, action );
-    if( newState != game.state.current ) {
-      game.addSystemMessage( "TRANSITION TO STATE '" + newState + "'" );
-      game.state.current = newState;
-    }
+  if( state && (result = state.applyAction( game, action )) ) {
+    game.state.current = state.transitionState( game, action );
   }
 
   return result;
 }
-

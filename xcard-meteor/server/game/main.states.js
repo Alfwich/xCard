@@ -12,16 +12,15 @@ var finishedState = new GameState(FINISHED_STATE);
 // Init State
 initState.addAction( "select-deck", function(game,action) {
   var deck = UserDeckCollection.findOne(action.deckId);
-  var player = game.players[action.playerGameId];
 
   if( deck ) {
-    game.players[action.playerGameId].deck = DeckShuffler( deck );
-    game.addGlobalGameMessage( player.playerName + " has chosen a deck." );
+    action.player.deck = DeckShuffler( deck );
+    game.addGlobalGameMessage( action.player.playerName + " has chosen a deck." );
     return true;
   }
 });
 
-initState.addTransition( function(game,action) {
+initState.addTransition( "initToPlaying", function(game,action) {
   // Check to see if all players have selected a deck. If this is true then
   // for each player draw 10 cards and start the game.
   if( _.every(game.players, function(player){ return player.deck; })) {
@@ -75,7 +74,7 @@ playingState.addAction( "pass-turn" , function(game,action){
   return true;
 });
 
-playingState.addTransition( function(game,action) {
+playingState.addTransition( "playingToEnd", function(game,action) {
   // Check to see if there is only one player alive. If this is true then
   // the game is over and the remaining player is the winner ( or a draw if none )
   var alivePlayers = _.filter( game.players, function(player){
@@ -98,15 +97,3 @@ playingState.addTransition( function(game,action) {
 // Finished State
 
 xCard.evaluator.addGameStates( initState, playingState, finishedState );
-
-
-
-
-
-
-
-
-
-
-
-

@@ -8,13 +8,16 @@ GameActions = new Mongo.Collection("GAMEACTIONS");
 GameActions.find().observe({
     added: function(action) {
       var gameContainer = GameCollection.findOne(action.game);
-      
+
       if( gameContainer && action ) {
         var game = new Game( gameContainer.game );
         action.playerGameId = game.playersMap[action.playerId];
         action.player = game.players[action.playerGameId];
 
-        if( xCard.evaluator && xCard.evaluator.applyAction(game,action) ) {
+        // Check to make sure that the requesting player is actually in the game,
+        // that we have a evaluator defined. Then if the action caused a change in game state
+        // then update the game collection with the new state of the game
+        if( action.player && xCard.evaluator && xCard.evaluator.applyAction(game,action) ) {
 
           // Update the game state if a change has been registered
           GameCollection.update(gameContainer._id, { $set: { game: game } });
