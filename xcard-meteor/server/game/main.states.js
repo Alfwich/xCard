@@ -21,27 +21,45 @@ initState.addAction( "select-deck", function(game,action) {
 });
 
 initState.addAction( "add-player", function(game,action) {
-  console.log( action );
-  if( Meteor.users.findOne( action.playerId )) {
+  // If the player exists and the requesting player is the creator attempt to add
+  // the player to the game
+  if( Meteor.users.findOne( action.playerId ) && action.requestingPlayerId == game.creator ) {
     return game.addPlayer( action.playerId );
   }
 });
 
+initState.addAction( "remove-player", function(game,action) {
+  // If the requesting player is the creator or modifying their own state then attempty to
+  // remove the player from the game
+  if( action.requestingPlayerId == game.creator || action.requestingPlayerId == action.playerId ) {
+    return game.removePlayer( action.playerId );
+  }
+});
+
+
+initState.addTransition( "noPlayers", function(game,action) {
+  if( game.state.totalPlayers == 0 ) {
+    return FINISHED_STATE;
+  }
+});
+
 initState.addTransition( "initToPlaying", function(game,action) {
-  // Check to see if all players have selected a deck. If this is true then
-  // for each player draw 10 cards and start the game.
-  if( _.every(game.players, function(player){ return player.deck; })) {
+  // Make sure that there are more than 1 players going into the playing state
+  if( game.state.totalPlayers > 1 ) {
+    // Check to see if all players have selected a deck. If this is true then
+    // for each player draw 10 cards and start the game.
+    if( _.every(game.players, function(player){ return player.deck; })) {
 
-    // For each player take the top 10 cards from their deck and place into their hand
-    _.each( game.players, function(player,playerGameId,players) {
-      players[playerGameId].hand = players[playerGameId].deck.splice(0,10);
-    });
+      // For each player take the top 10 cards from their deck and place into their hand
+      _.each( game.players, function(player,playerGameId,players) {
+        players[playerGameId].hand = players[playerGameId].deck.splice(0,10);
+      });
 
+      // Draw one additional card for the active player
+      game.activePlayerDrawCard();
 
-    // Draw one additional card for the active player
-    game.activePlayerDrawCard();
-
-    return PLAY_STATE;
+      return PLAY_STATE;
+    }
   }
 });
 
@@ -68,17 +86,28 @@ playingState.addAction( "use-card", function(game,action) {
 });
 
 playingState.addAction( "pass-turn" , function(game,action){
-  // Move the active player to the next player with cards
   // Change active player to the next player
-  game.state.activePlayer =
-    (game.state.activePlayer == game.state.totalPlayers) ? 1 : game.state.activePlayer+1;
-
+  game.setNextActivePlayer();
   game.addSystemMessage( "CHANGED ACTIVE PLAYER" );
 
   // Draw a card for the active player
   game.activePlayerDrawCard();
 
   return true;
+});
+
+// TODO: Refactor this into another state
+playingState.addTransition( "playersCannotPlay", function(game,action) {
+  // Check to see if we have any players that can perform action
+  var haveActionablePlayers = _.some( game.players, function(player) {
+    return player.health > 0 && ( player.hand.length > 0 || player.deck.length > 0 );
+  });
+
+  // If we have none then transition to the finished state
+  if( !haveActionablePlayers ) {
+    game.addGlobalGameMessage( "Draw between post-alive players" );
+    return FINISHED_STATE;
+  }
 });
 
 playingState.addTransition( "playingToEnd", function(game,action) {

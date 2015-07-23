@@ -7,13 +7,21 @@ var get = function( obj, k, def ) {
   return def;
 }
 
+var nextId = function(id, maxPlayers) {
+  return (id+1>maxPlayers) ? 1 : id+1;
+}
+
+var playerCanPerformActions = function(player) {
+  return (!_.isUndefined(player)) && player.health >= 0 && ( player.deck.length > 0 || player.hand.length > 0 );
+}
+
 Game = function(raw) {
 
   this.creator = get(raw, "creator");
   this.playersMap = get(raw, "playersMap", {});
   this.players = get(raw, "players", {});
   this.options = get(raw, "options", {});
-  this.state = get(raw, "state", { current: "init", activePlayer: 1, totalPlayers: 0 });
+  this.state = get(raw, "state", { current: "init", activePlayer: 1, totalPlayers: 0, nextPlayerId: 1 });
   this.messages = get(raw, "messages", []);
 
   this._initPlayers(get(raw, "initPlayers", []));
@@ -54,13 +62,42 @@ Game.prototype.activePlayerDrawCard = function() {
   }
 }
 
+Game.prototype.setNextActivePlayer = function() {
+  // Produce an array of all playerIds to make sure if all players are checked and
+  // we cannot find a valid active player we exit the loop
+  var playerAttemptedIds = _.map( this.players, function(ele) {
+    return ele.playerId;
+  });
+
+  do {
+    this.state.activePlayer = nextId( this.state.activePlayer, this.state.nextPlayerId-1 );
+    var player = this.players[this.state.activePlayer];
+    if( player ) {
+      playerAttemptedIds.pop( playerAttemptedIds.indexOf( player.playerId ) );
+    }
+    // If the player cannot perform actions and we have players left to check
+    // then repeat the selection process
+  } while( !playerCanPerformActions(player) && playerAttemptedIds.length > 0 );
+
+}
+
 Game.prototype.addPlayer = function(playerId) {
   if( _.isUndefined( this.playersMap[playerId] ) ) {
-    console.log( "Add player: " + arguments );
-    var playerGameId = (this.state.totalPlayers++) + 1;
+    var playerGameId = (this.state.nextPlayerId++);
+    this.state.totalPlayers++;
     this.playersMap[playerId] = playerGameId;
     this.players[playerGameId] = new Player( playerId, playerGameId );
     this.addGlobalGameMessage( UserCollection.findOne(playerId).username + " has joined the game." );
     return true;
+  }
+}
+
+Game.prototype.removePlayer = function(playerId) {
+  if( !_.isUndefined( this.playersMap[playerId] ) ) {
+      this.state.totalPlayers--;
+      delete this.players[this.playersMap[playerId]];
+      delete this.playersMap[playerId];
+      this.addGlobalGameMessage( UserCollection.findOne(playerId).username + " has left the game." );
+      return true;
   }
 }

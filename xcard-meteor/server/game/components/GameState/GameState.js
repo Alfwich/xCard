@@ -27,7 +27,7 @@ GameState.prototype.applyAction = function(gameState,userAction) {
 
   if(action) {
     result = action(gameState,userAction);
-    gameState.addSystemMessage( "APPLIED ACTION '" + userAction.type + "'" );
+    gameState.addSystemMessage( "FINISHED ACTION '" + userAction.type + "'" );
   }
 
   return result;
@@ -44,7 +44,7 @@ GameState.prototype.callAction = function( actionName, gameState, userAction ) {
 GameState.prototype.transitionState = function(gameState,userAction) {
   var result = null;
 
-  _.forEach( this.transitions, function(transition){
+  _.find( this.transitions, function(transition){
     result = transition.condition(gameState, userAction);
     if( result ) {
       gameState.addSystemMessage( "TRANSITIONED TO STATE '" + result + "' FROM '" + this.name + "' THROUGH '" + transition.name + "'" );
