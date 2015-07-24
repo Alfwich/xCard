@@ -14,6 +14,17 @@ GameState = function(name, actions, transitions) {
   this.transitions = transitions || [];
 }
 
+GameState.globalActions = {};
+GameState.globalInternalActions = {};
+
+GameState.addGlobalAction = function(actionType, method) {
+  GameState.globalActions[actionType] = method;
+}
+
+GameState.addGlobalInternalAction = function(actionType, method) {
+  GameState.globalInternalActions[actionType] = method;
+}
+
 GameState.prototype.addAction = function(actionType, method) {
   this.actions[actionType] = method;
 }
@@ -27,7 +38,7 @@ GameState.prototype.addTransition = function(transitionName, condition) {
 }
 
 GameState.prototype.applyAction = function(gameState,userAction) {
-  var action = this.actions[userAction.type],
+  var action = this.actions[userAction.type] || GameState.globalActions[userAction.type],
       result = false;
 
   if(action) {
@@ -40,7 +51,10 @@ GameState.prototype.applyAction = function(gameState,userAction) {
 
 // Allows actions to call other actions and internal actions to be called
 GameState.prototype.callAction = function( actionName, gameState, userAction ) {
-  var action = this.actions[actionName] || this.internalActions[actionName];
+  // Find the correct action to call starting with internal actions first then normal actions
+  var action = this.internalActions[actionName] || GameState.globalInternalActions[actionName] || 
+               this.actions[actionName]         || GameState.globalActions[actionName];
+
   if( action ) {
     return action( gameState, userAction );
   }
