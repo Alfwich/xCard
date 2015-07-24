@@ -14,15 +14,20 @@ GameState = function(name, actions, transitions) {
   this.transitions = transitions || [];
 }
 
-GameState.globalActions = {};
-GameState.globalInternalActions = {};
 
+GameState.globalActions = {};
 GameState.addGlobalAction = function(actionType, method) {
   GameState.globalActions[actionType] = method;
 }
 
+GameState.globalInternalActions = {};
 GameState.addGlobalInternalAction = function(actionType, method) {
   GameState.globalInternalActions[actionType] = method;
+}
+
+GameState.globalTransitions = [];
+GameState.addGlobalTransition = function(transitionName, condition) {
+  GameState.globalTransition.push({ name: transitionName, condition: condition });
 }
 
 GameState.prototype.addAction = function(actionType, method) {
@@ -34,7 +39,7 @@ GameState.prototype.addInternalAction = function(actionType, method) {
 }
 
 GameState.prototype.addTransition = function(transitionName, condition) {
-  this.transitions.push( { name: transitionName, condition: condition } );
+  this.transitions.push({ name: transitionName, condition: condition });
 }
 
 GameState.prototype.applyAction = function(gameState,userAction) {
@@ -64,7 +69,7 @@ GameState.prototype.callAction = function( actionName, gameState, userAction ) {
 GameState.prototype.transitionState = function(gameState,userAction) {
   var result = null;
 
-  _.find( this.transitions, function(transition){
+  _.find( GameState.globalTransitions.concat(this.transitions), function(transition){
     result = transition.condition(gameState, userAction);
     if( result ) {
       gameState.addSystemMessage( "TRANSITIONED TO STATE '" + result + "' FROM '" + this.name + "' THROUGH '" + transition.name + "'" );
