@@ -13,8 +13,9 @@ Meteor.methods({
     Meteor.call( "handleGameAction", { type: "add-player", playerId: this.userId, gameId: gameId });
   },
 
+  // Places a game action into the GameActions collection. This has a hook on insertion to
+  // process the action request.
   handleGameAction: function(action) {
-    action.game = action.gameId;
     action.requestingPlayerId = this.userId;
     GameActions.insert( action );
   }

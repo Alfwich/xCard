@@ -23,6 +23,13 @@ Template.gamePage.events({
     });
   },
 
+  "click .gamePassTurn": function() {
+    Meteor.call( "handleGameAction", {
+      type: "pass",
+      gameId: Session.get( xCard.session.currentGameId )
+    });
+  },
+
   "click .useGameCard": function() {
     Meteor.call( "handleGameAction", {
         type: "use-card",

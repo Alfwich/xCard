@@ -19,15 +19,15 @@ initState.addAction( "select-deck", function(game,action) {
   var deck = UserDeckCollection.findOne(action.deckId);
 
   if( deck ) {
-    action.player.deck = DeckShuffler( deck );
-    game.addGlobalGameMessage( action.player.playerName + " has chosen a deck." );
+    action.requestingPlayer.deck = DeckShuffler( deck );
+    game.addGlobalGameMessage( action.requestingPlayer.playerName + " has chosen a deck." );
     return true;
   }
 });
 
 initState.addAction( "add-player", function(game,action) {
   // Only allow the creator of the game to modify players
-  if( action.requestingPlayerId == game.creator ) {
+  if( action.requestingPlayerIsCreator ) {
     var player;
     if( (player = Meteor.users.findOne( action.playerId )) || (player = Meteor.users.findOne( { username: action.username }) )) {
       if( game.addPlayer( player._id ) ) {
@@ -40,7 +40,7 @@ initState.addAction( "add-player", function(game,action) {
 
 initState.addAction( "remove-player", function(game,action) {
   // Only allow the creator of the game to modify players
-  if( action.requestingPlayerId == game.creator ) {
+  if( action.requestingPlayerIsCreator ) {
     var player;
     if( (player = Meteor.users.findOne( action.playerId )) || (player = Meteor.users.findOne( { username: action.username }) )) {
       if( game.removePlayer( player._id ) ) {
@@ -78,9 +78,9 @@ initState.addTransition( "allPlayersReady", function(game,action) {
 
 // Main Start State
 mainStateStart.addInternalAction( "init", function(game,action) {
-  game.activePlayerDrawCard();
+
+  // Restore mana and add one more max mana
   game.players[game.state.activePlayer].mana = ++game.players[game.state.activePlayer].maxMana;
-  game.addGlobalGameMessage( game.players[game.state.activePlayer].playerName + " drew a card from their library" );
   return true;
 })
 
@@ -91,17 +91,18 @@ mainStateStart.addTransition( "finishedMainStart", function(game,action) {
 // Main State
 mainState.addAction( "use-card", function(game,action) {
   var card = CardCollection.findOne( action.cardId );
-  var player = game.players[action.playerGameId];
 
-  if( action.playerGameId == game.state.activePlayer &&
+  if( action.requestingPlayerGameId == game.state.activePlayer &&
       card &&
-      _.contains(game.players[action.playerGameId].hand, action.cardId ) ) {
+      _.contains(action.requestingPlayer.hand, action.cardId ) ) {
 
     // Do card actions
     xCard.cardEvaluator.applyCard( card, game, action );
 
     // Remove the card from the players hand and place into discard
-    player.discard.push( player.hand.splice(player.hand.indexOf(action.cardId), 1) );
+    action.requestingPlayer.discard.push(
+      action.requestingPlayer.hand.splice(action.requestingPlayer.hand.indexOf(card._id), 1)
+    );
 
     return true;
   }
@@ -167,6 +168,3 @@ finishedState.addTransition( "restartGame", function(game,action) {
 });
 
 xCard.evaluator.addGameStates( initState, mainStateStart, mainState, mainStateEnd, finishedState );
-
-
-

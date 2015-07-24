@@ -14,36 +14,36 @@ GameState = function(name, actions, transitions) {
   this.transitions = transitions || [];
 }
 
-GameState.boundMethodName = function(method,name) {
-  return method.bind({ name: name });
+GameState.boundMethodName = function(method, name, state) {
+  return method.bind({ name: name, state: state });
 }
 
 GameState.globalActions = {};
 GameState.addGlobalAction = function(actionType, method) {
   method.name = actionType;
-  GameState.globalActions[actionType] = GameState.boundMethodName( method, actionType );
+  GameState.globalActions[actionType] = GameState.boundMethodName( method, actionType, GameState );
 }
 
 GameState.globalInternalActions = {};
 GameState.addGlobalInternalAction = function(actionType, method) {
-  GameState.globalInternalActions[actionType] = GameState.boundMethodName( method, actionType );
+  GameState.globalInternalActions[actionType] = GameState.boundMethodName( method, actionType, GameState );
 }
 
 GameState.globalTransitions = [];
 GameState.addGlobalTransition = function(transitionName, condition) {
-  GameState.globalTransitions.push({ name: transitionName, condition: GameState.boundMethodName(condition, transitionName) });
+  GameState.globalTransitions.push({ name: transitionName, condition: GameState.boundMethodName(condition, transitionName, GameState) });
 }
 
 GameState.prototype.addAction = function(actionType, method) {
-  this.actions[actionType] = GameState.boundMethodName( method, actionType );
+  this.actions[actionType] = GameState.boundMethodName( method, actionType, this );
 }
 
 GameState.prototype.addInternalAction = function(actionType, method) {
-  this.internalActions[actionType] = GameState.boundMethodName( method, actionType );
+  this.internalActions[actionType] = GameState.boundMethodName( method, actionType, this );
 }
 
 GameState.prototype.addTransition = function(transitionName, condition) {
-  this.transitions.push({ name: transitionName, condition: GameState.boundMethodName( condition, transitionName ) });
+  this.transitions.push({ name: transitionName, condition: GameState.boundMethodName( condition, transitionName, this ) });
 }
 
 GameState.prototype.applyAction = function(gameState,userAction) {
@@ -61,7 +61,7 @@ GameState.prototype.applyAction = function(gameState,userAction) {
 // Allows actions to call other actions and internal actions to be called
 GameState.prototype.callAction = function( actionName, gameState, userAction ) {
   // Find the correct action to call starting with internal actions first then normal actions
-  var action = this.internalActions[actionName] || GameState.globalInternalActions[actionName] || 
+  var action = this.internalActions[actionName] || GameState.globalInternalActions[actionName] ||
                this.actions[actionName]         || GameState.globalActions[actionName];
 
   if( action ) {
