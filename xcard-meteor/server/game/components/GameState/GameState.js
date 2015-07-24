@@ -64,7 +64,7 @@ GameState.prototype.callAction = function( actionName, gameState, userAction ) {
   var action = this.internalActions[actionName] || GameState.globalInternalActions[actionName] ||
                this.actions[actionName]         || GameState.globalActions[actionName];
 
-  if( action ) {
+  if( action && gameState && userAction ) {
     return action( gameState, userAction );
   }
 }

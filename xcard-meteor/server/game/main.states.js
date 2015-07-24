@@ -79,6 +79,9 @@ initState.addTransition( "allPlayersReady", function(game,action) {
 // Main Start State
 mainStateStart.addInternalAction( "init", function(game,action) {
 
+  // Have the active player draw a card
+  this.state.callAction( "activePlayerDraw", game, action );
+
   // Restore mana and add one more max mana
   game.players[game.state.activePlayer].mana = ++game.players[game.state.activePlayer].maxMana;
   return true;
@@ -120,25 +123,10 @@ mainStateEnd.addInternalAction( "init", function(game,action) {
   return true;
 });
 
-mainStateEnd.addTransition( "noPlayablePlayerActions", function(game,action) {
-  // Check to see if we have any players that can perform action
-  var haveActionablePlayers = _.some( game.players, function(player) {
-    return player.health > 0 && ( player.hand.length > 0 || player.deck.length > 0 );
-  });
-
-  // If we have none then transition to the finished state
-  if( !haveActionablePlayers ) {
-    game.addGlobalGameMessage( "Draw between alive players" );
-    return FINISHED_STATE;
-  }
-});
-
 mainStateEnd.addTransition( "notEnoughAlivePlayers", function(game,action) {
   // Check to see if there is only one player alive. If this is true then
   // the game is over and the remaining player is the winner ( or a draw if none )
-  var alivePlayers = _.filter( game.players, function(player){
-    return player.health > 0;
-  });
+  var alivePlayers = this.state.callAction( "getAlivePlayers", game, action );
 
   if( alivePlayers.length < 2 ) {
 
@@ -149,6 +137,17 @@ mainStateEnd.addTransition( "notEnoughAlivePlayers", function(game,action) {
       game.addGlobalGameMessage( "Draw between post-alive players" );
     }
 
+    return FINISHED_STATE;
+  }
+});
+
+mainStateEnd.addTransition( "noPlayablePlayerActions", function(game,action) {
+  // Get a listing of the actionable players
+  var actionablePlayers = this.state.callAction( "getActionablePlayers", game, action );
+
+  // If we have no actionable players then end the game
+  if( !actionablePlayers.length ) {
+    game.addGlobalGameMessage( "Draw between alive players" );
     return FINISHED_STATE;
   }
 });

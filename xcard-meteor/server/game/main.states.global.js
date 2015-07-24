@@ -16,4 +16,16 @@ GameState.addGlobalInternalAction( "activePlayerDraw", function(game,action) {
     game.addGlobalGameMessage( game.players[game.state.activePlayer].playerName + " drew a card from their library" );
     return true;
   }
+});
+
+GameState.addGlobalInternalAction( "getAlivePlayers", function(game, action){
+  return _.filter( game.players, function(player) {
+    return player.health > 0;
+  });
+});
+
+GameState.addGlobalInternalAction( "getActionablePlayers", function(game, action) {
+  return _.filter( game.players, function(player) {
+    return player.health > 0 && ( player.hand.length > 0 || player.deck.length > 0 );
+  });
 })
