@@ -29,6 +29,24 @@ Template.gamePage.events({
         cardId: this.data._id,
         gameId: Session.get( xCard.session.currentGameId )
     });
+  },
+
+  "click .gameAddPlayerButton": function(e) {
+    Meteor.call( "handleGameAction", {
+        type: "add-player",
+        username: $(".gameAddPlayerInput").val(),
+        gameId: Session.get( xCard.session.currentGameId )
+    });
+    $(".gameAddPlayerInput").val("");
+  },
+
+  "click .gameRemovePlayerButton": function(e) {
+    Meteor.call( "handleGameAction", {
+        type: "remove-player",
+        username: $(".gameAddPlayerInput").val(),
+        gameId: Session.get( xCard.session.currentGameId )
+    });
+    $(".gameAddPlayerInput").val("");
   }
 });
 
@@ -37,8 +55,18 @@ Template.selectGameDeck.helpers({
     var result = UserDeckCollection.find( { owner: Meteor.userId() } ).fetch();
     result = _.map( result, function(ele){ return new DeckModel(ele); });
     return { decks: result };
+  },
+
+  isInvlovedInGame: function() {
+    return this.game.playersMap[Meteor.userId()];
   }
 })
+
+Template.gamePlayersPanel.helpers({
+  isCreator: function() {
+    return this.game.creator == Meteor.userId();
+  }
+});
 
 Template.gamePage.helpers({
   gameData: function() {

@@ -21,18 +21,30 @@ initState.addAction( "select-deck", function(game,action) {
 });
 
 initState.addAction( "add-player", function(game,action) {
-  // If the player exists and the requesting player is the creator attempt to add
-  // the player to the game
-  if( Meteor.users.findOne( action.playerId ) && action.requestingPlayerId == game.creator ) {
-    return game.addPlayer( action.playerId );
+  // Only allow the creator of the game to modify players
+  if( action.requestingPlayerId == game.creator ) {
+    var player;
+    if( player = Meteor.users.findOne( action.playerId ) ) {
+      return game.addPlayer( player._id );
+    }
+
+    if( player = Meteor.users.findOne( { username: action.username }) ) {
+      return game.addPlayer( player._id );
+    }
   }
 });
 
 initState.addAction( "remove-player", function(game,action) {
-  // If the requesting player is the creator or modifying their own state then attempty to
-  // remove the player from the game
-  if( action.requestingPlayerId == game.creator || action.requestingPlayerId == action.playerId ) {
-    return game.removePlayer( action.playerId );
+  // Only allow the creator of the game to modify players
+  if( action.requestingPlayerId == game.creator ) {
+    var player;
+    if( player = Meteor.users.findOne( action.playerId ) ) {
+      return game.removePlayer( player._id );
+    }
+
+    if( player = Meteor.users.findOne( { username: action.username }) ) {
+      return game.removePlayer( player._id );
+    }
   }
 });
 

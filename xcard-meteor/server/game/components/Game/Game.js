@@ -15,24 +15,20 @@ var playerCanPerformActions = function(player) {
   return (!_.isUndefined(player)) && player.health >= 0 && ( player.deck.length > 0 || player.hand.length > 0 );
 }
 
+var nextPlayerId = function(players) {
+  var result = 1;
+  while( !_.isUndefined(players[result])){ result++; }
+  return result;
+}
+
 Game = function(raw) {
 
   this.creator = get(raw, "creator");
   this.playersMap = get(raw, "playersMap", {});
   this.players = get(raw, "players", {});
   this.options = get(raw, "options", {});
-  this.state = get(raw, "state", { current: "init", activePlayer: 1, totalPlayers: 0, nextPlayerId: 1 });
+  this.state = get(raw, "state", { current: "init", activePlayer: 1, totalPlayers: 0 });
   this.messages = get(raw, "messages", []);
-
-  this._initPlayers(get(raw, "initPlayers", []));
-}
-
-Game.prototype._initPlayers = function(players) {
-  if( players.length ) {
-    _.each(players, function(playerId) {
-      this.addPlayer( playerId );
-    }.bind(this));
-  }
 }
 
 Game.prototype.addGlobalGameMessage = function(msg) {
@@ -70,7 +66,7 @@ Game.prototype.setNextActivePlayer = function() {
   });
 
   do {
-    this.state.activePlayer = nextId( this.state.activePlayer, this.state.nextPlayerId-1 );
+    this.state.activePlayer = nextId( this.state.activePlayer, this.state.totalPlayers );
     var player = this.players[this.state.activePlayer];
     if( player ) {
       playerAttemptedIds.pop( playerAttemptedIds.indexOf( player.playerId ) );
@@ -83,7 +79,7 @@ Game.prototype.setNextActivePlayer = function() {
 
 Game.prototype.addPlayer = function(playerId) {
   if( _.isUndefined( this.playersMap[playerId] ) ) {
-    var playerGameId = (this.state.nextPlayerId++);
+    var playerGameId = nextPlayerId(this.players); 
     this.state.totalPlayers++;
     this.playersMap[playerId] = playerGameId;
     this.players[playerGameId] = new Player( playerId, playerGameId );

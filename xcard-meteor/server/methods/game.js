@@ -1,27 +1,16 @@
+
+var makeNewGame = function( playerId ) {
+  return { game: new Game({ creator: playerId }) };
+}
+
 Meteor.methods({
 
   // This will create a new game instance for the currently logged in user.
   // This will include ALL players in the current room that the player is a member
   // of.
   createGame: function() {
-    var membership = RoomMembershipCollection.findOne({ owner: this.userId }),
-        allMemberships = RoomMembershipCollection.find({ roomId: membership ? membership.roomId : "" }).fetch(),
-        players = _.map( allMemberships, function(ele){
-          return ele.owner;
-        }),
-        result = null;
-
-    if(membership) {
-      result = GameCollection.insert({
-        game: new Game({
-          creator: this.userId,
-          initPlayers: players,
-          options: {}
-        })
-      });
-    }
-
-    return result;
+    var gameId = GameCollection.insert( makeNewGame( this.userId ) );
+    Meteor.call( "handleGameAction", { type: "add-player", playerId: this.userId, gameId: gameId });
   },
 
   handleGameAction: function(action) {

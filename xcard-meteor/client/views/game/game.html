@@ -5,11 +5,22 @@
 </template>
 
 <template name="selectGameDeck">
-  {{#if userId}}
+  {{#if isInvlovedInGame}}
     {{#with ownedDecks}}
       <h2> Select a deck </h2>
       {{> deckList data=decks customClass="selectDeck"}}
     {{/with}}
+  {{/if}}
+</template>
+
+<template name="gamePlayersPanel">
+  {{#if isCreator}}
+    <h2>Add a Player</h2>
+    <div class="gameAddPlayers">
+      <input type="text" class="gameAddPlayerInput" placeholder="Enter player name..." />
+      <button class="gameAddPlayerButton">Add</button>
+      <button class="gameRemovePlayerButton">Remove</button>
+    </div>
   {{/if}}
 </template>
 
@@ -47,6 +58,7 @@
             </div>
           </div>
           {{> selectGameDeck}}
+          {{> gamePlayersPanel}}
         {{/if}}
 
         {{#if equals game.state.current "playing"}}
