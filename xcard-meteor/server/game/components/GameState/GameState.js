@@ -7,31 +7,35 @@
 //  transitions: If the action results in a change of state then the transitions will be checked
 //               to see if the current state warrents a state transition. Methods registered as a
 //               transition need to take the following form: fn(game,action) => newState
-GameState = function(name, actions, transitions) {
+GameState = function(name) {
   this.name = name;
-  this.actions = actions || {};
-  this.internalActions = actions || {};
-  this.transitions = transitions || [];
+  this.actions = {};
+  this.internalActions = {};
+  this.transitions = [];
 }
 
 GameState.boundMethodName = function(method, name, state) {
   return method.bind({ name: name, state: state });
 }
 
+// Global state object which is the this.state reference for
+// globalActions, globalInternalActions, and globalTransitions
+var globalGameState = new GameState( "GLOBAL_STATE" );
+
 GameState.globalActions = {};
 GameState.addGlobalAction = function(actionType, method) {
   method.name = actionType;
-  GameState.globalActions[actionType] = GameState.boundMethodName( method, actionType, GameState );
+  GameState.globalActions[actionType] = GameState.boundMethodName( method, actionType, globalGameState);
 }
 
 GameState.globalInternalActions = {};
 GameState.addGlobalInternalAction = function(actionType, method) {
-  GameState.globalInternalActions[actionType] = GameState.boundMethodName( method, actionType, GameState );
+  GameState.globalInternalActions[actionType] = GameState.boundMethodName( method, actionType, globalGameState);
 }
 
 GameState.globalTransitions = [];
 GameState.addGlobalTransition = function(transitionName, condition) {
-  GameState.globalTransitions.push({ name: transitionName, condition: GameState.boundMethodName(condition, transitionName, GameState) });
+  GameState.globalTransitions.push({ name: transitionName, condition: GameState.boundMethodName(condition, transitionName, globalGameState) });
 }
 
 GameState.prototype.addAction = function(actionType, method) {

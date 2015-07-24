@@ -7,9 +7,13 @@ GameState.addGlobalAction( "pass", function(game,action){
   }
 });
 
+GameState.addGlobalInternalAction( "getActivePlayer", function(game,action) {
+  return game.players[game.state.activePlayer];
+})
+
 GameState.addGlobalInternalAction( "activePlayerDraw", function(game,action) {
   // Draw a single card from the players deck and place in hand
-  var activePlayer = game.players[game.state.activePlayer];
+  var activePlayer = this.state.callAction( "getActivePlayer", game, action );
   if( activePlayer.deck.length ) {
     var card = activePlayer.deck.splice(0,1)[0];
     activePlayer.hand.push( card );
@@ -19,7 +23,7 @@ GameState.addGlobalInternalAction( "activePlayerDraw", function(game,action) {
 });
 
 GameState.addGlobalInternalAction( "activePlayerRegenerateMana", function(game,action) {
-  var activePlayer = game.players[game.state.activePlayer];
+  var activePlayer = this.state.callAction( "getActivePlayer", game, action );
   if( activePlayer ) {
     activePlayer.mana = activePlayer.maxMana;
     return true;
@@ -27,7 +31,7 @@ GameState.addGlobalInternalAction( "activePlayerRegenerateMana", function(game,a
 });
 
 GameState.addGlobalInternalAction( "activePlayerIncreaseMana", function(game,action) {
-  var activePlayer = game.players[game.state.activePlayer];
+  var activePlayer = this.state.callAction( "getActivePlayer", game, action );
   if( activePlayer && activePlayer.maxMana < 10 ) {
     activePlayer.maxMana++;
     return true;
@@ -35,7 +39,7 @@ GameState.addGlobalInternalAction( "activePlayerIncreaseMana", function(game,act
 });
 
 
-GameState.addGlobalInternalAction( "getAlivePlayers", function(game, action){
+GameState.addGlobalInternalAction( "getAlivePlayers", function(game, action) {
   return _.filter( game.players, function(player) {
     return player.health > 0;
   });
