@@ -25,9 +25,15 @@ GameActions.find().observe({
         // that we have a evaluator defined. Then if the action caused a change in game state
         // then update the game collection with the new state of the game
         if(( action.requestingPlayer || action.requestingPlayerIsCreator ) &&
-             xCard.evaluator && xCard.evaluator.applyAction(game,action )) {
+             xCard.evaluator && xCard.evaluator.applyAction( game,action )) {
 
           // Update the game state if a change has been registered
+          // TODO: Create a smarter system based on some configurable update
+          // object in the action to update only what is needed. This would
+          // VASTLY improve the network performance of the entire system.
+          // Currently when a game update happens the WHOLE game state is replaced
+          // in the GameCollection. This means for each connected client we are
+          // continously sending out the same data repeatedly.
           GameCollection.update(gameContainer._id, { $set: { game: game } });
         }
 
