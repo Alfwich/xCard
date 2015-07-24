@@ -10,11 +10,16 @@
 GameState = function(name, actions, transitions) {
   this.name = name;
   this.actions = actions || {};
+  this.internalActions = actions || {};
   this.transitions = transitions || [];
 }
 
 GameState.prototype.addAction = function(actionType, method) {
   this.actions[actionType] = method;
+}
+
+GameState.prototype.addInternalAction = function(actionType, method) {
+  this.internalActions[actionType] = method;
 }
 
 GameState.prototype.addTransition = function(transitionName, condition) {
@@ -33,8 +38,9 @@ GameState.prototype.applyAction = function(gameState,userAction) {
   return result;
 }
 
+// Allows actions to call other actions and internal actions to be called
 GameState.prototype.callAction = function( actionName, gameState, userAction ) {
-  var action = this.actions[actionName];
+  var action = this.actions[actionName] || this.internalActions[actionName];
   if( action ) {
     return action( gameState, userAction );
   }

@@ -15,7 +15,7 @@
 
 <template name="gamePlayersPanel">
   {{#if isCreator}}
-    <h2>Add a Player</h2>
+    <h2>Add/Remove Players</h2>
     <div class="gameAddPlayers">
       <input type="text" class="gameAddPlayerInput" placeholder="Enter player name..." />
       <button class="gameAddPlayerButton">Add</button>
@@ -61,7 +61,7 @@
           {{> gamePlayersPanel}}
         {{/if}}
 
-        {{#if equals game.state.current "playing"}}
+        {{#if equals game.state.current "main"}}
           <div class="row">
             <div class="col-xs-10">
               {{> gameMessages}}
@@ -113,6 +113,8 @@
               {{> gamePlayers}}
             </div>
           </div>
+          <h2>Restart</h2>
+          <button class="gameRestartButton">Restart</button>
         {{/if}}
       </div>
     {{/with}}

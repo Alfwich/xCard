@@ -31,7 +31,7 @@ Template.gamePage.events({
     });
   },
 
-  "click .gameAddPlayerButton": function(e) {
+  "click .gameAddPlayerButton": function() {
     Meteor.call( "handleGameAction", {
         type: "add-player",
         username: $(".gameAddPlayerInput").val(),
@@ -40,13 +40,20 @@ Template.gamePage.events({
     $(".gameAddPlayerInput").val("");
   },
 
-  "click .gameRemovePlayerButton": function(e) {
+  "click .gameRemovePlayerButton": function() {
     Meteor.call( "handleGameAction", {
         type: "remove-player",
         username: $(".gameAddPlayerInput").val(),
         gameId: Session.get( xCard.session.currentGameId )
     });
     $(".gameAddPlayerInput").val("");
+  },
+
+  "click .gameRestartButton": function() {
+    Meteor.call( "handleGameAction", {
+        type: "restart",
+        gameId: Session.get( xCard.session.currentGameId )
+    });
   }
 });
 

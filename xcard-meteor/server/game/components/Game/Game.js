@@ -53,7 +53,6 @@ Game.prototype.activePlayerDrawCard = function() {
   var activePlayer = this.players[this.state.activePlayer];
   if( activePlayer.deck.length ) {
     var card = activePlayer.deck.splice(0,1)[0];
-    this.addGlobalGameMessage( activePlayer.playerName + " drew a card from their library" );
     activePlayer.hand.push( card );
   }
 }
@@ -83,7 +82,6 @@ Game.prototype.addPlayer = function(playerId) {
     this.state.totalPlayers++;
     this.playersMap[playerId] = playerGameId;
     this.players[playerGameId] = new Player( playerId, playerGameId );
-    this.addGlobalGameMessage( UserCollection.findOne(playerId).username + " has joined the game." );
     return true;
   }
 }
@@ -93,7 +91,17 @@ Game.prototype.removePlayer = function(playerId) {
       this.state.totalPlayers--;
       delete this.players[this.playersMap[playerId]];
       delete this.playersMap[playerId];
-      this.addGlobalGameMessage( UserCollection.findOne(playerId).username + " has left the game." );
       return true;
   }
+}
+
+Game.prototype.restart = function() {
+  _.forEach( this.players, function(player) {
+    this.removePlayer( player.playerId );
+    this.addPlayer( player.playerId );
+  }.bind(this));
+
+  this.state.activePlayer = 1;
+  this.messages = [];
+
 }

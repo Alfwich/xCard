@@ -8,6 +8,6 @@ Player = function(id, gameId) {
   this.exile = [];
   this.battlefield = [];
   this.health = 20;
-  this.maxMana = 1;
-  this.mana = 1;
+  this.maxMana = 0;
+  this.mana = 0;
 }

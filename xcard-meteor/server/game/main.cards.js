@@ -19,3 +19,8 @@ xCard.cardEvaluator.registerCard("Assassins Of History", function(game, action) 
   game.modifyPlayerValue( randomPlayerId, "health", -3 );
   return true;
 });
+
+xCard.cardEvaluator.registerCard("Death At The Void", function(game, action) {
+  game.addGlobalGameMessage( action.player.playerName + " fell on his sword and died... D:" );
+  game.modifyPlayerValue( action.playerGameId, "health", -1337 );
+})
