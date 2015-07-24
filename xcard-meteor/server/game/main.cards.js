@@ -12,7 +12,6 @@ xCard.cardEvaluator.registerCard("Belonging To Myself", function(game,action) {
   return true;
 });
 
-
 xCard.cardEvaluator.registerCard("Assassins Of History", function(game, action) {
   game.addGlobalGameMessage( action.player.playerName + " stabbed a random player!" ); 
   var randomPlayerId = _.random(1,game.state.totalPlayers);
