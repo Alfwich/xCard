@@ -13,6 +13,7 @@ var mainState      = new GameState(MAIN_STATE);
 var mainStateEnd   = new GameState(MAIN_STATE_END);
 var finishedState  = new GameState(FINISHED_STATE);
 
+
 // Init State
 initState.addAction( "select-deck", function(game,action) {
   var deck = UserDeckCollection.findOne(action.deckId);
@@ -107,11 +108,6 @@ mainState.addAction( "use-card", function(game,action) {
 
 });
 
-mainState.addAction( "pass-turn" , function(game,action){
-  // NOOP operation to allow the turn to transition
-  return true;
-});
-
 mainState.addTransition( "playerMainEnding", function(game,action) {
   return MAIN_STATE_END;
 });
@@ -123,7 +119,6 @@ mainStateEnd.addInternalAction( "init", function(game,action) {
   return true;
 });
 
-// TODO: Refactor this into another state
 mainStateEnd.addTransition( "noPlayablePlayerActions", function(game,action) {
   // Check to see if we have any players that can perform action
   var haveActionablePlayers = _.some( game.players, function(player) {

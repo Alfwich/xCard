@@ -14,32 +14,36 @@ GameState = function(name, actions, transitions) {
   this.transitions = transitions || [];
 }
 
+GameState.boundMethodName = function(method,name) {
+  return method.bind({ name: name });
+}
 
 GameState.globalActions = {};
 GameState.addGlobalAction = function(actionType, method) {
-  GameState.globalActions[actionType] = method;
+  method.name = actionType;
+  GameState.globalActions[actionType] = GameState.boundMethodName( method, actionType );
 }
 
 GameState.globalInternalActions = {};
 GameState.addGlobalInternalAction = function(actionType, method) {
-  GameState.globalInternalActions[actionType] = method;
+  GameState.globalInternalActions[actionType] = GameState.boundMethodName( method, actionType );
 }
 
 GameState.globalTransitions = [];
 GameState.addGlobalTransition = function(transitionName, condition) {
-  GameState.globalTransition.push({ name: transitionName, condition: condition });
+  GameState.globalTransitions.push({ name: transitionName, condition: GameState.boundMethodName(condition, transitionName) });
 }
 
 GameState.prototype.addAction = function(actionType, method) {
-  this.actions[actionType] = method;
+  this.actions[actionType] = GameState.boundMethodName( method, actionType );
 }
 
 GameState.prototype.addInternalAction = function(actionType, method) {
-  this.internalActions[actionType] = method;
+  this.internalActions[actionType] = GameState.boundMethodName( method, actionType );
 }
 
 GameState.prototype.addTransition = function(transitionName, condition) {
-  this.transitions.push({ name: transitionName, condition: condition });
+  this.transitions.push({ name: transitionName, condition: GameState.boundMethodName( condition, transitionName ) });
 }
 
 GameState.prototype.applyAction = function(gameState,userAction) {
@@ -66,7 +70,7 @@ GameState.prototype.callAction = function( actionName, gameState, userAction ) {
 }
 
 // Checks each transition to see if the current gameState warrents a transition
-GameState.prototype.transitionState = function(gameState,userAction) {
+GameState.prototype.transitionState = function(gameState, userAction) {
   var result = null;
 
   _.find( GameState.globalTransitions.concat(this.transitions), function(transition){
