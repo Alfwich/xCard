@@ -83,7 +83,8 @@ mainStateStart.addInternalAction( "init", function(game,action) {
   this.state.callAction( "activePlayerDraw", game, action );
 
   // Restore mana and add one more max mana
-  game.players[game.state.activePlayer].mana = ++game.players[game.state.activePlayer].maxMana;
+  this.state.callAction( "activePlayerIncreaseMana", game, action );
+  this.state.callAction( "activePlayerRegenerateMana", game, action );
   return true;
 })
 

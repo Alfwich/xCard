@@ -18,6 +18,23 @@ GameState.addGlobalInternalAction( "activePlayerDraw", function(game,action) {
   }
 });
 
+GameState.addGlobalInternalAction( "activePlayerRegenerateMana", function(game,action) {
+  var activePlayer = game.players[game.state.activePlayer];
+  if( activePlayer ) {
+    activePlayer.mana = activePlayer.maxMana;
+    return true;
+  }
+});
+
+GameState.addGlobalInternalAction( "activePlayerIncreaseMana", function(game,action) {
+  var activePlayer = game.players[game.state.activePlayer];
+  if( activePlayer && activePlayer.maxMana < 10 ) {
+    activePlayer.maxMana++;
+    return true;
+  }
+});
+
+
 GameState.addGlobalInternalAction( "getAlivePlayers", function(game, action){
   return _.filter( game.players, function(player) {
     return player.health > 0;
