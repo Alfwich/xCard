@@ -18,13 +18,13 @@ xCardEvaluator.prototype.applyAction = function(game, action) {
       result = null;
 
   if( state ) {
-    state.callAction( "pre", game, action );
+    state.callEvent( "pre", game, action );
     result = state.applyAction( game, action );
-    state.callAction( "post", game, action );
+    state.callEvent( "post", game, action );
     if( result ) {
       do { // Keep on changing states while the next state's init action return truthy
         game.state.current = this.states[game.state.current].transitionState( game, action );
-      } while( this.states[game.state.current].callAction( "init", game, action ) ) 
+      } while( this.states[game.state.current].callEvent( "init", game, action ) ) 
     }
   }
 

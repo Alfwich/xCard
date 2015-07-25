@@ -1,11 +1,12 @@
 // Setup the xCard GameStates and xCardEvaluator
 
 // Convient state labels
-var INIT_STATE       = "init",
-    MAIN_STATE_START = "mainStart",
-    MAIN_STATE       = "main",
-    MAIN_STATE_END   = "mainEnd",
-    FINISHED_STATE   = "finished";
+var STATE_HAS_CHANGED = true,
+    INIT_STATE        = "init",
+    MAIN_STATE_START  = "mainStart",
+    MAIN_STATE        = "main",
+    MAIN_STATE_END    = "mainEnd",
+    FINISHED_STATE    = "finished";
 
 var initState      = new GameState(INIT_STATE);
 var mainStateStart = new GameState(MAIN_STATE_START);
@@ -21,7 +22,7 @@ initState.addAction( "select-deck", function(game,action) {
   if( deck ) {
     action.requestingPlayer.deck = DeckShuffler( deck );
     game.addGlobalGameMessage( action.requestingPlayer.playerName + " has chosen a deck." );
-    return true;
+    return STATE_HAS_CHANGED;
   }
 });
 
@@ -32,7 +33,7 @@ initState.addAction( "add-player", function(game,action) {
     if( (player = Meteor.users.findOne( action.playerId )) || (player = Meteor.users.findOne( { username: action.username }) )) {
       if( game.addPlayer( player._id ) ) {
         game.addGlobalGameMessage( player.username + " has joined the game." );
-        return true;
+        return STATE_HAS_CHANGED;
       }
     }
   }
@@ -45,7 +46,7 @@ initState.addAction( "remove-player", function(game,action) {
     if( (player = Meteor.users.findOne( action.playerId )) || (player = Meteor.users.findOne( { username: action.username }) )) {
       if( game.removePlayer( player._id ) ) {
         game.addGlobalGameMessage( player.username + " has left the game." );
-        return true;
+        return STATE_HAS_CHANGED;
       }
     }
   }
@@ -77,15 +78,15 @@ initState.addTransition( "allPlayersReady", function(game,action) {
 });
 
 // Main Start State
-mainStateStart.addInternalAction( "init", function(game,action) {
+mainStateStart.addEvent( "init", function(game,action) {
 
   // Have the active player draw a card
-  this.state.callAction( "activePlayerDraw", game, action );
+  this.state.callMethod( "activePlayerDraw", game, action );
 
   // Restore mana and add one more max mana
-  this.state.callAction( "activePlayerIncreaseMana", game, action );
-  this.state.callAction( "activePlayerRegenerateMana", game, action );
-  return true;
+  this.state.callMethod( "activePlayerIncreaseMana", game, action );
+  this.state.callMethod( "activePlayerRegenerateMana", game, action );
+  return STATE_HAS_CHANGED;
 })
 
 mainStateStart.addTransition( "finishedMainStart", function(game,action) {
@@ -108,7 +109,7 @@ mainState.addAction( "use-card", function(game,action) {
       action.requestingPlayer.hand.splice(action.requestingPlayer.hand.indexOf(card._id), 1)
     );
 
-    return true;
+    return STATE_HAS_CHANGED;
   }
 
 });
@@ -117,17 +118,17 @@ mainState.addTransition( "playerMainEnding", function(game,action) {
   return MAIN_STATE_END;
 });
 
-mainStateEnd.addInternalAction( "init", function(game,action) {
+mainStateEnd.addEvent( "init", function(game,action) {
   // Change active player to the next player
   game.addSystemMessage( "CHANGED ACTIVE PLAYER" );
   game.setNextActivePlayer();
-  return true;
+  return STATE_HAS_CHANGED;
 });
 
 mainStateEnd.addTransition( "notEnoughAlivePlayers", function(game,action) {
   // Check to see if there is only one player alive. If this is true then
   // the game is over and the remaining player is the winner ( or a draw if none )
-  var alivePlayers = this.state.callAction( "getAlivePlayers", game, action );
+  var alivePlayers = this.state.callMethod( "getAlivePlayers", game, action );
 
   if( alivePlayers.length < 2 ) {
 
@@ -144,7 +145,7 @@ mainStateEnd.addTransition( "notEnoughAlivePlayers", function(game,action) {
 
 mainStateEnd.addTransition( "noPlayablePlayerActions", function(game,action) {
   // Get a listing of the actionable players
-  var actionablePlayers = this.state.callAction( "getActionablePlayers", game, action );
+  var actionablePlayers = this.state.callMethod( "getActionablePlayers", game, action );
 
   // If we have no actionable players then end the game
   if( !actionablePlayers.length ) {
@@ -159,8 +160,10 @@ mainStateEnd.addTransition( "nextPlayerStart", function(game,action) {
 
 // Finished State
 finishedState.addAction( "restart", function(game,action) {
-  game.restart();
-  return true;
+  if( action.requestingPlayerIsCreator ) {
+    game.restart();
+    return STATE_HAS_CHANGED;
+  }
 });
 
 finishedState.addTransition( "restartGame", function(game,action) {
