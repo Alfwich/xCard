@@ -56,7 +56,7 @@ GameState.prototype.addTransition = function(transitionName, condition) {
 }
 
 GameState.prototype.applyAction = function(gameState,userAction) {
-  var action = this.actions[userAction.type] || GameState.globalActions[userAction.type],
+  var action = this.actions[userAction.type] || globalGameState.actions[userAction.type],
       result = false;
 
   if(action) {
