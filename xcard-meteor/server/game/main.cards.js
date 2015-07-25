@@ -20,6 +20,6 @@ xCard.cardEvaluator.registerCard("Assassins Of History", function(game, action) 
 });
 
 xCard.cardEvaluator.registerCard("Death At The Void", function(game, action) {
-  game.addGlobalGameMessage( action.requestingPlayer.playerName + " fell on his sword and died... D:" );
-  game.modifyPlayerValue( action.requestingPlayerGameId, "health", -1337 );
+  game.addGlobalGameMessage( action.requestingPlayer.playerName + " fell on his sword ... Ouch! D:" );
+  game.modifyPlayerValue( action.requestingPlayerGameId, "health", -8 );
 })
