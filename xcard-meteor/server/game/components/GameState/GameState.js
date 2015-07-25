@@ -12,7 +12,7 @@ GameState = function(name) {
   this.actions = {};
   this.methods = {};
   this.events = {}
-  this.transitions = [];
+  this.transitions = {};
 }
 
 GameState.boundMethodName = function(method, name, state) {
@@ -35,8 +35,8 @@ GameState.addGlobalMethod = function(methodName, method) {
   globalGameState.addMethod( methodName, method );
 }
 
-GameState.addGlobalTransition = function(transitionName, condition) {
-  globalGameState.addTransition( transitionName, condition );
+GameState.addGlobalTransition = function(transitionName, priority, condition) {
+  globalGameState.addTransition( transitionName, priority, condition );
 }
 
 GameState.prototype.addAction = function(actionType, method) {
@@ -51,8 +51,15 @@ GameState.prototype.addMethod = function(methodName, method) {
   this.methods[methodName] = GameState.boundMethodName( method, methodName, this );
 }
 
-GameState.prototype.addTransition = function(transitionName, condition) {
-  this.transitions.push({ name: transitionName, condition: GameState.boundMethodName( condition, transitionName, this ) });
+GameState.prototype.addTransition = function(transitionName, priority, condition) {
+  if( _.isUndefined( this.transitions[priority] )) {
+    this.transitions[priority] = [];
+  }
+
+  this.transitions[priority].push({
+    name: transitionName,
+    condition: GameState.boundMethodName( condition, transitionName, this )
+  });
 }
 
 GameState.prototype.applyAction = function(gameState,userAction) {
@@ -97,16 +104,14 @@ GameState.prototype.callEvent = function( eventName, game, action ) {
 }
 
 // Checks each transition to see if the current gameState warrents a transition
-GameState.prototype.transitionState = function(gameState, userAction) {
+GameState.prototype.checkForStateTransition = function(gameState, userAction) {
   var result = null;
-
-  _.find( globalGameState.transitions.concat(this.transitions), function(transition){
-    result = transition.condition(gameState, userAction);
-    if( result ) {
-      gameState.addSystemMessage( "TRANSITIONED TO STATE '" + result + "' FROM '" + this.name + "' THROUGH '" + transition.name + "'" );
-      return true;
-    }
+  // Find the first transition of lowerst priority which return a truthy value.
+  _.find( _.sortBy(Object.keys(this.transitions)), function(priority){
+    return _.find( this.transitions[priority], function(transition){
+      return result = transition.condition(gameState, userAction);
+    });
   }.bind(this));
-
+  
   return result ? result : this.name;
 }

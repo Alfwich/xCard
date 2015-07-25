@@ -53,13 +53,13 @@ initState.addAction( "remove-player", function(game,action) {
 });
 
 
-initState.addTransition( "noPlayers", function(game,action) {
+initState.addTransition( "noPlayers", 0, function(game,action) {
   if( game.state.totalPlayers == 0 ) {
     return FINISHED_STATE;
   }
 });
 
-initState.addTransition( "allPlayersReady", function(game,action) {
+initState.addTransition( "allPlayersReady", 1, function(game,action) {
   // Make sure that there are more than 1 players going into the playing state
   if( game.state.totalPlayers > 1 ) {
     // Check to see if all players have selected a deck. If this is true then
@@ -89,7 +89,7 @@ mainStateStart.addEvent( "init", function(game,action) {
   return STATE_HAS_CHANGED;
 })
 
-mainStateStart.addTransition( "finishedMainStart", function(game,action) {
+mainStateStart.addTransition( "finishedMainStart", 0, function(game,action) {
   return MAIN_STATE;
 });
 
@@ -114,7 +114,7 @@ mainState.addAction( "use-card", function(game,action) {
 
 });
 
-mainState.addTransition( "playerMainEnding", function(game,action) {
+mainState.addTransition( "playerMainEnding", 0, function(game,action) {
   return MAIN_STATE_END;
 });
 
@@ -125,7 +125,7 @@ mainStateEnd.addEvent( "init", function(game,action) {
   return STATE_HAS_CHANGED;
 });
 
-mainStateEnd.addTransition( "notEnoughAlivePlayers", function(game,action) {
+mainStateEnd.addTransition( "notEnoughAlivePlayers", 0, function(game,action) {
   // Check to see if there is only one player alive. If this is true then
   // the game is over and the remaining player is the winner ( or a draw if none )
   var alivePlayers = this.state.callMethod( "getAlivePlayers", game, action );
@@ -143,7 +143,7 @@ mainStateEnd.addTransition( "notEnoughAlivePlayers", function(game,action) {
   }
 });
 
-mainStateEnd.addTransition( "noPlayablePlayerActions", function(game,action) {
+mainStateEnd.addTransition( "noPlayablePlayerActions", 1, function(game,action) {
   // Get a listing of the actionable players
   var actionablePlayers = this.state.callMethod( "getActionablePlayers", game, action );
 
@@ -154,7 +154,7 @@ mainStateEnd.addTransition( "noPlayablePlayerActions", function(game,action) {
   }
 });
 
-mainStateEnd.addTransition( "nextPlayerStart", function(game,action) {
+mainStateEnd.addTransition( "nextPlayerStart", 2, function(game,action) {
   return MAIN_STATE_START;
 });
 
@@ -166,7 +166,7 @@ finishedState.addAction( "restart", function(game,action) {
   }
 });
 
-finishedState.addTransition( "restartGame", function(game,action) {
+finishedState.addTransition( "restartGame", 0, function(game,action) {
   return INIT_STATE;
 });
 
