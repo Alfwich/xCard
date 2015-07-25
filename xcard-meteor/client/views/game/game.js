@@ -119,6 +119,10 @@ Template.gamePage.helpers({
     }
 
     return result;
+  },
+
+  isCreator: function() {
+    return this.game.creator == Meteor.userId();
   }
 });
 
@@ -132,6 +136,14 @@ Template.gamePlayers.helpers({
     }.bind(this));
     return result;
   },
+});
+
+Template.gameMessages.helpers({
+  isSystemMessage: function() {
+    if( _.isString(this) ) {
+      return this.indexOf( "###SYSTEM" ) != -1 ? "system" : "";
+    }
+  }
 });
 
 Template.gamePage.rendered = function() {

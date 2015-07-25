@@ -27,7 +27,7 @@
 <template name="gameMessages">
   <div id="gameStateOutput" class="gameMessages">
     {{#each game.messages}}
-      <div  class="stateMessage">{{this}}</div>
+      <div  class="stateMessage {{isSystemMessage}}">{{this}}</div>
     {{/each}}
   </div>
 </template>
@@ -114,8 +114,10 @@
               {{> gamePlayers}}
             </div>
           </div>
-          <h2>Restart</h2>
-          <button class="gameRestartButton">Restart</button>
+          {{#if isCreator}}
+            <h2>Restart</h2>
+            <button class="gameRestartButton">Restart</button>
+          {{/if}}
         {{/if}}
       </div>
     {{/with}}
