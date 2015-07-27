@@ -13,19 +13,18 @@ xCardEvaluator.prototype.addGameState = function(state) {
   this.states[state.name] = state;
 }
 
-xCardEvaluator.prototype.applyAction = function(action) {
-  var state = this.states[action.game.state.current],
+xCardEvaluator.prototype.handleRequest = function(request) {
+  var state = this.states[request.game.state.current],
       result = null;
 
-  console.log( state );
   if( state ) {
-    state.callEvent( "pre", action );
-    result = state.applyAction( action );
-    state.callEvent( "post", action );
+    state.callEvent( "pre", request );
+    result = state.applyAction( request );
+    state.callEvent( "post", request );
     if( result ) {
-      do { // Keep on changing states while the next state's init action return truthy
-        action.game.state.current = this.states[action.game.state.current].checkForStateTransition( action );
-      } while( this.states[action.game.state.current].callEvent( "init", action ) )
+      do { // Keep on changing states while the next state's init event return truthy
+        request.game.state.current = this.states[request.game.state.current].checkForStateTransition( request );
+      } while( this.states[request.game.state.current].callEvent( "init", request ) )
     }
   }
 

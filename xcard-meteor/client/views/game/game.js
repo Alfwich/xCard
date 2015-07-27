@@ -16,7 +16,7 @@ var getPlayerAttribute = function(game, attr, def) {
 
 Template.gamePage.events({
   "click .selectDeck": function() {
-    Meteor.call( "handleGameAction", {
+    Meteor.call( "handleGameRequest", {
       type: "select-deck",
       deckId: this.data._id,
       gameId: Session.get( xCard.session.currentGameId )
@@ -24,14 +24,14 @@ Template.gamePage.events({
   },
 
   "click .gamePassTurn": function() {
-    Meteor.call( "handleGameAction", {
+    Meteor.call( "handleGameRequest", {
       type: "pass",
       gameId: Session.get( xCard.session.currentGameId )
     });
   },
 
   "click .useGameCard": function() {
-    Meteor.call( "handleGameAction", {
+    Meteor.call( "handleGameRequest", {
         type: "use-card",
         cardId: this.data._id,
         gameId: Session.get( xCard.session.currentGameId )
@@ -39,7 +39,7 @@ Template.gamePage.events({
   },
 
   "click .gameAddPlayerButton": function() {
-    Meteor.call( "handleGameAction", {
+    Meteor.call( "handleGameRequest", {
         type: "add-player",
         username: $(".gameAddPlayerInput").val(),
         gameId: Session.get( xCard.session.currentGameId )
@@ -48,7 +48,7 @@ Template.gamePage.events({
   },
 
   "click .gameRemovePlayerButton": function() {
-    Meteor.call( "handleGameAction", {
+    Meteor.call( "handleGameRequest", {
         type: "remove-player",
         username: $(".gameAddPlayerInput").val(),
         gameId: Session.get( xCard.session.currentGameId )
@@ -57,7 +57,7 @@ Template.gamePage.events({
   },
 
   "click .gameRestartButton": function() {
-    Meteor.call( "handleGameAction", {
+    Meteor.call( "handleGameRequest", {
         type: "restart",
         gameId: Session.get( xCard.session.currentGameId )
     });

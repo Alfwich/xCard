@@ -75,41 +75,41 @@ GameState.prototype.applyAction = function(request) {
 }
 
 // Allows actions to call other actions and internal actions to be called
-GameState.prototype.callAction = function( actionName, action ) {
+GameState.prototype.callAction = function( actionName, request ) {
   // Find the correct action to call starting with internal actions first then normal actions
-  var stateAction = this.actions[actionName] || globalGameState.actions[actionName];
+  var action = this.actions[actionName] || globalGameState.actions[actionName];
 
-  if( stateAction && game && action ) {
-    return stateAction( action );
+  if( action && request && request.game ) {
+    return stateAction( request );
   }
 }
 
-GameState.prototype.callMethod = function( methodName, action ) {
+GameState.prototype.callMethod = function( methodName, request ) {
   // Find the correct method to call
   var stateMethod = this.methods[methodName] || globalGameState.methods[methodName];
 
-  if( stateMethod && action && action.game ) {
-    var methodArguments = [ action ].concat(Array.prototype.slice.call(arguments).slice(2));
+  if( stateMethod && request && request.game ) {
+    var methodArguments = [ request ].concat(Array.prototype.slice.call(arguments).slice(2));
     return stateMethod.apply( null, methodArguments );
   }
 }
 
-GameState.prototype.callEvent = function( eventName, action ) {
+GameState.prototype.callEvent = function( eventName, request ) {
   // Find the correct event to call
   var stateEvent = this.events[eventName] || globalGameState.events[eventName];
 
-  if( stateEvent && action && action.game ) {
-    return stateEvent( action );
+  if( stateEvent && request && request.game ) {
+    return stateEvent( request );
   }
 }
 
 // Checks each transition to see if the current gameState warrents a transition
-GameState.prototype.checkForStateTransition = function( action ) {
+GameState.prototype.checkForStateTransition = function( request ) {
   var result = null;
   // Find the first transition of lowerst priority which return a truthy value.
   _.find( _.sortBy(Object.keys(this.transitions)), function(priority){
     return _.find( this.transitions[priority], function(transition){
-      return result = transition.condition( action);
+      return result = transition.condition( request);
     });
   }.bind(this));
 
