@@ -7,14 +7,13 @@ CardEvaluator.prototype.registerCard = function( cardName, actions ) {
   this.cards[cardName] = actions;
 }
 
-CardEvaluator.prototype.applyCard = function( card, action ) {
+CardEvaluator.prototype.applyCard = function( card, action, state ) {
   var cardAction = this.cards[card.title],
       result = null;
-
-  action.game.addGlobalGameMessage( action.requestingPlayer.playerName + " casted card '" + card.title + "'" );
-
-  if( cardAction ) {
-    result = cardAction( action );
+      
+  if( cardAction, state ) {
+    state.callMethod( "addGlobalGameMessage", action.requestingPlayer.playerName + " casted card '" + card.title + "'" );
+    result = cardAction( action, state );
   }
 
   return result;

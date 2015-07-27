@@ -31,8 +31,8 @@ initState.addAction( "add-player", function(action) {
   if( action.requestingPlayerIsCreator ) {
     var player;
     if( (player = Meteor.users.findOne( action.playerId )) || (player = Meteor.users.findOne( { username: action.username }) )) {
-      if( action.game.addPlayer( player._id ) ) {
-        action.game.addGlobalGameMessage( player.username + " has joined the game." );
+      if( this.state.callMethod( "addGamePlayer", action, player._id ) ) {
+        this.state.callMethod( "addGameMessage", action, player.username + " has joined the game." )
         return STATE_HAS_CHANGED;
       }
     }
@@ -44,8 +44,8 @@ initState.addAction( "remove-player", function(action) {
   if( action.requestingPlayerIsCreator ) {
     var player;
     if( (player = Meteor.users.findOne( action.playerId )) || (player = Meteor.users.findOne( { username: action.username }) )) {
-      if( action.game.removePlayer( player._id ) ) {
-        action.game.addGlobalGameMessage( player.username + " has left the game." );
+      if( this.state.callMethod( "removeGamePlayer", action, player._id )) {
+        this.state.callMethod( "addGameMessage", action, player.username + " has left the game." )
         return STATE_HAS_CHANGED;
       }
     }
@@ -102,7 +102,7 @@ mainState.addAction( "use-card", function(action) {
       _.contains(action.requestingPlayer.hand, action.cardId ) ) {
 
     // Do card actions
-    xCard.cardEvaluator.applyCard( card, action );
+    xCard.cardEvaluator.applyCard( card, action, this.state );
 
     // Remove the card from the players hand and place into discard
     action.requestingPlayer.discard.push(
@@ -120,8 +120,8 @@ mainState.addTransition( "playerMainEnding", 0, function(action) {
 
 mainStateEnd.addEvent( "init", function(action) {
   // Change active player to the next player
-  action.game.addSystemMessage( "CHANGED ACTIVE PLAYER" );
-  action.game.setNextActivePlayer();
+  this.state.callMethod( "addGameSystemMessage", action,  "CHANGED ACTIVE PLAYER" );
+  this.state.callMethod( "setNextActivePlayer", action );
   return STATE_HAS_CHANGED;
 });
 
@@ -134,9 +134,9 @@ mainStateEnd.addTransition( "notEnoughAlivePlayers", 0, function(action) {
 
     if( alivePlayers.length == 1 ) {
       // Do some winning player cleanup
-      action.game.addGlobalGameMessage( alivePlayers[0].playerName + " has won the game!" );
+      this.state.callMethod( "addGameMessage", action,  alivePlayers[0].playerName + " has won the game!" );
     } else {
-      action.game.addGlobalGameMessage( "Draw between post-alive players" );
+      this.state.callMethod( "addGameMessage", action,  "Draw between post-alive players" );
     }
 
     return FINISHED_STATE;
@@ -149,7 +149,7 @@ mainStateEnd.addTransition( "noPlayablePlayerActions", 1, function(action) {
 
   // If we have no actionable players then end the game
   if( !actionablePlayers.length ) {
-    action.game.addGlobalGameMessage( "Draw between alive players" );
+    this.state.callMethod( "addGameMessage", action,  "Draw between alive players" );
     return FINISHED_STATE;
   }
 });
@@ -161,7 +161,7 @@ mainStateEnd.addTransition( "nextPlayerStart", 2, function(action) {
 // Finished State
 finishedState.addAction( "restart", function(action) {
   if( action.requestingPlayerIsCreator ) {
-    action.game.restart();
+    this.state.callMethod( "restartGame", action );
     return STATE_HAS_CHANGED;
   }
 });

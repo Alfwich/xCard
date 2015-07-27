@@ -10,7 +10,7 @@ GameState.addGlobalMethod( "addGameSystemMessage", function( action, msg ) {
 });
 
 GameState.addGlobalMethod( "modifyGamePlayerValue", function( action, playerId, attr, delta ) {
-  var player = action.game.players[playerGameId];
+  var player = action.game.players[playerId];
 
   if( player && player[attr] ) {
     this.state.callMethod( "addGlobalGameMessage", action, ( player.playerName + (delta>0?" gained ":" lost ") + Math.abs(delta) + " " + attr ) );
@@ -43,7 +43,7 @@ GameState.addGlobalMethod( "setNextActivePlayer", function( action ) {
   var playerAttemptedIds = _.map( action.game.players, function(ele) {
     return ele.playerId;
   }),
-      maxPlayerId = Math.max.apply( null, Object.keys( this.players ) );
+      maxPlayerId = Math.max.apply( null, Object.keys( action.game.players ) );
 
   do {
     action.game.state.activePlayer = nextId( action.game.state.activePlayer, maxPlayerId );
@@ -76,7 +76,7 @@ var nextInsertPlayerId = function(players) {
 
 GameState.addGlobalMethod( "addGamePlayer", function( action, playerId ){
   if( _.isUndefined( action.game.playersMap[playerId] ) ) {
-    var playerGameId = nextPlayerId(action.game.players);
+    var playerGameId = nextInsertPlayerId(action.game.players);
     action.game.state.totalPlayers++;
     action.game.playersMap[playerId] = playerGameId;
     action.game.players[playerGameId] = new Player( playerId, playerGameId );
@@ -87,7 +87,7 @@ GameState.addGlobalMethod( "addGamePlayer", function( action, playerId ){
 GameState.addGlobalMethod( "removeGamePlayer", function( action, playerId) {
   if( !_.isUndefined( action.game.playersMap[playerId] ) ) {
       action.game.state.totalPlayers--;
-      delete action.game.players[this.playersMap[playerId]];
+      delete action.game.players[action.game.playersMap[playerId]];
       delete action.game.playersMap[playerId];
       return true;
   }
@@ -103,7 +103,7 @@ GameState.addGlobalMethod( "activePlayerDraw", function(action) {
   if( activePlayer.deck.length ) {
     var card = activePlayer.deck.splice(0,1)[0];
     activePlayer.hand.push( card );
-    action.game.addGlobalGameMessage( action.game.players[action.game.state.activePlayer].playerName + " drew a card from their library" );
+    this.state.callMethod( "addGlobalGameMessage", action, action.game.players[action.game.state.activePlayer].playerName + " drew a card from their library" );
   }
 });
 
