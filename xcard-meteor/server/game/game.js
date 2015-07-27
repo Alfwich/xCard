@@ -2,7 +2,7 @@
 GameActions = new Mongo.Collection("GAMEACTIONS");
 
 // Will provide the action with game specific data
-var packAction = function(game,action) {
+var packAction = function(action, game) {
   action.game = game;
   action.requestingPlayerGameId = action.game.playersMap[action.requestingPlayerId];
   action.requestingPlayer = action.game.players[action.requestingPlayerGameId];
@@ -20,13 +20,13 @@ GameActions.find().observe({
 
       if( gameContainer && action ) {
         var game = new Game( gameContainer.game );
-        action = packAction( game, action );
+        action = packAction( action, game );
 
         // Check to make sure that the requesting player is actually in the game( or is the creator of the game ),
         // that we have a evaluator defined. Then if the action caused a change in game state
         // then update the game collection with the new state of the game
         if(( action.requestingPlayer || action.requestingPlayerIsCreator ) &&
-             xCard.evaluator && xCard.evaluator.applyAction( game,action )) {
+             xCard.evaluator && xCard.evaluator.applyAction( action )) {
 
           // Update the game state if a change has been registered
           // TODO: Create a smarter system based on some configurable update
