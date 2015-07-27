@@ -1,5 +1,4 @@
 // Game: Responsible for holding game state and common game function
-
 var get = function( obj, k, def ) {
   if( obj[k] ) {
     return obj[k];
@@ -29,6 +28,7 @@ Game = function(raw) {
   this.options = get(raw, "options", {});
   this.state = get(raw, "state", { current: "init", activePlayer: 1, totalPlayers: 0 });
   this.messages = get(raw, "messages", []);
+  this.targets = {};
 }
 
 Game.prototype.addGlobalGameMessage = function(msg) {
@@ -78,7 +78,7 @@ Game.prototype.setNextActivePlayer = function() {
 
 Game.prototype.addPlayer = function(playerId) {
   if( _.isUndefined( this.playersMap[playerId] ) ) {
-    var playerGameId = nextPlayerId(this.players); 
+    var playerGameId = nextPlayerId(this.players);
     this.state.totalPlayers++;
     this.playersMap[playerId] = playerGameId;
     this.players[playerGameId] = new Player( playerId, playerGameId );

@@ -3,6 +3,7 @@ GameActions = new Mongo.Collection("GAMEACTIONS");
 
 // Will provide the action with game specific data
 var packAction = function(game,action) {
+  action.game = game;
   action.requestingPlayerGameId = game.playersMap[action.requestingPlayerId];
   action.requestingPlayer = game.players[action.requestingPlayerGameId];
   action.requestingPlayerIsCreator = action.requestingPlayerId == game.creator;
@@ -44,6 +45,8 @@ GameActions.find().observe({
     }
 });
 
-// Setup the game evaluator. States are added in the states folder
+// Setup the game evaluator.
+// - States are defined in the main.states.* files
+// - Cards are defined in the main.cards.* files
 xCard.evaluator = new xCardEvaluator();
 xCard.cardEvaluator = new CardEvaluator();
