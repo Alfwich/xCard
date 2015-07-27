@@ -3,10 +3,10 @@
 //  actions:     The available actions for the state. Actions from the client are passed to
 //               a state through the applyAction method. Each action needs to return a truthy
 //               value if any state change has occured elsewise the changes will not get recorded.
-//               actions need to take the following form: fn(game,action) => bool
+//               actions need to take the following form: fn(action) => bool
 //  transitions: If the action results in a change of state then the transitions will be checked
 //               to see if the current state warrents a state transition. Methods registered as a
-//               transition need to take the following form: fn(game,action) => newState
+//               transition need to take the following form: fn(action) => newState
 GameState = function(name) {
   this.name = name;
   this.actions = {};
@@ -62,56 +62,56 @@ GameState.prototype.addTransition = function(transitionName, priority, condition
   });
 }
 
-GameState.prototype.applyAction = function(gameState,userAction) {
+GameState.prototype.applyAction = function(userAction) {
   var action = this.actions[userAction.type] || globalGameState.actions[userAction.type],
       result = false;
 
   if(action) {
-    result = action(gameState,userAction);
-    gameState.addSystemMessage( "FINISHED ACTION '" + userAction.type + "'" );
+    result = action(userAction);
+    userAction.game.addSystemMessage( "FINISHED ACTION '" + userAction.type + "'" );
   }
 
   return result;
 }
 
 // Allows actions to call other actions and internal actions to be called
-GameState.prototype.callAction = function( actionName, game, action ) {
+GameState.prototype.callAction = function( actionName, action ) {
   // Find the correct action to call starting with internal actions first then normal actions
   var stateAction = this.actions[actionName] || globalGameState.actions[actionName];
 
   if( stateAction && game && action ) {
-    return stateAction( game, action );
+    return stateAction( action );
   }
 }
 
-GameState.prototype.callMethod = function( methodName, game, action ) {
+GameState.prototype.callMethod = function( methodName, action ) {
   // Find the correct method to call
   var stateMethod = this.methods[methodName] || globalGameState.methods[methodName];
 
-  if( stateMethod && game && action ) {
-    var methodArguments = [ game, action ].concat(Array.prototype.slice.call(arguments).slice(3));
+  if( stateMethod && action && action.game ) {
+    var methodArguments = [ action ].concat(Array.prototype.slice.call(arguments).slice(2));
     return stateMethod.apply( null, methodArguments );
   }
 }
 
-GameState.prototype.callEvent = function( eventName, game, action ) {
+GameState.prototype.callEvent = function( eventName, action ) {
   // Find the correct event to call
   var stateEvent = this.events[eventName] || globalGameState.events[eventName];
 
-  if( stateEvent && game && action ) {
-    return stateEvent( game, action );
+  if( stateEvent && action && action.game ) {
+    return stateEvent( action );
   }
 }
 
 // Checks each transition to see if the current gameState warrents a transition
-GameState.prototype.checkForStateTransition = function(gameState, userAction) {
+GameState.prototype.checkForStateTransition = function( action ) {
   var result = null;
   // Find the first transition of lowerst priority which return a truthy value.
   _.find( _.sortBy(Object.keys(this.transitions)), function(priority){
     return _.find( this.transitions[priority], function(transition){
-      return result = transition.condition(gameState, userAction);
+      return result = transition.condition( action);
     });
   }.bind(this));
-  
+
   return result ? result : this.name;
 }
