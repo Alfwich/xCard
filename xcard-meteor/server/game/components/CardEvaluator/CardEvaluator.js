@@ -8,13 +8,10 @@ CardEvaluator.prototype.registerCard = function( cardName, actions ) {
 }
 
 CardEvaluator.prototype.applyCard = function( card, request, state ) {
-  var cardAction = this.cards[card.title],
-      result = null;
+  var action = this.cards[card.title];
 
-  if( cardAction, state ) {
+  if( action && state ) {
     state.callMethod( "addGlobalGameMessage", request.requestingPlayer.playerName + " casted card '" + card.title + "'" );
-    result = cardAction( request, state );
+    return action( request, state );
   }
-
-  return result;
 }
