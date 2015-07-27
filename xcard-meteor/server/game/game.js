@@ -1,5 +1,5 @@
-// Mongo collection to represent queued game actions.
-GameActions = new Mongo.Collection("GAMEACTIONS");
+// Mongo collection to represent queued game requests.
+GameRequests = new Mongo.Collection("GAMEREQUESTS");
 
 // Will provide the action with game specific data
 var packRequest = function(request, game) {
@@ -14,7 +14,7 @@ var packRequest = function(request, game) {
 // collection. This should happen synchronously and allow actions to be executed
 // by inserting order.
 // TODO: Test that this happens correctly
-GameActions.find().observe({
+GameRequests.find().observe({
     added: function(request) {
       var gameContainer = GameCollection.findOne(request.data.gameId);
 
@@ -26,7 +26,7 @@ GameActions.find().observe({
         // that we have a evaluator defined. Then if the request caused a change in game state
         // then update the game collection with the new state of the game
         if(( request.requestingPlayer || request.requestingPlayerIsCreator ) &&
-             xCard.evaluator && xCard.evaluator.applyAction( request )) {
+             xCard.evaluator && xCard.evaluator.handleRequest( request )) {
 
           // Update the game state if a change has been registered
           // TODO: Create a smarter system based on some configurable update
@@ -41,7 +41,7 @@ GameActions.find().observe({
       }
 
       // After the action has been completed then remove it from the collection
-      GameActions.remove( request._id );
+      GameRequests.remove( request._id );
     }
 });
 
