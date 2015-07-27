@@ -80,6 +80,7 @@ GameState.addGlobalMethod( "addGamePlayer", function( request, playerId ){
     request.game.state.totalPlayers++;
     request.game.playersMap[playerId] = playerGameId;
     request.game.players[playerGameId] = new Player( playerId, playerGameId );
+    this.state.callMethod( "addGameTarget", request, playerId, "player", UserCollection.findOne(playerId).username );
     return true;
   }
 });
@@ -89,7 +90,20 @@ GameState.addGlobalMethod( "removeGamePlayer", function( request, playerId) {
       request.game.state.totalPlayers--;
       delete request.game.players[request.game.playersMap[playerId]];
       delete request.game.playersMap[playerId];
+      this.state.callMethod( "removeGameTarget", request, playerId );
       return true;
+  }
+});
+
+GameState.addGlobalMethod( "addGameTarget", function(request, targetId, type, name ){
+  if( request.game ) {
+    request.game.targets[targetId] = { id: targetId, type: type, name: name };
+  }
+});
+
+GameState.addGlobalMethod( "removeGameTarget", function(request, targetId ){
+  if( request.game && request.game.targets[targetId] ) {
+    delete request.game.targets[targetId];
   }
 });
 
