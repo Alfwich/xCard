@@ -17,7 +17,7 @@ var finishedState  = new GameState(FINISHED_STATE);
 
 // Init State
 initState.addAction( "select-deck", function(action) {
-  var deck = UserDeckCollection.findOne(action.deckId);
+  var deck = UserDeckCollection.findOne(action.data.deckId);
 
   if( deck ) {
     action.requestingPlayer.deck = DeckShuffler( deck );
@@ -30,7 +30,7 @@ initState.addAction( "add-player", function(action) {
   // Only allow the creator of the game to modify players
   if( action.requestingPlayerIsCreator ) {
     var player;
-    if( (player = Meteor.users.findOne( action.playerId )) || (player = Meteor.users.findOne( { username: action.username }) )) {
+    if( (player = Meteor.users.findOne( action.data.playerId )) || (player = Meteor.users.findOne( { username: action.data.username }) )) {
       if( this.state.callMethod( "addGamePlayer", action, player._id ) ) {
         this.state.callMethod( "addGameMessage", action, player.username + " has joined the game." )
         return STATE_HAS_CHANGED;
@@ -43,7 +43,7 @@ initState.addAction( "remove-player", function(action) {
   // Only allow the creator of the game to modify players
   if( action.requestingPlayerIsCreator ) {
     var player;
-    if( (player = Meteor.users.findOne( action.playerId )) || (player = Meteor.users.findOne( { username: action.username }) )) {
+    if( (player = Meteor.users.findOne( action.data.playerId )) || (player = Meteor.users.findOne( { username: action.data.username }) )) {
       if( this.state.callMethod( "removeGamePlayer", action, player._id )) {
         this.state.callMethod( "addGameMessage", action, player.username + " has left the game." )
         return STATE_HAS_CHANGED;
@@ -95,11 +95,11 @@ mainStateStart.addTransition( "finishedMainStart", 0, function(action) {
 
 // Main State
 mainState.addAction( "use-card", function(action) {
-  var card = CardCollection.findOne( action.cardId );
+  var card = CardCollection.findOne( action.data.cardId );
 
   if( action.requestingPlayerGameId == action.game.state.activePlayer &&
       card &&
-      _.contains(action.requestingPlayer.hand, action.cardId ) ) {
+      _.contains(action.requestingPlayer.hand, action.data.cardId ) ) {
 
     // Do card actions
     xCard.cardEvaluator.applyCard( card, action, this.state );

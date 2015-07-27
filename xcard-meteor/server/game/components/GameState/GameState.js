@@ -62,13 +62,13 @@ GameState.prototype.addTransition = function(transitionName, priority, condition
   });
 }
 
-GameState.prototype.applyAction = function(userAction) {
-  var action = this.actions[userAction.type] || globalGameState.actions[userAction.type],
+GameState.prototype.applyAction = function(request) {
+  var action = this.actions[request.data.type] || globalGameState.actions[request.data.type],
       result = false;
 
   if(action) {
-    result = action(userAction);
-    this.callMethod( "addGameSystemMessage", userAction, "FINISHED ACTION '" + userAction.type + "'" );
+    result = action(request);
+    this.callMethod( "addGameSystemMessage", request, "FINISHED ACTION '" + request.data.type + "'" );
   }
 
   return result;
