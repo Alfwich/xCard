@@ -104,6 +104,7 @@ GameState.prototype.callEvent = function( eventName, request ) {
 }
 
 // Checks each transition to see if the current gameState warrents a transition
+// Transitions are checked based on lowest priority first, then by insertion order
 GameState.prototype.checkForStateTransition = function( request ) {
   var result = null;
   // Find the first transition of lowerst priority which return a truthy value.

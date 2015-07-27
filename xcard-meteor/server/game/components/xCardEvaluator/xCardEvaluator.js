@@ -21,6 +21,7 @@ xCardEvaluator.prototype.handleRequest = function(request) {
     state.callEvent( "pre", request );
     result = state.applyAction( request );
     state.callEvent( "post", request );
+
     if( result ) {
       do { // Keep on changing states while the next state's init event return truthy
         request.game.state.current = this.states[request.game.state.current].checkForStateTransition( request );
