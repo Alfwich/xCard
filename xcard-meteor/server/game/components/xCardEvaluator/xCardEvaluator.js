@@ -17,6 +17,7 @@ xCardEvaluator.prototype.applyAction = function(action) {
   var state = this.states[action.game.state.current],
       result = null;
 
+  console.log( state );
   if( state ) {
     state.callEvent( "pre", action );
     result = state.applyAction( action );

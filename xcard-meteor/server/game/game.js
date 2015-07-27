@@ -2,12 +2,12 @@
 GameActions = new Mongo.Collection("GAMEACTIONS");
 
 // Will provide the action with game specific data
-var packAction = function(action, game) {
-  action.game = game;
-  action.requestingPlayerGameId = action.game.playersMap[action.requestingPlayerId];
-  action.requestingPlayer = action.game.players[action.requestingPlayerGameId];
-  action.requestingPlayerIsCreator = action.requestingPlayerId == action.game.creator;
-  return action;
+var packRequest = function(request, game) {
+  request.game = game;
+  request.requestingPlayerGameId = request.game.playersMap[request.requestingPlayerId];
+  request.requestingPlayer = request.game.players[request.requestingPlayerGameId];
+  request.requestingPlayerIsCreator = request.requestingPlayerId == request.game.creator;
+  return request;
 }
 
 // Add a hook to the collection to process actions as they are added to the actions
@@ -15,22 +15,22 @@ var packAction = function(action, game) {
 // by inserting order.
 // TODO: Test that this happens correctly
 GameActions.find().observe({
-    added: function(action) {
-      var gameContainer = GameCollection.findOne(action.gameId);
+    added: function(request) {
+      var gameContainer = GameCollection.findOne(request.data.gameId);
 
-      if( gameContainer && action ) {
+      if( gameContainer && request ) {
         var game = new Game( gameContainer.game );
-        action = packAction( action, game );
+        request = packRequest( request, game );
 
         // Check to make sure that the requesting player is actually in the game( or is the creator of the game ),
-        // that we have a evaluator defined. Then if the action caused a change in game state
+        // that we have a evaluator defined. Then if the request caused a change in game state
         // then update the game collection with the new state of the game
-        if(( action.requestingPlayer || action.requestingPlayerIsCreator ) &&
-             xCard.evaluator && xCard.evaluator.applyAction( action )) {
+        if(( request.requestingPlayer || request.requestingPlayerIsCreator ) &&
+             xCard.evaluator && xCard.evaluator.applyAction( request )) {
 
           // Update the game state if a change has been registered
           // TODO: Create a smarter system based on some configurable update
-          // object in the action to update only what is needed. This would
+          // object in the requesto update only what is needed. This would
           // VASTLY improve the network performance of the entire system.
           // Currently when a game update happens the WHOLE game state is replaced
           // in the GameCollection. This means for each connected client we are
@@ -41,7 +41,7 @@ GameActions.find().observe({
       }
 
       // After the action has been completed then remove it from the collection
-      GameActions.remove( action._id );
+      GameActions.remove( request._id );
     }
 });
 
