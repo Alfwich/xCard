@@ -14,7 +14,7 @@ xCardEvaluator.prototype.addGameState = function(state) {
 }
 
 xCardEvaluator.prototype.applyAction = function(game, action) {
-  var state = this.states[game.state.current],
+  var state = this.states[action.game.state.current],
       result = null;
 
   if( state ) {
@@ -23,8 +23,8 @@ xCardEvaluator.prototype.applyAction = function(game, action) {
     state.callEvent( "post", game, action );
     if( result ) {
       do { // Keep on changing states while the next state's init action return truthy
-        game.state.current = this.states[game.state.current].checkForStateTransition( game, action );
-      } while( this.states[game.state.current].callEvent( "init", game, action ) )
+        action.game.state.current = this.states[action.game.state.current].checkForStateTransition( game, action );
+      } while( this.states[action.game.state.current].callEvent( "init", game, action ) )
     }
   }
 
