@@ -62,10 +62,11 @@ Game.prototype.setNextActivePlayer = function() {
   // we cannot find a valid active player we exit the loop
   var playerAttemptedIds = _.map( this.players, function(ele) {
     return ele.playerId;
-  });
+  }),
+      maxPlayerId = Math.max.apply( null, Object.keys( this.players ) );
 
   do {
-    this.state.activePlayer = nextId( this.state.activePlayer, this.state.totalPlayers );
+    this.state.activePlayer = nextId( this.state.activePlayer, maxPlayerId );
     var player = this.players[this.state.activePlayer];
     if( player ) {
       playerAttemptedIds.pop( playerAttemptedIds.indexOf( player.playerId ) );
