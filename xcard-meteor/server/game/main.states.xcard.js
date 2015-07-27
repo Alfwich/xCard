@@ -21,7 +21,7 @@ initState.addAction( "select-deck", function(game,action) {
 
   if( deck ) {
     action.requestingPlayer.deck = DeckShuffler( deck );
-    game.addGlobalGameMessage( action.requestingPlayer.playerName + " has chosen a deck." );
+    this.state.callMethod( "addGameMessage", game, action, action.requestingPlayer.playerName + " has chosen a deck." );
     return STATE_HAS_CHANGED;
   }
 });
