@@ -11,7 +11,7 @@ CardEvaluator.prototype.applyCard = function( card, game, action ) {
   var cardAction = this.cards[card.title],
       result = null;
 
-  game.addGlobalGameMessage( action.requestingPlayer.playerName + " casted card '" + card.title + "'" );
+  action.game.addGlobalGameMessage( action.requestingPlayer.playerName + " casted card '" + card.title + "'" );
 
   if( cardAction ) {
     result = cardAction( game, action );

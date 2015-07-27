@@ -1,7 +1,7 @@
 // Defines global methods for game actions.
 
 GameState.addGlobalMethod( "addGameMessage", function( game, action, msg ) {
-  game.messages.push( msg );
+  action.game.messages.push( msg );
   return true;
 });
 
@@ -10,7 +10,7 @@ GameState.addGlobalMethod( "addGameSystemMessage", function( game, action, msg )
 });
 
 GameState.addGlobalMethod( "modifyGamePlayerValue", function( game, action, playerId, attr, delta ) {
-  var player = game.players[playerGameId];
+  var player = action.game.players[playerGameId];
 
   if( player && player[attr] ) {
     this.state.callMethod( "addGlobalGameMessage", game, action, ( player.playerName + (delta>0?" gained ":" lost ") + Math.abs(delta) + " " + attr ) );
@@ -21,7 +21,7 @@ GameState.addGlobalMethod( "modifyGamePlayerValue", function( game, action, play
 
 GameState.addGlobalMethod( "activePlayerDrawCard", function( game, action ) {
   // Draw a single card from the players deck and place in hand
-  var activePlayer = game.players[game.state.activePlayer];
+  var activePlayer = action.game.players[action.game.state.activePlayer];
   if( activePlayer.deck.length ) {
     var card = activePlayer.deck.splice(0,1)[0];
     activePlayer.hand.push( card );
@@ -36,13 +36,13 @@ GameState.addGlobalMethod( "setNextActivePlayer", function( game, action ) {
 
   // Produce an array of all playerIds to make sure if all players are checked and
   // we cannot find a valid active player we exit the loop
-  var playerAttemptedIds = _.map( game.players, function(ele) {
+  var playerAttemptedIds = _.map( action.game.players, function(ele) {
     return ele.playerId;
   });
 
   do {
-    game.state.activePlayer = nextId( game.state.activePlayer, game.state.totalPlayers );
-    var player = game.players[game.state.activePlayer];
+    action.game.state.activePlayer = nextId( action.game.state.activePlayer, action.game.state.totalPlayers );
+    var player = action.game.players[action.game.state.activePlayer];
     if( player ) {
       playerAttemptedIds.pop( playerAttemptedIds.indexOf( player.playerId ) );
     }
@@ -54,13 +54,13 @@ GameState.addGlobalMethod( "setNextActivePlayer", function( game, action ) {
 });
 
 GameState.addGlobalMethod( "restartGame", function(game,action) {
-  _.forEach( game.players, function(player) {
+  _.forEach( action.game.players, function(player) {
     this.state.callMethod( "removeGamePlayer", game, action, player.playerId );
     this.state.callMethod( "addGamePlayer", game, action, player.playerId );
   }.bind(this));
 
-  game.state.activePlayer = 1;
-  game.messages = [];
+  action.game.state.activePlayer = 1;
+  action.game.messages = [];
 });
 
 var nextInsertPlayerId = function(players) {
@@ -70,26 +70,26 @@ var nextInsertPlayerId = function(players) {
 }
 
 GameState.addGlobalMethod( "addGamePlayer", function( game, action, playerId ){
-  if( _.isUndefined( game.playersMap[playerId] ) ) {
-    var playerGameId = nextPlayerId(game.players);
-    game.state.totalPlayers++;
-    game.playersMap[playerId] = playerGameId;
-    game.players[playerGameId] = new Player( playerId, playerGameId );
+  if( _.isUndefined( action.game.playersMap[playerId] ) ) {
+    var playerGameId = nextPlayerId(action.game.players);
+    action.game.state.totalPlayers++;
+    action.game.playersMap[playerId] = playerGameId;
+    action.game.players[playerGameId] = new Player( playerId, playerGameId );
     return true;
   }
 });
 
 GameState.addGlobalMethod( "removeGamePlayer", function( game, action, playerId) {
-  if( !_.isUndefined( game.playersMap[playerId] ) ) {
-      game.state.totalPlayers--;
-      delete game.players[this.playersMap[playerId]];
-      delete game.playersMap[playerId];
+  if( !_.isUndefined( action.game.playersMap[playerId] ) ) {
+      action.game.state.totalPlayers--;
+      delete action.game.players[this.playersMap[playerId]];
+      delete action.game.playersMap[playerId];
       return true;
   }
 });
 
 GameState.addGlobalMethod( "getActivePlayer", function(game,action) {
-  return game.players[game.state.activePlayer];
+  return action.game.players[action.game.state.activePlayer];
 })
 
 GameState.addGlobalMethod( "activePlayerDraw", function(game,action) {
@@ -98,7 +98,7 @@ GameState.addGlobalMethod( "activePlayerDraw", function(game,action) {
   if( activePlayer.deck.length ) {
     var card = activePlayer.deck.splice(0,1)[0];
     activePlayer.hand.push( card );
-    game.addGlobalGameMessage( game.players[game.state.activePlayer].playerName + " drew a card from their library" );
+    action.game.addGlobalGameMessage( action.game.players[action.game.state.activePlayer].playerName + " drew a card from their library" );
   }
 });
 
@@ -118,13 +118,13 @@ GameState.addGlobalMethod( "activePlayerIncreaseMana", function(game,action) {
 
 
 GameState.addGlobalMethod( "getAlivePlayers", function(game, action) {
-  return _.filter( game.players, function(player) {
+  return _.filter( action.game.players, function(player) {
     return player.health > 0;
   });
 });
 
 GameState.addGlobalMethod( "getActionablePlayers", function(game, action) {
-  return _.filter( game.players, function(player) {
+  return _.filter( action.game.players, function(player) {
     return player.health > 0 && ( player.hand.length > 0 || player.deck.length > 0 );
   });
 })

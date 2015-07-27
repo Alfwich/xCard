@@ -16,7 +16,7 @@ var finishedState  = new GameState(FINISHED_STATE);
 
 
 // Init State
-initState.addAction( "select-deck", function(game,action) {
+initState.addAction( "select-deck", function(game, action) {
   var deck = UserDeckCollection.findOne(action.deckId);
 
   if( deck ) {
@@ -31,8 +31,8 @@ initState.addAction( "add-player", function(game,action) {
   if( action.requestingPlayerIsCreator ) {
     var player;
     if( (player = Meteor.users.findOne( action.playerId )) || (player = Meteor.users.findOne( { username: action.username }) )) {
-      if( game.addPlayer( player._id ) ) {
-        game.addGlobalGameMessage( player.username + " has joined the game." );
+      if( action.game.addPlayer( player._id ) ) {
+        action.game.addGlobalGameMessage( player.username + " has joined the game." );
         return STATE_HAS_CHANGED;
       }
     }
@@ -44,8 +44,8 @@ initState.addAction( "remove-player", function(game,action) {
   if( action.requestingPlayerIsCreator ) {
     var player;
     if( (player = Meteor.users.findOne( action.playerId )) || (player = Meteor.users.findOne( { username: action.username }) )) {
-      if( game.removePlayer( player._id ) ) {
-        game.addGlobalGameMessage( player.username + " has left the game." );
+      if( action.game.removePlayer( player._id ) ) {
+        action.game.addGlobalGameMessage( player.username + " has left the game." );
         return STATE_HAS_CHANGED;
       }
     }
@@ -54,20 +54,20 @@ initState.addAction( "remove-player", function(game,action) {
 
 
 initState.addTransition( "noPlayers", 0, function(game,action) {
-  if( game.state.totalPlayers == 0 ) {
+  if( action.game.state.totalPlayers == 0 ) {
     return FINISHED_STATE;
   }
 });
 
 initState.addTransition( "allPlayersReady", 1, function(game,action) {
   // Make sure that there are more than 1 players going into the playing state
-  if( game.state.totalPlayers > 1 ) {
+  if( action.game.state.totalPlayers > 1 ) {
     // Check to see if all players have selected a deck. If this is true then
     // for each player draw 10 cards and start the game.
-    if( _.every(game.players, function(player){ return player.deck; })) {
+    if( _.every(action.game.players, function(player){ return player.deck; })) {
 
       // For each player take the top 10 cards from their deck and place into their hand
-      _.each( game.players, function(player,playerGameId,players) {
+      _.each( action.game.players, function(player,playerGameId,players) {
         players[playerGameId].hand = players[playerGameId].deck.splice(0,10);
       });
 
@@ -97,7 +97,7 @@ mainStateStart.addTransition( "finishedMainStart", 0, function(game,action) {
 mainState.addAction( "use-card", function(game,action) {
   var card = CardCollection.findOne( action.cardId );
 
-  if( action.requestingPlayerGameId == game.state.activePlayer &&
+  if( action.requestingPlayerGameId == action.game.state.activePlayer &&
       card &&
       _.contains(action.requestingPlayer.hand, action.cardId ) ) {
 
@@ -120,8 +120,8 @@ mainState.addTransition( "playerMainEnding", 0, function(game,action) {
 
 mainStateEnd.addEvent( "init", function(game,action) {
   // Change active player to the next player
-  game.addSystemMessage( "CHANGED ACTIVE PLAYER" );
-  game.setNextActivePlayer();
+  action.game.addSystemMessage( "CHANGED ACTIVE PLAYER" );
+  action.game.setNextActivePlayer();
   return STATE_HAS_CHANGED;
 });
 
@@ -134,9 +134,9 @@ mainStateEnd.addTransition( "notEnoughAlivePlayers", 0, function(game,action) {
 
     if( alivePlayers.length == 1 ) {
       // Do some winning player cleanup
-      game.addGlobalGameMessage( alivePlayers[0].playerName + " has won the game!" );
+      action.game.addGlobalGameMessage( alivePlayers[0].playerName + " has won the game!" );
     } else {
-      game.addGlobalGameMessage( "Draw between post-alive players" );
+      action.game.addGlobalGameMessage( "Draw between post-alive players" );
     }
 
     return FINISHED_STATE;
@@ -149,7 +149,7 @@ mainStateEnd.addTransition( "noPlayablePlayerActions", 1, function(game,action) 
 
   // If we have no actionable players then end the game
   if( !actionablePlayers.length ) {
-    game.addGlobalGameMessage( "Draw between alive players" );
+    action.game.addGlobalGameMessage( "Draw between alive players" );
     return FINISHED_STATE;
   }
 });
@@ -161,7 +161,7 @@ mainStateEnd.addTransition( "nextPlayerStart", 2, function(game,action) {
 // Finished State
 finishedState.addAction( "restart", function(game,action) {
   if( action.requestingPlayerIsCreator ) {
-    game.restart();
+    action.game.restart();
     return STATE_HAS_CHANGED;
   }
 });
