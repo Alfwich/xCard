@@ -34,9 +34,17 @@ RANDOM_TITLES = [
 	"Belonging To Myself"
 ]
 
+def genId():
+	genId.current += 1
+	return genId.prefix + hex( genId.current ).split("0x")[1]
+
+genId.current = (16**4)-1
+genId.prefix = ''.join([random.choice('0123456789abcdef') for x in range(19)])
+
+
 def genCard(name):
 	result = {
-		"_id": ''.join([random.choice('0123456789abcdef') for x in range(24)]),
+		"_id": genId(),
 		"title": name,
 		"body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius metus quis tempus venenatis. Ut non ultricies mi, a blandit lorem. Vestibulum blandit sem et sem semper maximus. Vestibulum quis accumsan odio, vel eleifend elit. Curabitur ultrices risus ac auctor malesuada. Aenean accumsan leo at elit commodo faucibus. Praesent tempus enim vitae fringilla faucibus. Pellentesque sodales maur",
 		"image": "test0%d.jpg" % ( random.randint(1,9) )
