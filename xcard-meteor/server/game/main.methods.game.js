@@ -32,16 +32,21 @@ var playerCanPerformActions = function(player) {
   return (!_.isUndefined(player)) && player.health >= 0 && ( player.deck.length > 0 || player.hand.length > 0 );
 }
 
+var nextId = function(id, maxPlayers) {
+  return (id+1>maxPlayers) ? 1 : id+1;
+}
+
 GameState.addGlobalMethod( "setNextActivePlayer", function( action ) {
 
   // Produce an array of all playerIds to make sure if all players are checked and
   // we cannot find a valid active player we exit the loop
   var playerAttemptedIds = _.map( action.game.players, function(ele) {
     return ele.playerId;
-  });
+  }),
+      maxPlayerId = Math.max.apply( null, Object.keys( this.players ) );
 
   do {
-    action.game.state.activePlayer = nextId( action.game.state.activePlayer, action.game.state.totalPlayers );
+    action.game.state.activePlayer = nextId( action.game.state.activePlayer, maxPlayerId );
     var player = action.game.players[action.game.state.activePlayer];
     if( player ) {
       playerAttemptedIds.pop( playerAttemptedIds.indexOf( player.playerId ) );
