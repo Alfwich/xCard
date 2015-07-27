@@ -68,7 +68,7 @@ GameState.prototype.applyAction = function(userAction) {
 
   if(action) {
     result = action(userAction);
-    userAction.game.addSystemMessage( "FINISHED ACTION '" + userAction.type + "'" );
+    this.callMethod( "addGameSystemMessage", userAction, "FINISHED ACTION '" + userAction.type + "'" );
   }
 
   return result;
