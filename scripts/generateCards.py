@@ -47,7 +47,8 @@ def genCard(name):
 		"_id": genId(),
 		"title": name,
 		"body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius metus quis tempus venenatis. Ut non ultricies mi, a blandit lorem. Vestibulum blandit sem et sem semper maximus. Vestibulum quis accumsan odio, vel eleifend elit. Curabitur ultrices risus ac auctor malesuada. Aenean accumsan leo at elit commodo faucibus. Praesent tempus enim vitae fringilla faucibus. Pellentesque sodales maur",
-		"image": "test0%d.jpg" % ( random.randint(1,9) )
+		"image": "test0%d.jpg" % ( random.randint(1,9) ),
+		"targets" : 1
 	}
 	return result
 
