@@ -133,7 +133,7 @@ Template.gamePage.helpers({
       result.cards = _.map( getPlayerAttribute( this.player, "hand", [] ),
         function(ele){
           var card = new CardModel( CardCollection.findOne( ""+ele) );
-          card.customClass = card.manaCost <= this.player.mana ? "canUse" : "cantUse";
+          card.customClass = (card.manaCost <= this.player.mana && this.game.isActivePlayer ) ? "canUse" : "cantUse";
           return card;
       }.bind(this));
     }
