@@ -132,8 +132,10 @@ Template.gamePage.helpers({
     if( this.player ) {
       result.cards = _.map( getPlayerAttribute( this.player, "hand", [] ),
         function(ele){
-          return new CardModel( CardCollection.findOne( ""+ele) );
-      });
+          var card = new CardModel( CardCollection.findOne( ""+ele) );
+          card.customClass = card.manaCost <= this.player.mana ? "canUse" : "cantUse";
+          return card;
+      }.bind(this));
     }
 
     return result;

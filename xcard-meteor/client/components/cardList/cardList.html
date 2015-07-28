@@ -7,7 +7,7 @@
 <template name="customCards">
   <div class="customCards">
     {{#each unpackData}}
-      <div class="card-container {{customClass}}">
+      <div class="card-container {{customClass}} {{data.customClass}}">
         {{#with data}}
           {{> card }}
         {{/with}}

@@ -7,6 +7,8 @@ CardModel = function(raw) {
   this.body = _.get(raw, "body", "");
   this.image = _.get(raw, "image", "");
   this.targets = _.get( raw, "targets", 0 );
+  this.manaCost = _.get( raw, "manaCost", 0 );
+  this.customClass = "";
   this.count = 1;
 };
 

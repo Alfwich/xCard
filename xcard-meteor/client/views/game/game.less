@@ -26,6 +26,18 @@
 
     .useGameCard {
       cursor: pointer;
+      position: relative;
+      z-index: 10;
+
+      &.canUse:hover > .card > .card {
+        border: 3px solid #0F0;
+        top: 0px;
+      }
+
+      &.cantUse:hover > .card > .card {
+        border: 3px solid #F00;
+      }
+
     }
 
     .gameMessages {
@@ -83,12 +95,20 @@
       white-space: nowrap;
       overflow-x: scroll;
 
+      .cardList {
+        height: 225px;
+      }
+
       .card-container {
         width: 110px;
         height: 180px;
         .card .card {
           width: 105px;
           height: 170px;
+          position: relative;
+          top: 10px;
+          transition: top 0.5s, border 0.1s;
+          -webkit-transition: top 0.5s, border 0.1s;
 
           .head {
             font-size: 9px;
