@@ -1,6 +1,26 @@
 .gamePage {
-
   margin-top: 10px;
+
+  .targetsPanel {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    background-color: #FFF;
+    padding: 3px;
+    z-index: 5;
+
+    .target {
+      padding: 5px;
+      margin: 5px;
+      cursor: pointer;
+      border: 1px solid #AAA;
+      border-radius: 3px;
+
+      &:hover {
+        background-color: #EEE;
+      }
+    }
+  }
 
   .gameContainer {
 
