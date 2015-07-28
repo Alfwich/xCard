@@ -21,7 +21,7 @@ initState.addAction( "select-deck", function(request) {
 
   if( deck ) {
     request.requestingPlayer.deck = DeckShuffler( deck );
-    this.state.callMethod( "addGameMessage", request, request.requestingPlayer.playerName + " has chosen a deck." );
+    this.state.callMethod( "addGameMessage", request, request.requestingPlayer.name + " has chosen a deck." );
     return STATE_HAS_CHANGED;
   }
 });
@@ -98,10 +98,11 @@ mainState.addAction( "use-card", function(request) {
   var card = CardCollection.findOne( request.data.cardId );
 
   if( request.requestingPlayerGameId == request.game.state.activePlayer &&
-      card &&
-      _.contains(request.requestingPlayer.hand, request.data.cardId ) ) {
+      card && _.contains(request.requestingPlayer.hand, request.data.cardId ) &&
+      request.requestingPlayer.mana >= card.manaCost ) {
 
     // Do card requests
+    request.requestingPlayer.mana -= card.manaCost;
     xCard.cardEvaluator.applyCard( card, request, this.state );
 
     // Remove the card from the players hand and place into discard
@@ -115,7 +116,7 @@ mainState.addAction( "use-card", function(request) {
 });
 
 mainState.addTransition( "playerMainEnding", 0, function(request) {
-  return MAIN_STATE_END;
+  return request.data.type == "pass" ? MAIN_STATE_END : null;
 });
 
 mainStateEnd.addEvent( "init", function(request) {
@@ -134,7 +135,7 @@ mainStateEnd.addTransition( "notEnoughAlivePlayers", 0, function(request) {
 
     if( alivePlayers.length == 1 ) {
       // Do some winning player cleanup
-      this.state.callMethod( "addGameMessage", request,  alivePlayers[0].playerName + " has won the game!" );
+      this.state.callMethod( "addGameMessage", request,  alivePlayers[0].name + " has won the game!" );
     } else {
       this.state.callMethod( "addGameMessage", request,  "Draw between post-alive players" );
     }

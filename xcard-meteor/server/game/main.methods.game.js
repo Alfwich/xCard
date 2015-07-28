@@ -13,7 +13,7 @@ GameState.addGlobalMethod( "modifyGamePlayerValue", function( request, playerId,
   var player = request.game.players[playerId];
 
   if( player && player[attr] ) {
-    this.state.callMethod( "addGameMessage", request, ( player.playerName + (delta>0?" gained ":" lost ") + Math.abs(delta) + " " + attr ) );
+    this.state.callMethod( "addGameMessage", request, ( player.name + (delta>0?" gained ":" lost ") + Math.abs(delta) + " " + attr ) );
     player[attr] += delta;
     return true;
   }
@@ -117,7 +117,7 @@ GameState.addGlobalMethod( "activePlayerDraw", function(request) {
   if( activePlayer.deck.length ) {
     var card = activePlayer.deck.splice(0,1)[0];
     activePlayer.hand.push( card );
-    this.state.callMethod( "addGlobalGameMessage", request, request.game.players[request.game.state.activePlayer].playerName + " drew a card from their library" );
+    this.state.callMethod( "addGlobalGameMessage", request, request.game.players[request.game.state.activePlayer].name + " drew a card from their library" );
   }
 });
 
