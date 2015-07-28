@@ -1,5 +1,5 @@
 .card {
-	
+
 	.card {
 		width: 200px;
 	  height: 300px;
@@ -13,9 +13,16 @@
 		position: relative;
 		box-shadow: 7px 6px 12px 0px #AAA;
 		background-color: #FFF;
+    transition: top 0.5s, width 0.5s, height 0.5s;
+    -webkit-transition: top 0.5s, width 0.5s, height 0.5s;
+
+		.head, .body {
+	    transition: font-size 0.5s;
+	    -webkit-transition: font-size 0.5s;
+		}
 
 		.head {
-			font-size: 110%;
+			font-size: 15px;
 			font-weight: bold;
 		}
 
@@ -24,6 +31,8 @@
 			background-color: #EEE;
 			height: 150px;
 			border: 1px solid #000;
+	    transition: top 0.5s, width 0.5s, height 0.5s;
+	    -webkit-transition: top 0.5s, width 0.5s, height 0.5s;
 
 			img {
 				width: 100%;
