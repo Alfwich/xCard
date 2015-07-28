@@ -2,13 +2,8 @@ var gameTargets           = "xCard.game.currentTargets",
     gameTargetsIsVisible  = "xCard.game.targetsIsVisible",
     gameTargetsRequest    = "xCard.game.targetRequest";
 
-var getPlayer = function( game ) {
-  return game.players[game.playerGameId];
-}
-
-var getPlayerAttribute = function(game, attr, def) {
-  var player = getPlayer( game ),
-      result = def;
+var getPlayerAttribute = function(player, attr, def) {
+  var result = def;
 
   if( player && !_.isUndefined( player[attr] ) ) {
     result = player[attr];
@@ -87,17 +82,18 @@ Template.selectGameDeck.helpers({
   ownedDecks: function() {
     var result = UserDeckCollection.find( { owner: Meteor.userId() } ).fetch();
     result = _.map( result, function(ele){ return new DeckModel(ele); });
+    result = _.filter( result, function(ele){ return Object.keys(ele.cards).length > 0; } )
     return { decks: result };
   },
 
   isInvlovedInGame: function() {
-    return this.game.playersMap[Meteor.userId()];
+    return !_.isUndefined(this.player);
   }
 })
 
 Template.gamePlayersPanel.helpers({
   isCreator: function() {
-    return this.game.creator == Meteor.userId();
+    return this.player.playerId == Meteor.userId();
   }
 });
 
@@ -107,10 +103,12 @@ Template.gamePage.helpers({
         gameContainer = GameCollection.findOne( gameId );
 
     if( gameContainer ) {
-      gameContainer.game.playerGameId = gameContainer.game.playersMap[Meteor.userId()];
-      gameContainer.game.isActivePlayer = gameContainer.game.playerGameId == gameContainer.game.state.activePlayer;
-      Session.set( gameTargets, gameContainer.game.targets );
-      console.log( gameContainer );
+      gameContainer.player = gameContainer.game.players[gameContainer.game.playersMap[Meteor.userId()]]
+      if( gameContainer.player ) {
+        gameContainer.game.isActivePlayer = gameContainer.player.gameId == gameContainer.game.state.activePlayer;
+        Session.set( gameTargets, gameContainer.game.targets );
+        console.log( gameContainer );
+      }
     }
 
     return gameContainer;
@@ -121,18 +119,18 @@ Template.gamePage.helpers({
   },
 
   playerAttribute: function(attr) {
-    return getPlayerAttribute( this.game, attr, "" );
+    return getPlayerAttribute( this.player, attr, "" );
   },
 
   playerZoneCount: function( zone ) {
-    return getPlayerAttribute( this.game, zone, [] ).length;
+    return getPlayerAttribute( this.player, zone, [] ).length;
   },
 
   handCards: function() {
     var result = { cards:[] };
 
-    if( this.game ) {
-      result.cards = _.map( getPlayerAttribute( this.game, "hand", [] ),
+    if( this.player ) {
+      result.cards = _.map( getPlayerAttribute( this.player, "hand", [] ),
         function(ele){
           return new CardModel( CardCollection.findOne( ""+ele) );
       });
