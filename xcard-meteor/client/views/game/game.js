@@ -1,3 +1,6 @@
+var gameTargets           = "xCard.game.currentTargets",
+    gameTargetsIsVisible  = "xCard.game.targetsIsVisible",
+    gameTargetsRequest    = "xCard.game.targetRequest";
 
 var getPlayer = function( game ) {
   return game.players[game.playerGameId];
@@ -31,11 +34,27 @@ Template.gamePage.events({
   },
 
   "click .useGameCard": function() {
-    Meteor.call( "handleGameRequest", {
-        type: "use-card",
-        cardId: this.data._id,
-        gameId: Session.get( xCard.session.currentGameId )
-    });
+    var request = {
+      type: "use-card",
+      cardId: this.data._id,
+      targets:[],
+      gameId: Session.get( xCard.session.currentGameId )
+    }
+
+    if( this.data.targets > 0 ) {
+      Session.set( gameTargetsRequest, request );
+      Session.set( gameTargetsIsVisible, true );
+    } else {
+      Meteor.call( "handleGameRequest", request );
+    }
+
+  },
+
+  "click .target": function() {
+      var request = Session.get( gameTargetsRequest );
+      request.targets.push( this.id );
+      Session.set( gameTargetsIsVisible, false );
+      Meteor.call( "handleGameRequest", request );
   },
 
   "click .gameAddPlayerButton": function() {
@@ -90,6 +109,7 @@ Template.gamePage.helpers({
     if( gameContainer ) {
       gameContainer.game.playerGameId = gameContainer.game.playersMap[Meteor.userId()];
       gameContainer.game.isActivePlayer = gameContainer.game.playerGameId == gameContainer.game.state.activePlayer;
+      Session.set( gameTargets, gameContainer.game.targets );
       console.log( gameContainer );
     }
 
@@ -123,6 +143,16 @@ Template.gamePage.helpers({
 
   isCreator: function() {
     return this.game.creator == Meteor.userId();
+  },
+
+  targetsPanelEnabled: function() {
+    return Session.get( gameTargetsIsVisible );
+  }
+});
+
+Template.targetsPanel.helpers({
+  targets: function() {
+    return _.map( Session.get( gameTargets ) );
   }
 });
 

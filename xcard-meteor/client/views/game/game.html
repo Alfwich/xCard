@@ -44,9 +44,25 @@
   </div>
 </template>
 
+<template name="targetsPanel">
+  <div class="targetsPanel">
+    <h3>Select a target</h3>
+    {{#each targets}}
+      <div class="target">
+        {{this.id}}
+        {{this.name}}
+        {{this.type}}
+      </div>
+    {{/each}}
+  </div>
+</template>
+
 <template name="gamePage">
   <div class="gamePage">
     {{#with gameData}}
+      {{#if targetsPanelEnabled}}
+        {{> targetsPanel}}
+      {{/if}}
       <div class="gameContainer {{isActivePlayer}}">
         {{#if equals game.state.current "init"}}
           <div class="row">

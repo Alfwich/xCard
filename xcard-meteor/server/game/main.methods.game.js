@@ -13,7 +13,7 @@ GameState.addGlobalMethod( "modifyGamePlayerValue", function( request, playerId,
   var player = request.game.players[playerId];
 
   if( player && player[attr] ) {
-    this.state.callMethod( "addGlobalGameMessage", request, ( player.playerName + (delta>0?" gained ":" lost ") + Math.abs(delta) + " " + attr ) );
+    this.state.callMethod( "addGameMessage", request, ( player.playerName + (delta>0?" gained ":" lost ") + Math.abs(delta) + " " + attr ) );
     player[attr] += delta;
     return true;
   }
